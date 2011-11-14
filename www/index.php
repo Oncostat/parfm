@@ -43,7 +43,11 @@ echo $contents; } ?>
 
 <!-- end of project description -->
 
-<p> No content added. </p>
+<h3>References</h3>
+<ul>
+ <li> Duchateau, L. & Janssen, P. (2008) <em>The frailty model</em>. Springer.</li>
+ <li> Wienke, A. (2010) <em>Frailty Models in Survival Analysis</em>. Chapman & Hall/CRC biostatistics series. Taylor and Francis.</li>
+</ul>
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
