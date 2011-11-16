@@ -17,8 +17,8 @@ function(formula, cluster, data, inip=NULL, initheta=1,
     obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
     obsdata$di <- aggregate(obsdata$event, by=list(obsdata$cluster), FUN=sum)[, 2]
   }
-  if (!is.null(data$x)&&class(data$x)!="data.frame") 
-    stop("The covariates object 'x' must be of class 'data.frame'!")
+  #if (!is.null(data$x)&&class(data$x)!="data.frame") 
+  #  stop("The covariates object 'x' must be of class 'data.frame'!")
   if (!(frailty%in%c("none", "gamma", "ingau", "possta"))) stop("Invalid frailty distribution!")
   
   res <- NULL
