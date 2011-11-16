@@ -17,10 +17,10 @@ parfm(formula, cluster, data, inip = NULL, initheta=1,
   \item{initheta}{The initial value of frailty parameter.}
   \item{dist}{
     The baseline hazard distribution.
-    One of "\code{weibull}", "\code{exponential}", "\code{gompertz}", "\code{lognormal}" or "\code{loglogistic}".}
+    One of \code{weibull}, \code{exponential}, \code{gompertz}, \code{lognormal} or \code{loglogistic}.}
   \item{frailty}{
     The Frailty distribution.
-    One of: "\code{none}", "\code{gamma}", "\code{ingau}" or "\code{possta}".}
+    One of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
   \item{method}{The optimization method to pass to the function \code{optim()}.}
   \item{maxit}{Maximum number of iterations.}
 }
