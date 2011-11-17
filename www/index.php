@@ -32,38 +32,48 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <h2>Parametric Frailty Models in R</h2>
 
-<p>Frailty Models [1,2] are survival models for clustered or overdispersed duration data.
-  They consist in proportional hazards Cox models [3] with the addition of a random effect, accounting for different levels of risk
+<p>Frailty Models [<a href="#DJ08">1</a>,<a href="#W10">2</a>] are survival models for clustered or overdispersed duration data.
+  They consist in proportional hazards Cox models [<a href="#C72">3</a>] with the addition of a random effect, accounting for different levels of risk
     due to unobserved covariates.
 <p>Accoridng to the focus of the interest, estimation of parameters can be done by means of either a parametric or a semiparametric model.
-  In the latter case, the baseline hazard is left unspecified and the penalized partial likelihood is considered [4].
+  In the latter case, the baseline hazard is left unspecified and the penalized partial likelihood is considered [<a href="#TGP03">4</a>].
   Estimation can be done in R by means of the
     <a href="http://stat.ethz.ch/R-manual/R-patched/library/survival/html/coxph.html"><tt>coxph</tt></a> function 
     in the <a href="http://cran.r-project.org/web/packages/survival/index.html"><tt>survival</tt></a> package.
 
-<p>Here we provide code for estimating frailty models, based on the marginal likelihood, for many of the most common models.
+<p>In the case of semiparametric frailty models, estimation is based on the marginal likelihood.
+  Here we provide R functions for many of the most common models.</br>
   Possible basline hazards are
   <ul> <li>Weibull,</li> <li>Exponential,</li> <li>Gompertz,</li> <li>logNormal,</li> <li>loglogistic.</li> </ul>
  Possible Frailty distributions are
   <ul> <li>Gamma,</li> <li>Inverse Gaussian,</li> <li>Positive Stable.</li> </ul>
 The method is analogous to that of the Stata
-  <tt><a href = "http://www.stata-journal.com/article.html?article=st0006">streg</a></tt> command [5],
-  the difference being that <tt>streg</tt> offers one more baseline (the generalized gamma survival distribution)
+  <tt><a href = "http://www.stata.com/help.cgi?streg">streg</a></tt> command [<a href="#G02">5</a>],
+  the difference being that <tt>streg</tt> command offers one more baseline (the generalized gamma survival distribution)
   and one less frailty distribution (the Positive Stable).
 
 
-<h3>References</h3>
-<p> [1] Duchateau, L. & Janssen, P. (2008) <em>The frailty model</em>. Springer.</p>
-<p> [2] Wienke, A. (2010) <em>Frailty Models in Survival Analysis</em>. Chapman & Hall/CRC biostatistics series. Taylor and Francis.</p>
-<p> [3] Cox, D. R. (1972) Regression models and life-tables. 
-  <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 34, 187–220.</p>
-<p> [4] Therneau, T. M., Grambsch, P. M. & Pankratz, V. S. (2003) Penalized survival models and frailty.
-  <em>Journal of Computational and Graphical Statistics</em> 12, 156–175.</p>
-<p> [5] Gutierrez, R. G.  (2002) Parametric frailty and shared frailty survival models. 
-  <em>Stata Journal</em> 2, 22-44.</p>
+<p> The project summary page can be found
+  <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
-<p>
-<p> The <tt>project summary page</tt> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><tt>here</tt></a>. </p>
+
+<!--References-->
+<h3>References</h3>
+<p> [<a name="DJ08">1</a>] Duchateau, L. & Janssen, P. (2008) 
+  <em><a href="http://www.springer.com/statistics/life+sciences,+medicine+%26+health/book/978-0-387-72834-6">The frailty model</a></em>.
+  Springer.</p>
+<p> [<a name="W10">2</a>] Wienke, A. (2010)
+  <em><a href="http://dx.doi.org/10.1201/9781420073911">Frailty Models in Survival Analysis</a></em>.
+  Chapman & Hall/CRC biostatistics series. Taylor and Francis.</p>
+<p> [<a name="C72">3</a>] Cox, D. R. (1972)
+  <a href="http://www.jstor.org/stable/2985181">Regression models and life-tables</a>. 
+  <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 34, 187–220.</p>
+<p> [<a name="TGP03">4</a>] Therneau, T. M., Grambsch, P. M. & Pankratz, V. S. (2003) 
+  <a href="http://dx.doi.org/10.1198/1061860031365">Penalized survival models and frailty</a>.
+  <em>Journal of Computational and Graphical Statistics</em> 12, 156–175.</p>
+<p> [<a name="G02">5</a>] Gutierrez, R. G.  (2002)
+  <a href="http://www.stata-journal.com/article.html?article=st0006">Parametric frailty and shared frailty survival models</a>. 
+  <em>Stata Journal</em> 2(1), 22-44.</p>
 
 </body>
 </html>
