@@ -60,7 +60,7 @@ The method is analogous to that of the Stata
 <h3>Parametrisations</h3>
 <h4>Baseline hazards</h4>
 <p>The <B>Exponential</B> model is</p>
-  <p align="center"><i>h</i>(<i>t;, &lambda;</i>)<i> = &lambda;</i>,</p>
+  <p align="center"><i>h</i>(<i>t; &lambda;</i>)<i> = &lambda;</i>,</p>
   <p>with <i>&lambda;&gt;0</i>.</p>
 <p>The <B>Weibull</B> model is</p>
   <p align="center"><i>h</i>(<i>t; &rho;, &lambda;</i>)<i> = &rho; &lambda; t<sup>&rho;-1</sup></i>,</p>
@@ -108,6 +108,5 @@ The method is analogous to that of the Stata
 <p> [<a name="G02">5</a>] Gutierrez, R. G.  (2002)
   <a href="http://www.stata-journal.com/article.html?article=st0006">Parametric frailty and shared frailty survival models</a>. 
   <em>Stata Journal</em> 2(1), 22-44.</p>
-
 </body>
 </html>
