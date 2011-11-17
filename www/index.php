@@ -57,6 +57,36 @@ The method is analogous to that of the Stata
   and one less frailty distribution (the Positive Stable).
 
 
+<h3>Parametrisations</h3>
+<h4>Baseline hazards</h4>
+<p>The <B>Exponential</B> model is</p>
+  <p align="center"><i>h</i>(<i>t;, &lambda;</i>)<i> = &lambda;</i>,</p>
+  <p>with <i>&lambda;&gt;0</i>.</p>
+<p>The <B>Weibull</B> model is</p>
+  <p align="center"><i>h</i>(<i>t; &rho;, &lambda;</i>)<i> = &rho; &lambda; t<sup>&rho;-1</sup></i>,</p>
+  <p>with <i>&rho;,&lambda;&gt;0</i>.</p>
+<p>The <B>Gompertz</B> model is</p>
+  <p align="center"><i>h</i>(<i>t; &gamma;, &lambda;</i>)<i> = &lambda; </i>e<i><sup>&gamma;t</sup></i>,</p>
+  <p>with <i>&gamma;,&lambda;&gt;0</i>.</p>
+<p>The <B>logNormal</B> model is</p>
+  <p align="center"><i>h</i>(<i>t; &mu;, &sigma;</i>)<i> = 
+    </i>{<i> &phi;</i>(<i>[</i>log<i> t -&mu;]/&sigma;</i>)<i> </i>}<i> / </i>{<i> &sigma; t [1-&Phi;</i>(<i>[</i>log<i> t -&mu;]/&sigma;</i>)<i>] </i>},</p>
+  <p>with <i>&mu;&in;<strong>R</strong></i>, <i>&sigma;&gt;0</i> and <i>&phi;</i>(<i>.</i>)<i></i> and <i>&Phi;</i>(<i>.</i>)<i></i> the density and distribution functions of a standard Normal.</p>
+
+<h4>Frailty distributions</h4>
+<p>The <B>Gamma</B> model is</p>
+  <p align="center"><i>f</i>(<i>u;, &theta;</i>)<i> = 
+    </i>{<i> u<sup>1/&theta;-1</sup> </i>e<i><sup>-u/&theta;</sup> </i>}<i>/</i>{<i> &Gamma;</i>(<i>1/&theta;</i>)<i> &theta;<sup>1/&theta;</sup> </i>}<i></i>,</p>
+  <p>with <i>&theta;&gt;0</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
+<p>The <B>Inverse Gaussian</B> model is</p>
+  <p align="center"><i>f</i>(<i>u; &theta;</i>)<i> = 
+    </i>(<i>2&theta;&pi;</i>)<i><sup>-1/2</sup> u<sup>-3/2</sup> </i>exp<i></i>{<i> </i>(<i>u-1</i>)<i><sup>2</sup> / 2u&theta; </i>}<i></i>,</p>
+  <p>with <i>&theta;&gt;0</i>.</p>
+<p>The <B>Positive Stable</B> model is</p>
+  <p align="center"><i>f</i>(<i>u; &mu;, &sigma;</i>)<i> = 
+    -</i>&Sigma;<i><sub>k=1...&#8734;</sub></i>{<i>-u<sup>-&theta;k</sup> </i>sin<i></i>(<i>&theta;k&pi;</i>)<i> &Gamma;</i>(<i>k&theta;+1</i>)<i>/k!</i>}<i> / &pi;u</i>,</p>
+  <p>with <i>&theta;&gt;0</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
+
 <p><strong>Project summary</strong>:
   <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/">here</a>. </p>
 
