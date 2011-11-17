@@ -83,7 +83,7 @@ The method is analogous to that of the Stata
     </i>(<i>2&theta;&pi;</i>)<i><sup>-1/2</sup> u<sup>-3/2</sup> </i>exp<i></i>{<i> </i>(<i>u-1</i>)<i><sup>2</sup> / 2u&theta; </i>}<i></i>,</p>
   <p>with <i>&theta;&gt;0</i>.</p>
 <p>The <B>Positive Stable</B> model is</p>
-  <p align="center"><i>f</i>(<i>u; &mu;, &sigma;</i>)<i> = 
+  <p align="center"><i>f</i>(<i>u; &theta;</i>)<i> = 
     -</i>&Sigma;<i><sub>k=1...&#8734;</sub></i>{<i>-u<sup>-&theta;k</sup> </i>sin<i></i>(<i>&theta;k&pi;</i>)<i> &Gamma;</i>(<i>k&theta;+1</i>)<i>/k!</i>}<i> / &pi;u</i>,</p>
   <p>with <i>&theta;&gt;0</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
 
