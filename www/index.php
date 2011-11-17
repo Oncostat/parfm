@@ -15,7 +15,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title><?php echo $group_name; ?></title>
 	<link href="http://<?php echo $themeroot; ?>styles/estilo1.css" rel="stylesheet" type="text/css" />
-  <meta name="description" content="Parametric frailty models in R" />
+  <meta name="description" content="F. Rotolo and M. Munda" />
+  <meta name="author" content="Parametric frailty models in R" />
   <meta name="keywords" content="parametric, frailty, frailty models, survival, R, package" /> 
   </head>
 
@@ -53,11 +54,11 @@ The method is analogous to that of the Stata
   and one less frailty distribution (the Positive Stable).
 
 
-<p> The project summary page can be found
+<p><strong>Project summary</strong>:
   <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
 
-<!--References-->
+<!--References--><hr>
 <h3>References</h3>
 <p> [<a name="DJ08">1</a>] Duchateau, L. & Janssen, P. (2008) 
   <em><a href="http://www.springer.com/statistics/life+sciences,+medicine+%26+health/book/978-0-387-72834-6">The frailty model</a></em>.
