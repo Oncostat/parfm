@@ -11,15 +11,18 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en   ">
 
-  <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title><?php echo $group_name; ?></title>
-	<link href="http://<?php echo $themeroot; ?>styles/estilo1.css" rel="stylesheet" type="text/css" />
-  <meta name="description" content="F. Rotolo and M. Munda" />
-  <meta name="author" content="Parametric frailty models in R" />
-  <meta name="keywords" content="parametric, frailty, frailty models, survival, R, package" /> 
-  </head>
+<head>
+  <title>parfm: Parametric Frailty Models in R</title>
 
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="author" content="F. Rotolo and M. Munda" />
+  <meta name="description" content="Parametric frailty models in R" />
+  <meta name="keywords" content="parametric, frailty, frailty models, survival, R, package" /> 
+
+  <link href="http://<?php echo $themeroot; ?>styles/estilo1.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="https://r-forge.r-project.org/themes/css/gforge.css" />
+  <link rel="stylesheet" type="text/css" href="https://r-forge.r-project.org/themes/rforge/css/theme.css" />
+</head>
 <body>
 
 <!-- R-Forge Logo -->
@@ -43,7 +46,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     in the <a href="http://cran.r-project.org/web/packages/survival/index.html"><tt>survival</tt></a> package.
 
 <p>In the case of semiparametric frailty models, estimation is based on the marginal likelihood.
-  Here we provide R functions for many of the most common models.</br>
+  Here we provide <B>R</B> functions for many of the most common models.</br>
   Possible basline hazards are
   <ul> <li>Weibull,</li> <li>Exponential,</li> <li>Gompertz,</li> <li>logNormal,</li> <li>loglogistic.</li> </ul>
  Possible Frailty distributions are
@@ -55,7 +58,7 @@ The method is analogous to that of the Stata
 
 
 <p><strong>Project summary</strong>:
-  <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
+  <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/">here</a>. </p>
 
 
 <!--References--><hr>
