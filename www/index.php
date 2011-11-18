@@ -45,7 +45,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     <a href="http://stat.ethz.ch/R-manual/R-patched/library/survival/html/coxph.html"><tt>coxph</tt></a> function 
     in the <a href="http://cran.r-project.org/web/packages/survival/index.html"><tt>survival</tt></a> package.
 
-<p>In the case of semiparametric frailty models, estimation is based on the marginal likelihood.
+<p>In the case of parametric frailty models, estimation is based on the marginal loglikelihood.
   Here we provide <B>R</B> functions for many of the most common models.</br>
   Possible basline hazards are
   <ul> <li>Weibull,</li> <li>Exponential,</li> <li>Gompertz,</li> <li>logNormal,</li> <li>loglogistic.</li> </ul>
