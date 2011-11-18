@@ -52,7 +52,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
  Possible Frailty distributions are
   <ul> <li>Gamma,</li> <li>Inverse Gaussian,</li> <li>Positive Stable.</li> </ul>
 The method is analogous to that of the Stata
-  <tt><a href = "http://www.stata.com/help.cgi?streg">streg</a></tt> command [<a href="#G02">5</a>],
+  <a href = "http://www.stata.com/help.cgi?streg"><tt>streg</tt></a> command [<a href="#G02">5</a>],
   the difference being that <tt>streg</tt> command offers one more baseline (the generalized gamma survival distribution)
   and one less frailty distribution (the Positive Stable).
 
