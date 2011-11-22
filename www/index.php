@@ -35,6 +35,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <!-- project title  -->
 
 <h2>Parametric Frailty Models in R</h2>
+<em>F.Rotolo, M.Munda</em>
 
 <p>Frailty Models [<a href="#DJ08">1</a>,<a href="#W10">2</a>] are survival models for clustered or overdispersed duration data.
   They consist in proportional hazards Cox models [<a href="#C72">3</a>] with the addition of a random effect, accounting for different levels of risk
@@ -108,5 +109,6 @@ The method is analogous to that of the Stata
 <p> [<a name="G02">5</a>] Gutierrez, R. G.  (2002)
   <a href="http://www.stata-journal.com/article.html?article=st0006">Parametric frailty and shared frailty survival models</a>. 
   <em>Stata Journal</em> 2(1), 22-44.</p>
+
 </body>
 </html>
