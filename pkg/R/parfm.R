@@ -142,8 +142,14 @@ function(formula, cluster, data, inip=NULL, initheta=1,
     var <- c(diag(V), diag(coxMod$var)[1:(dim(coxMod$var)[1]-2)])
   } else {  
     var <- diag(solve(res$hessian))
-    if (frailty%in%c("gamma","ingau")) se.theta <- sqrt(var[1] * theta^2)
-    if (frailty=="possta") se.theta <- sqrt(var[1] * (theta*log(theta))^2)
+    if var[1]>0 {
+      if (frailty%in%c("gamma","ingau")) se.theta <- sqrt(var[1] * theta^2)
+      if (frailty=="possta") se.theta <- sqrt(var[1] * (theta*log(theta))^2)
+    } else {
+      warning(paste("Negative estimated variance for parameter theta!",
+	"Maybe the true value of theta is exactly 0, so that the Normal approximation does not hold.", sep="\n")
+      se.theta <- NA
+    }
   }
 
   if (dist=="exponential"){SE <- c(
