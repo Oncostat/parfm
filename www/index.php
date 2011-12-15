@@ -40,7 +40,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <p>Frailty Models [<a href="#DJ08">1</a>,<a href="#W10">2</a>] are survival models for clustered or overdispersed duration data.
   They consist in proportional hazards Cox models [<a href="#C72">3</a>] with the addition of a random effect, accounting for different levels of risk
     due to unobserved covariates.
-<p>Accoridng to the focus of the interest, estimation of parameters can be done by means of either a parametric or a semiparametric model.
+<p>According to the focus of the interest, estimation of parameters can be done by means of either a parametric or a semiparametric model.
   In the latter case, the baseline hazard is left unspecified and the penalized partial likelihood is considered [<a href="#TGP03">4</a>].
   Estimation can be done in R by means of the
     <a href="http://stat.ethz.ch/R-manual/R-patched/library/survival/html/coxph.html"><tt>coxph</tt></a> function 
