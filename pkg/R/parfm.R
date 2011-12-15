@@ -142,7 +142,7 @@ function(formula, cluster, data, inip=NULL, initheta=1,
     var <- c(diag(V), diag(coxMod$var)[1:(dim(coxMod$var)[1]-2)])
   } else {  
     var <- diag(solve(res$hessian))
-    if var[1]>0 {
+    if (var[1]>0) {
       if (frailty%in%c("gamma","ingau")) se.theta <- sqrt(var[1] * theta^2)
       if (frailty=="possta") se.theta <- sqrt(var[1] * (theta*log(theta))^2)
     } else {
