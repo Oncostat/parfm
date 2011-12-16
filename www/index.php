@@ -75,8 +75,8 @@ The method is analogous to that of the Stata
   <p>with <i>&mu;&in;<strong>R</strong></i>, <i>&sigma;&gt;0</i> and <i>&phi;</i>(<i>.</i>)<i></i> and <i>&Phi;</i>(<i>.</i>)<i></i> the density and distribution functions of a standard Normal.</p>
 <p>The <B>LogLogistic</B> model is</p>
   <p align="center"><i>h</i>(<i>t; &alpha;, &kappa;</i>) = 
-    {exp(<i>&alpha;</i>) <i>&kappa; t^</i>{<i>&kappa;-1</i>} } <i>/</i> {
-      <i>1 +</i> exp(<i>&alpha;</i>) <i>t^&kappa; </i>},</p>
+    {exp(<i>&alpha;</i>) <i>&kappa; t<sup>&kappa;-1</sup> } <i>/</i> {
+      <i>1 +</i> exp(<i>&alpha;</i>) <i>t<sup>&kappa;</sup></i>},</p>
   <p>with <i>&alpha;&in;<strong>R</strong></i> and <i>&kappa;&gt;0</i>.</p>
 
 <h4>Frailty distributions</h4>
