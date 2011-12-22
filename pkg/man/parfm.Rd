@@ -2,11 +2,13 @@
 \alias{parfm}
 \title{Parametric Frailty Models}
 \description{Fits parametric Frailty Models by maximizing the marginal likelihood.}
+
 \usage{
-parfm(formula, cluster, data, inip = NULL, initheta=1,
+parfm(formula, cluster, data, inip = NULL, initheta=NULL,
       dist = "weibull", frailty = "none", 
-      method = "Nelder-Mead", maxit = 5000)
+      method = "BFGS", maxit = 5000, showtime=TRUE)
 }
+
 \arguments{
   \item{formula}{A formula object, with the response on the left of a ~ operator, and the terms on the right.
 
@@ -21,11 +23,15 @@ parfm(formula, cluster, data, inip = NULL, initheta=1,
   \item{frailty}{
     The Frailty distribution.
     One of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
-  \item{method}{The optimization method to pass to the function \code{optim()}.}
-  \item{maxit}{Maximum number of iterations.}
+  \item{method}{The optimization method to pass to the function \code{\link{optim}()}.}
+  \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
+  \item{showtime}{Show the execution time?}
 }
+
 %%\details{}
-%%\value{}
+
+\value{An object of class \code{parfm}.}
+
 \references{
   Duchateau, L. & Janssen, P. (2008) The frailty model. Springer.
 
@@ -34,19 +40,20 @@ parfm(formula, cluster, data, inip = NULL, initheta=1,
 \author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@uclouvain.be>}
 %%\note{}
 
-%%\seealso{}
+\seealso{\code{\link{select.parfm}}}
+
 \examples{
 library(parfm)
 data(kidney)
 
-parfm(Surv(time,status)~ sex+age, cluster="id", 
-      data=kidney, dist="weibull", frailty="gamma")
+parfm(Surv(time,status) ~ sex + age, cluster="id", 
+      data=kidney, dist="exponential", frailty="gamma")
 
-parfm(Surv(time,status)~ sex+age, cluster="id", 
-      data=kidney, dist="exponential", frailty="ingau")
+parfm(Surv(time,status) ~ sex + age, cluster="id", 
+      data=kidney, dist="weibull", frailty="ingau")
 
-parfm(Surv(time,status)~ sex+age, cluster="id", 
-      data=kidney, dist="gompertz", frailty="possta")
+parfm(Surv(time,status) ~ sex + age, cluster="id", 
+      data=kidney, dist="gompertz", frailty="possta", method="Nelder-Mead")
 }
 
 \keyword{survival}

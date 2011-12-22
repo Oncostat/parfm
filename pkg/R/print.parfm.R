@@ -53,7 +53,11 @@ print.parfm <- function(x,
     frailty <- list(gamma  = "Gamma",
                     possta = "Positive Stable",
                     ingau  = "Inverse Gaussian")[paste(attributes(x)$frailty)]
-
+    
+    # Kendall's Tau
+    tau <- eval(parse(text=paste("fr.", attributes(x)$frailty, sep="")))(
+                theta=x["theta", "ESTIMATE"], what="tau")
+    
     # Which baseline hazard, pretty expression
     baseline <- paste(toupper(substr(attributes(x)$dist, 1, 1)), 
                      substr(attributes(x)$dist, 2, 100), 
@@ -76,8 +80,11 @@ print.parfm <- function(x,
     # Object to printed out
     toprint <- cbind(round(x, digits), signif)
     names(toprint)[length(names(toprint))] = ""
-
     rownames(toprint) <- gsub("beta.","", rownames(toprint))
+    if (frailty == "Positive Stable") {
+      toprint["theta", "ESTIMATE"] <- 1 - toprint["theta", "ESTIMATE"]
+      rownames(toprint)[rownames(toprint)=="theta"] <- "nu"
+    }
 
     # Output
     cat(paste("\nFrailty distribution:", 
@@ -89,6 +96,7 @@ print.parfm <- function(x,
               "\n\n"))
     print(as.matrix(toprint), na.print=na.print, quote=FALSE)
     cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
+    cat(paste("\nKendall's Tau:", round(tau, digits), "\n"))
   } 
 }
 

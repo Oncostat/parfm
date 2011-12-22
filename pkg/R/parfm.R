@@ -17,15 +17,16 @@
 #   - cluster  : the name of the variable in data containing cluster IDs       #
 #   - data     : a data.frame in which to interpret the variables named        #
 #                in the formula.                                               #
-#   - inip     : initial values of parameters                                  #
-#   - initheta : initial value of the frailty theta                            #
+#   - inip     : the initial values of parameters                              #
+#   - initheta : the initial value of the frailty theta                        #
 #   - dist     : the name of the baseline hazard                               #
 #   - frailty  : the name of the frailty distribution                          #
-#   - method   : optimization method (See optim())                             #
-#   - maxit    : max number of iteration (See optim())                         #
+#   - method   : the optimization method (See optim())                         #
+#   - maxit    : the maximum number of iteration (See optim())                 #
+#   - showtime : show the execution time?                                      #
 #                                                                              #
 #                                                                              #
-#   Date: December 20, 2011                                                    #
+#   Date: December 21, 2011                                                    #
 #                                                                              #
 ################################################################################
 #   Check status: **still to check**                                           #
@@ -45,41 +46,54 @@ parfm <- function(formula,
                   initheta=NULL,
                   dist="weibull",
                   frailty="none",
-                  method="Nelder-Mead",
-                  maxit=5000){
+                  method="BFGS",
+                  maxit=5000,
+                  showtime=TRUE){
+  if (!(dist %in% c("exponential", "weibull", "gompertz", 
+                    "loglogistic", "lognormal")))
+    stop("Invalid baseline hazard name!")
+  
   if (!(frailty %in% c("none", "gamma", "ingau", "possta")))
-    stop("Invalid frailty distribution!")
+    stop("Invalid frailty distribution name!")
   
 
   #----- Data in a Mloglikelihood form ----------------------------------------#  
   
   obsdata <- NULL
   # times
-  obsdata$time <- eval(parse(text=paste("data$", 
-                                        formula[[2]][[2]], sep="")))
-    if (length(formula[[2]])==3) {
-      obsdata$event <- eval(parse(text=paste("data$", 
-                                             formula[[2]][[3]], sep="")))
-    } else if (length(formula[[2]])==4) {
-      obsdata$trunc <- eval(parse(text=paste("data$", 
-                                             formula[[2]][[3]], sep="")))
-      obsdata$event <- eval(parse(text=paste("data$", 
-                                             formula[[2]][[4]], sep="")))
-    }
+  if (length(formula[[2]])==3) { #     without left censoring
+    obsdata$time  <- eval(parse(text=paste("data$", 
+                                           formula[[2]][[2]], sep="")))
+    obsdata$event <- eval(parse(text=paste("data$", 
+                                           formula[[2]][[3]], sep="")))
+  } else if (length(formula[[2]])==4) { # with left censoring
+    obsdata$trunc <- eval(parse(text=paste("data$", 
+                                           formula[[2]][[2]], sep="")))
+    obsdata$time  <- eval(parse(text=paste("data$", 
+                                           formula[[2]][[3]], sep="")))
+    obsdata$event <- eval(parse(text=paste("data$", 
+                                           formula[[2]][[4]], sep="")))
+  }
   # covariates
   obsdata$x <- as.data.frame(model.matrix(formula, data=data)[,-1])
   # clusters
-  obsdata$cluster <- eval(parse(text=paste("data$", cluster, sep="")))
-    if(!is.null(cluster)){
-      # Number of clusters
-      obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
-      # Number of events per cluster
-      obsdata$di  <- aggregate(obsdata$event, 
-                               by=list(obsdata$cluster), FUN=sum)[, 2]
+  if(is.null(cluster)){
+    if (frailty != "none")
+      stop(paste("No cluster variable is specified,",
+                 "while a frailty distribution (",
+                 frailty, ") is.", sep=""))
+  }
+  else {
+    obsdata$cluster <- eval(parse(text=paste("data$", cluster, sep="")))
+    # Number of clusters
+    obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
+    # Number of events per cluster
+    obsdata$di  <- aggregate(obsdata$event, 
+                             by=list(obsdata$cluster), FUN=sum)[, 2]
     }
   
   
-  #----- Dimensions ----------------------------------------------------------#
+  #----- Dimensions -------------------------maybe to move into other func.'s--#
   
   # nFpar: number of frailty parameters
   if (frailty=="none") 
@@ -100,15 +114,16 @@ parfm <- function(formula,
     # If there are initial parameters, check the right dimension
     # and reparametrise into the whole Real line
     
-    if (length(inip) != (nBpar+ncol(model.matrix(formula, data=data))))
-      stop( paste("Number of initial parameters 'inip' must be ",
-                  nBpar+ncol(model.matrix(formula, data=data))) )
+    if (length(inip) != nBpar + ncol(obsdata$x))
+      stop( paste("Number of initial parameters 'inip' must be",
+                  nBpar + ncol(obsdata$x)))
+    p.init <- inip
     if (dist %in% c("exponential","weibull","gompertz"))             # 1st par
-      p.init <- log(inip[1]) # lambda, rho, gamma
+      p.init[1] <- log(p.init[1]) # lambda, rho, gamma
     if (dist %in% c("weibull","gompertz","lognormal","loglogistic")) # 2nd par
-      p.init <- log(inip[2]) # lambda, lambda, sigma, kappa
-    # the remaining are beta
-    p.init <- inip[(nBpar+1):length(inip)]
+      p.init[2] <- log(p.init[2]) # lambda, lambda, sigma, kappa
+#     # the remaining are betas
+#     p.init <- inip[(nBpar+1):length(inip)]
   } else {
     # In case of unspecified inital values, 
     # a parametric Cox model is fitted
@@ -121,7 +136,8 @@ parfm <- function(formula,
     }
     
     require(eha)
-    coxMod <- phreg(formula, data=data, dist=d, shape=shape)
+    coxMod <- phreg(formula, data=data, dist=d, shape=shape, center=FALSE,
+                    control=list(maxiter=maxit))
     
     logshape <- as.numeric(coxMod$coefficients["log(shape)"])
     logscale <- as.numeric(coxMod$coefficients["log(scale)"])
@@ -167,30 +183,37 @@ parfm <- function(formula,
   }
 
 
-  #############################################################################
-  #------ Minus log-likelihood minimization (begin) --------------------------#
-  #############################################################################
+  ##############################################################################
+  #------ Minus log-likelihood minimization (begin) ---------------------------#
+  ##############################################################################
   pars <-c(pars, p.init)
-  extime <- system.time({ res <- NULL })
+  res <- NULL
   if ((frailty=="none") && is.null(inip))
-    res <- list(par=pars) 
+    extime <- system.time({
+      res <- list(par=pars) 
+    })[1]
   else
-    extime <- system.time({res <- optim(pars, Mloglikelihood, method=method,
+    extime <- system.time({
+      res <- optim(pars, Mloglikelihood, method=method,
                                         obs=obsdata, dist=dist, frailty=frailty, 
                                         hessian=TRUE, control=c(maxit=maxit))
     })[1]
-  #############################################################################
-  #------ Minus log-likelihood minimization (end) ----------------------------#
-  #############################################################################
-
+  ##############################################################################
+  #------ Minus log-likelihood minimization (end) -----------------------------#
+  ##############################################################################
+  if (res$convergence > 0)
+    warning("Optimization algorithm did not converge!")
+  lL <- -res$value
+  it <- res$counts[1]
   
-  #----- Recover the frailty paramters estimates -----#
+  
+  #----- Recover the frailty paramters estimates -----------------------------#
   if (frailty %in% c("gamma","ingau"))
     theta <- exp(res$par[1])
   else if (frailty == "possta")
     theta <- exp(-exp(res$par[1]))
   
-  #----- Recover the baseline paramters estimates -----#
+  #----- Recover the baseline paramters estimates ----------------------------#
   if (dist=="exponential"){
     lambda <- exp(res$par[nFpar+1])
     ESTIMATE <- c(lambda=lambda)
@@ -216,96 +239,110 @@ parfm <- function(formula,
     ESTIMATE <- c(alpha=alpha, kappa=kappa)
   }
   
-  #----- Recover the regression coefficients estimates -----#
-  beta     <- res$par[-(1:(nFpar+nBpar))]  
-  ESTIMATE <- c(ESTIMATE, beta=beta)
+  #----- Recover the regression coefficients estimates ------------------------#
+  beta     <- res$par[-(1:(nFpar+nBpar))]
+  names(beta) <- paste("beta", names(head(obsdata$x)), sep=".")
+  
+  # All together #################################-ESTIMATE-###
+  ESTIMATE <- c(theta=ifelse(frailty=="none", NULL, theta),
+                ESTIMATE, 
+                beta=beta)
+  ################################################-ESTIMATE-###
 
 
-  #----- Obtain their standard dev -----#
+  #----- Obtain SE of paramters estimates -------------------------------------#
   if ((frailty == "none") && is.null(inip)) {
     # reeeeeeeeeeeeeaaaaally to carefully check and re-check
-    # maybe to eliminate............................................................
-    VAR <- coxMod$var[c("log(shape)","log(scale)"),
-                      c("log(shape)","log(scale)")]
-    if (dist=="exponential") 
-      D <- c(1, 0, log(lambda), -lambda)
-    else if (dist == "weibull")     
-      D <- c(1/rho, 0, rho*log(lambda), -rho*lambda^rho)
-    else if (dist == "gompertz")    
-      D <- c(0, gamma, 1/lambda, 0)
-    else if (dist == "lognormal")   
-      D <- c(0, exp(-mu), -sigma, 0)
-    else if (dist == "loglogistic") 
-      D <- c(alpha/kappa, -kappa*exp(alpha/kappa), 1/kappa, 0)
-    D <- matrix(D,2)
-    
-    V <- D %*% VAR %*% t(D)
-    var <- c(diag(V), diag(coxMod$var)[1:(dim(coxMod$var)[1]-2)])
-    # ............................................................maybe to eliminate
+    # maybe to eliminate...................................................#?
+    VAR <- coxMod$var[c("log(shape)","log(scale)"),                        #?
+                      c("log(shape)","log(scale)")]                        #?
+    if (dist=="exponential")                                               #?
+      D <- c(1, 0, log(lambda), -lambda)                                   #?
+    else if (dist == "weibull")                                            #?
+      D <- c(1/rho, 0, rho*log(lambda), -rho*lambda^rho)                   #?
+    else if (dist == "gompertz")                                           #?
+      D <- c(0, gamma, 1/lambda, 0)                                        #?
+    else if (dist == "lognormal")                                          #?
+      D <- c(0, exp(-mu), -sigma, 0)                                       #?
+    else if (dist == "loglogistic")                                        #?
+      D <- c(alpha/kappa, -kappa*exp(alpha/kappa), 1/kappa, 0)             #?
+    D <- matrix(D,2)                                                       #?
+                                                                           #?
+    V <- D %*% VAR %*% t(D)                                                #?
+    var <- c(diag(V), diag(coxMod$var)[1:(dim(coxMod$var)[1]-2)])          #?
+    # ....................................................maybe to eliminate?
   }
   else {
-    var <- diag(solve(res$hessian))
-    if (var[1] > 0) {
+    var <- try(diag(solve(res$hessian)), silent=TRUE)
+    if (class(var) == "try-error") 
+      var <- rep(NA, ncol(res$hessian))
+    if (!is.na(min(var)) && min(var[1:nFpar]) > 0) {
       if (frailty %in% c("gamma","ingau"))
         se.theta <- sqrt(var[1] * theta^2)
       else if (frailty == "possta")
         se.theta <- sqrt(var[1] * (theta*log(theta))^2)
     } else {
       warning(paste("Negative estimated variance for parameter theta!\n",
-                    "Maybe the true value of theta is exactly 0,",
-                    "so that the Normal approximation does not hold."))
+                    " Maybe the conditons for the Normal approximation",
+                    " are not satisfied.\n",
+                    " Please, try other initial values 'initheta'\n",
+                    " or other optimization methods 'method'.\n"))
       se.theta <- NA
     }
   }
 
-  # Possible reparameterizations
+  # Reparameterization concerning baseline parameters
   if (dist=="exponential")
     SE <- c(
-      se.lambda = sqrt(var[nFpar+1] * lambda^2)
+      se.lambda = sqrt(var[nFpar + 1] * lambda^2)
     )
   else if (dist=="weibull")
     SE <- c(
-      se.rho = sqrt(var[nFpar+1] * rho^2),
-      se.lambda = sqrt(var[nFpar+1] * lambda^2) 
+      se.rho = sqrt(var[nFpar + 1] * rho^2),
+      se.lambda = sqrt(var[nFpar + 2] * lambda^2) 
     )
   else if (dist=="gompertz")
     SE <- c(
-      se.gamma = sqrt(var[nFpar+1] * gamma^2), 
-      se.lambda = sqrt(var[nFpar+1] * lambda^2) 
+      se.gamma = sqrt(var[nFpar + 1] * gamma^2), 
+      se.lambda = sqrt(var[nFpar + 2] * lambda^2) 
     )
   else if (dist=="lognormal")
     SE <- c(
-      se.mu = sqrt(var[nFpar+1]),
-      se.sigma = sqrt(var[nFpar+2] * sigma^2)
+      se.mu = sqrt(var[nFpar + 1]),
+      se.sigma = sqrt(var[nFpar + 2] * sigma^2)
     )
   else if (dist=="loglogistic")
     SE <- c(
-      se.alpha = sqrt(var[nFpar+1]),
-      se.kappa = sqrt(var[nFpar+2] * kappa^2)
+      se.alpha = sqrt(var[nFpar + 1]),
+      se.kappa = sqrt(var[nFpar + 2] * kappa^2)
     )
 
+  # SE of regression coefficients
   se.beta <- sqrt(var[-(1:(nFpar+nBpar))])
-  SE <- c(SE, se.beta=se.beta)
-    
+
+  # All together ########################################-SE-###
+  SE <- c(se.theta=ifelse(frailty=="none", NULL, se.theta),
+          SE, 
+          se.beta=se.beta)
+  #######################################################-SE-###
+          
   
   #----- Output ---------------------------------------------------------------#
-  res <- cbind(ESTIMATE, SE,
-               "p-val"=c(rep(NA, nBpar), 
-                         2*pt(-abs(beta/se.beta), 
-                              nrow(data)-1-length(beta)+nBpar)))
-  if (frailty%in%c("gamma","ingau"))
-    res <- rbind(res, theta=c(theta, se.theta, NA))
-  if (frailty%in%c("possta")) 
-    res <- rbind(res, theta=c(theta, se.theta, NA))
+  resmodel <- cbind(ESTIMATE, SE,
+                    "p-val"=c(rep(NA, nFpar+nBpar), 
+                              2 * pt(-abs(beta / se.beta), 
+                                     nrow(data) - length(ESTIMATE))))
+  class(resmodel) <- c("parfm", class(resmodel))
+  attributes(resmodel)$loglik  <- lL                                                  
+  attributes(resmodel)$dist    <- dist
+  attributes(resmodel)$frailty <- frailty
+  attributes(resmodel)$extime  <- extime
+  attributes(resmodel)$nobs    <- nrow(data)
+  attributes(resmodel)$convergence <- res$convergence
+  attributes(resmodel)$it     <- it
   
-  class(res) <- c("parfm", class(res))
-  attributes(res)$loglik  <- -Mloglikelihood(p=pars, obs=obsdata, 
-                                             dist=dist, frailty=frailty)
-  attributes(res)$dist    <- dist
-  attributes(res)$frailty <- frailty
-  attributes(res)$extime <- extime
-  
-  cat("\nExecution time:", extime, "second(s) \n")
-  return(res)
+  if (showtime)
+    cat("\nExecution time:", extime, "second(s) \n")
+  return(resmodel)
 }
 

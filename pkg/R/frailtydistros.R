@@ -7,12 +7,12 @@
 #   - s    : the argument of the Laplace transform                             #
 #   - theta: the heterogeneity parameter of the frailty distribution           #
 #   - what : the quantity to be returned by the function                       #
-#            only "logLT" can be chosen, giving                                #
+#            either "logLT", the log-Laplace transform and its derivaatives    #
+#              \log[ (-1)^k \mathcal L^(k)(s) ]                                #
+#              with \mathcal L(s) the Laplace transofrm                        #
+#              and \mathcal L^(k)(s) its k-th derivative                       #
+#            or "tau", the Kendall's Tau                                       #
 #                                                                              #
-#            \log[ (-1)^k \mathcal L^(k)(s) ]                                  #
-#                                                                              #
-#            with \mathcal L(s) the Laplace transofrm                          #
-#            and \mathcal L^(k)(s) its k-th derivative                         #
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
@@ -39,7 +39,7 @@
 #   Maybe to elimitate                                                         #
 #                                                                              #
 #                                                                              #
-#   Date: December, 19, 2011                                                   #
+#   Date: December 21, 2011                                                    #
 #                                                                              #
 ################################################################################
 #   Check status: still to check                                               #
@@ -55,7 +55,9 @@ fr.none <- function(k,
                     theta,
                     what="logLT"){
   if (what=="logLT")
-    return( -s)
+    return(-s)
+  else if (what == "tau")
+    return(NA)
 }
 
 
@@ -75,7 +77,7 @@ fr.none <- function(k,
 #     [2] s > 0                                                                #
 #     [3] theta > 0                                                            #
 #                                                                              #
-#   Date: December, 19, 2011                                                   #
+#   Date: December 21, 2011                                                    #
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
@@ -97,6 +99,8 @@ fr.gamma <- function(k,
                     sum(log(1 + (seq(0, k-1) * theta))))
     return(res)
   }
+  else if (what == "tau")
+    return(theta / (theta + 2))
 }
 
 
@@ -114,7 +118,7 @@ fr.gamma <- function(k,
 #     [2] s > 0                                                                #
 #     [3] theta > 0                                                            #
 #                                                                              #
-#   Date: December, 19, 2011                                                   #
+#   Date: December 20, 2011                                                    #
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
@@ -139,6 +143,15 @@ fr.ingau <- function(k,
                     1 / theta * (1 - sqrt(1 + 2 * theta * s)))
     return(res)
   }
+  else if (what == "tau") {
+          integrand <- function(u) {
+        		return(exp(-u) / u)
+        	}
+        	int <- integrate(integrand,
+                           lower=(2/theta), 
+                           upper=Inf)$value
+        	return(0.5 - (1 / theta) + (2 * theta^(-2) * exp(2 / theta) * int))
+        }
 }
 
 
@@ -146,7 +159,7 @@ fr.ingau <- function(k,
 
 ################################################################################
 #                                                                              #
-#   Second part of the LT of the Positive Stable frailty distribution          #
+#   Sum of the polynomials Omega for the Positive Stable frailty distribution  #
 #                                                                              #
 #                                                                              #
 #   Date: December 20, 2011                                                    #
@@ -165,8 +178,8 @@ fr.ingau <- function(k,
 J <- function(k, s, theta, Omega){
   if(k == 0){sum <- 1} else {
     sum <- 0
-    for(m in 0:(k-1)){
-      sum <- sum + (Omega[k+1, m+1] * s^(-m * theta))
+    for(m in 0:(k - 1)){
+      sum <- sum + (Omega[k + 1, m + 1] * s^(-m * theta))
     }
   }
   return(sum)
@@ -188,7 +201,7 @@ J <- function(k, s, theta, Omega){
 #     [3] theta = 1-nu, in (0, 1)                                              #
 #     [4] Omega is the matrix that contains the omega's                        #
 #                                                                              #
-#   Date: December  19, 2011                                                   #
+#   Date: December 21, 2011                                                    #
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
@@ -211,5 +224,7 @@ fr.possta <- function(k,
       log(J(k, s, theta, Omega))
     return(res)
   }
+  else if (what == "tau")
+    return(1 - theta)
 }
 

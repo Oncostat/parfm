@@ -12,7 +12,7 @@
 #   - obs    : the observed data, in the form                                  #
 #              list( time   = event/censoring times,                           #
 #                   [trunc  = left truncation times, ]                         #
-#                    event   = event idnicators,                               #
+#                    event   = event indicators,                               #
 #                    x       = covariate data.frame,                           #
 #                    cluster = cluster ID vector,                              #
 #                    ncl     = number of clusters,                             #
@@ -21,17 +21,17 @@
 #   - frailty: the frailty distribution name                                   #
 #                                                                              #
 #                                                                              #
-#   Date: December, 19, 2012                                                   #
+#   Date: December, 19, 2011                                                   #
 #                                                                              #
 ################################################################################
-#   Check status: still to check                                               #
+#   Check status: checked                                                      #
 #   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date:                                                                   #
+#   On date: December 20, 2011                                                 #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -54,7 +54,7 @@ Mloglikelihood <- function(p,
     Omega <- matrix(NA, nrow=D+1, ncol=D)
     Omega[, 1] <- rep(1, D+1)
     
-    if (D==2) { Omega[3,2] <- 1/theta - 1 } else if (D>2) {
+    if (D==2) { Omega[3, 2] <- 1/theta - 1 } else if (D>2) {
       for(q in 3:(D+1))
         Omega[q, q-1] <- theta^(2 - q) * prod(q - theta - seq(2, q-1, 1))
       for(m in 2:(D-1))
@@ -112,7 +112,7 @@ Mloglikelihood <- function(p,
     by=list(obs$cluster), FUN=sum)[, 2]
 
     
-  # ---- 1: log-hazard -------------------------------------------------------#
+  # ---- log-hazard by cluster -----------------------------------------------#
   
   loghaz <- NULL
   loghaz <- aggregate(obs$event * (dist(pars, obs$time, what="lh") + 
@@ -120,11 +120,11 @@ Mloglikelihood <- function(p,
     by=list(obs$cluster), FUN=sum)[, 2]
 
     
-  # ---- 2: log-Survival -----------------------------------------------------#
+  # ---- log[ (-1)^di L^(di)(cumhaz) ]---------------------------------------#
     
   logSurv <- NULL
   if (frailty=="none")
-    logSurv <-mapply(fr.none, cumhaz, what="logLT") else
+    logSurv <- mapply(fr.none, cumhaz, what="logLT") else
   if (frailty=="gamma")
     logSurv <- mapply(fr.gamma, 
                       k=obs$di, s=cumhaz, theta=rep(theta, obs$ncl), 
@@ -147,4 +147,3 @@ Mloglikelihood <- function(p,
   Mloglik <- -sum(loghaz + logSurv)
   return(Mloglik)
 }
-

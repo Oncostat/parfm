@@ -53,9 +53,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
  Possible Frailty distributions are
   <ul> <li>Gamma,</li> <li>Inverse Gaussian,</li> <li>Positive Stable.</li> </ul>
 The method is analogous to that of the Stata
-  <a href = "http://www.stata.com/help.cgi?streg"><tt>streg</tt></a> command [<a href="#G02">5</a>],
-  the difference being that <tt>streg</tt> command offers one more baseline (the generalized gamma survival distribution)
-  and one less frailty distribution (the Positive Stable).
+  <a href = "http://www.stata.com/help.cgi?streg"><tt>streg</tt></a> command [<a href="#G02">5</a>]
+  for Weibull (or Exponential) baseline hazard distribution.
+Indeed the <tt>streg</tt> command fits an accelerated failure time model, which coincides with the proportional hazards model only in those cases.
 
 
 <h3>Parametrisations</h3>
