@@ -253,7 +253,7 @@ parfm <- function(formula,
     beta <- NULL
   else {
     beta     <- res$par[-(1:(nFpar+nBpar))]
-    names(beta) <- paste("beta", names(obsdata$x[,-1]), sep=".")
+    names(beta) <- paste("beta", names(obsdata$x), sep=".")[-1]
   }
   
   # All together #################################-ESTIMATE-###
