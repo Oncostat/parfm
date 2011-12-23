@@ -1,1 +1,4 @@
-export(parfm, print.parfm)
+export(        parfm, 
+         print.parfm, 
+        select.parfm, 
+   plot.select.parfm)
