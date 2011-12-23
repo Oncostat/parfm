@@ -55,8 +55,12 @@ print.parfm <- function(x,
                     ingau  = "Inverse Gaussian")[paste(attributes(x)$frailty)]
     
     # Kendall's Tau
-    tau <- eval(parse(text=paste("fr.", attributes(x)$frailty, sep="")))(
-                theta=x["theta", "ESTIMATE"], what="tau")
+    tau <- eval(parse(text=paste("fr.", attributes(x)$frailty, sep="")))
+      if (attributes(x)$frailty %in% c("gamma", "ingau"))
+        tau <- tau(theta=x["theta", "ESTIMATE"], what="tau")
+      else if (attributes(x)$frailty == "possta")
+        tau <- tau(nu=x["nu", "ESTIMATE"], what="tau")
+      else nu <- "---"
     
     # Which baseline hazard, pretty expression
     baseline <- paste(toupper(substr(attributes(x)$dist, 1, 1)), 
@@ -81,11 +85,7 @@ print.parfm <- function(x,
     toprint <- cbind(round(x, digits), signif)
     names(toprint)[length(names(toprint))] = ""
     rownames(toprint) <- gsub("beta.","", rownames(toprint))
-    if (frailty == "Positive Stable") {
-      toprint["theta", "ESTIMATE"] <- 1 - toprint["theta", "ESTIMATE"]
-      rownames(toprint)[rownames(toprint)=="theta"] <- "nu"
-    }
-
+    
     # Output
     cat(paste("\nFrailty distribution:", 
               frailty,

@@ -45,6 +45,7 @@ parfm(formula, cluster, data, inip = NULL, initheta=NULL,
 \examples{
 library(parfm)
 data(kidney)
+kidney$sex <- kidney$sex - 1
 
 parfm(Surv(time,status) ~ sex + age, cluster="id", 
       data=kidney, dist="exponential", frailty="gamma")

@@ -122,7 +122,7 @@ fr.gamma <- function(k,
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
-#   Comments: Il y avait un signe '-' de trop, et un '-' qui devait etre '+'   #                                                                              #
+#   Comments: Il y avait un signe '-' de trop, et un '-' qui devait etre '+'   #
 #                                                                              #
 #                                                                              #
 #                                                                              #
@@ -175,11 +175,11 @@ fr.ingau <- function(k,
 #   On date: December 20, 2011                                                 #
 ################################################################################
 
-J <- function(k, s, theta, Omega){
+J <- function(k, s, nu, Omega){
   if(k == 0){sum <- 1} else {
     sum <- 0
     for(m in 0:(k - 1)){
-      sum <- sum + (Omega[k + 1, m + 1] * s^(-m * theta))
+      sum <- sum + (Omega[k + 1, m + 1] * s^(-m * (1 - nu)))
     }
   }
   return(sum)
@@ -198,7 +198,7 @@ J <- function(k, s, theta, Omega){
 #   Arguments of fr.possta:                                                    #
 #     [1] k = 0, 1, ...                                                        #
 #     [2] s > 0                                                                #
-#     [3] theta = 1-nu, in (0, 1)                                              #
+#     [3] nu, in (0, 1)                                                        #
 #     [4] Omega is the matrix that contains the omega's                        #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
@@ -214,17 +214,17 @@ J <- function(k, s, theta, Omega){
 #   On date: December 20, 2011                                                 #
 ################################################################################
 
-fr.possta <- function(k, 
-                      s, 
-                      theta, 
-                      Omega, 
+fr.possta <- function(k,
+                      s,
+                      nu,
+                      Omega,
                       what="logLT"){
   if (what=="logLT") {
-    res <- k * (log(theta) + ((theta - 1) * log(s))) - s^(theta) + 
-      log(J(k, s, theta, Omega))
+    res <- k * (log(1 - nu) + (-nu * log(s))) - s^(1 - nu) + 
+      log(J(k, s, nu, Omega))
     return(res)
   }
   else if (what == "tau")
-    return(1 - theta)
+    return(nu)
 }
 

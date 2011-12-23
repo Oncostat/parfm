@@ -48,19 +48,19 @@ Mloglikelihood <- function(p,
     nFpar <- 1 
   }
   else if (frailty == "possta") {
-    theta <- exp(-exp(p[1]))
+    nu <- exp(-exp(p[1]))
     nFpar <- 1
     D <- max(obs$di)
     Omega <- matrix(NA, nrow=D+1, ncol=D)
     Omega[, 1] <- rep(1, D+1)
     
-    if (D==2) { Omega[3, 2] <- 1/theta - 1 } else if (D>2) {
+    if (D==2) { Omega[3, 2] <- 1/(1 - nu) - 1 } else if (D>2) {
       for(q in 3:(D+1))
-        Omega[q, q-1] <- theta^(2 - q) * prod(q - theta - seq(2, q-1, 1))
+        Omega[q, q-1] <- (1 - nu)^(2 - q) * prod(q - 1 + nu - seq(2, q-1, 1))
       for(m in 2:(D-1))
         for(q in (m+2):(D+1))
           Omega[q, m] <- Omega[q-1, m] + 
-            (Omega[q-1, m-1] * ((q - 2) / theta - (q - m)))
+            (Omega[q-1, m-1] * ((q - 2) / (1 - nu) - (q - m)))
     }
   }
   
@@ -102,13 +102,13 @@ Mloglikelihood <- function(p,
   cumhaz <- NULL
   cumhaz <- aggregate(
       dist(pars, obs$time, what="H") *
-      if (is.null(obs$x)) 1 else exp(as.matrix(obs$x) %*% beta), 
+      exp(as.matrix(obs$x) %*% c(0, beta)), 
     by=list(obs$cluster), FUN=sum)[, 2]
   
   # Possible truncation
   if (!is.null(obs$trunc)) cumhaz <- cumhaz - aggregate(
       dist(pars, obs$trunc, what="H") *
-      if (is.null(obs$x)) 1 else exp(as.matrix(obs$x) %*% beta), 
+      exp(as.matrix(obs$x) %*% c(0, beta)), 
     by=list(obs$cluster), FUN=sum)[, 2]
 
     
@@ -116,7 +116,7 @@ Mloglikelihood <- function(p,
   
   loghaz <- NULL
   loghaz <- aggregate(obs$event * (dist(pars, obs$time, what="lh") + 
-    if (is.null(obs$x)) 0 else (as.matrix(obs$x) %*% beta)),
+    as.matrix(obs$x) %*% c(0, beta)),
     by=list(obs$cluster), FUN=sum)[, 2]
 
     
@@ -137,7 +137,7 @@ Mloglikelihood <- function(p,
     logSurv <- rep(NA, obs$ncl)
     logSurv <- sapply(1:obs$ncl, 
                       function(x) fr.possta(k=obs$di[x], s=cumhaz[x], 
-                                            theta=theta, Omega=Omega, 
+                                            nu=nu, Omega=Omega, 
                                             what="logLT") )
   }
 

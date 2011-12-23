@@ -18,7 +18,7 @@
 #   - data     : a data.frame in which to interpret the variables named        #
 #                in the formula.                                               #
 #   - inip     : the initial values of parameters                              #
-#   - initheta : the initial value of the frailty theta                        #
+#   - iniFpar  : the initial value of the frailty theta                        #
 #   - dist     : the name of the baseline hazard                               #
 #   - frailty  : the name of the frailty distribution                          #
 #   - method   : the optimization method (See optim())                         #
@@ -43,7 +43,7 @@ parfm <- function(formula,
                   cluster,
                   data,
                   inip=NULL,
-                  initheta=NULL,
+                  iniFpar =NULL,
                   dist="weibull",
                   frailty="none",
                   method="BFGS",
@@ -53,7 +53,8 @@ parfm <- function(formula,
                     "loglogistic", "lognormal")))
     stop("Invalid baseline hazard name!")
   
-  if (!(frailty %in% c("none", "gamma", "ingau", "possta")))
+  if (!(frailty %in% c(#"none", 
+                       "gamma", "ingau", "possta")))
     stop("Invalid frailty distribution name!")
   
 
@@ -75,7 +76,7 @@ parfm <- function(formula,
                                            formula[[2]][[4]], sep="")))
   }
   # covariates
-  obsdata$x <- as.data.frame(model.matrix(formula, data=data)[,-1])
+  obsdata$x <- as.data.frame(model.matrix(formula, data=data))
   # clusters
   if(is.null(cluster)){
     if (frailty != "none")
@@ -106,6 +107,9 @@ parfm <- function(formula,
     nBpar <- 1 
   else if (dist %in% c("weibull","gompertz","lognormal","loglogistic")) 
     nBpar <- 2
+    
+  # nRpar: number of regression parameters
+    nRpar <- ncol(obsdata$x)-1
  
  
   #----- Initial parameters ---------------------------------------------------#
@@ -114,9 +118,9 @@ parfm <- function(formula,
     # If there are initial parameters, check the right dimension
     # and reparametrise into the whole Real line
     
-    if (length(inip) != nBpar + ncol(obsdata$x))
+    if (length(inip) != nBpar + nRpar)
       stop( paste("Number of initial parameters 'inip' must be",
-                  nBpar + ncol(obsdata$x)))
+                  nBpar + nRpar))
     p.init <- inip
     if (dist %in% c("exponential","weibull","gompertz"))             # 1st par
       p.init[1] <- log(p.init[1]) # lambda, rho, gamma
@@ -160,26 +164,27 @@ parfm <- function(formula,
       p.init <- c(-exp(logshape)*logscale,    # alpha
                    logshape )                 # log(kappa)
     }
-    p.init <- c(p.init, 
-                coxMod$coefficients[1:(length(coxMod$coefficients)-nBpar)] )
+    if (nRpar > 0)
+      p.init <- c(p.init, 
+                  coxMod$coefficients[1:nRpar] )
   }
         
   # --- Frailty parameters inizialization --- #
   if (frailty=="none")
     pars <- NULL
   else if (frailty %in% c("gamma","ingau")) {
-    if (is.null(initheta))
-      initheta <- 1
-    else if (initheta <= 0)
-      stop("Initial value of frailty variance 'initheta' must be positive!")
-    pars <- log(initheta)
+    if (is.null(iniFpar))
+      iniFpar <- 1
+    else if (iniFpar <= 0)
+      stop("Initial value of frailty variance 'iniFpar' must be positive!")
+    pars <- log(iniFpar)
   }
   else if (frailty == "possta") {
-    if (is.null(initheta)) 
-      initheta <- .5
-    else if (initheta <= 0 || initheta >= 1)
-      stop("Initial value of frailty theta 'initheta' must be in (0,1)!")
-    pars <- log(-log(initheta))
+    if (is.null(iniFpar)) 
+      iniFpar <- .5
+    else if (iniFpar <= 0 || iniFpar >= 1)
+      stop("Initial value of frailty nu 'iniFpar' must be in (0,1)!")
+    pars <- log(-log(iniFpar))
   }
 
 
@@ -210,8 +215,12 @@ parfm <- function(formula,
   #----- Recover the frailty paramters estimates -----------------------------#
   if (frailty %in% c("gamma","ingau"))
     theta <- exp(res$par[1])
-  else if (frailty == "possta")
-    theta <- exp(-exp(res$par[1]))
+  else
+    theta <- NULL
+  if (frailty == "possta")
+    nu <- exp(-exp(res$par[1]))
+  else
+    nu <- NULL
   
   #----- Recover the baseline paramters estimates ----------------------------#
   if (dist=="exponential"){
@@ -240,11 +249,16 @@ parfm <- function(formula,
   }
   
   #----- Recover the regression coefficients estimates ------------------------#
-  beta     <- res$par[-(1:(nFpar+nBpar))]
-  names(beta) <- paste("beta", names(head(obsdata$x)), sep=".")
+  if (nRpar == 0) 
+    beta <- NULL
+  else {
+    beta     <- res$par[-(1:(nFpar+nBpar))]
+    names(beta) <- paste("beta", names(obsdata$x[,-1]), sep=".")
+  }
   
   # All together #################################-ESTIMATE-###
-  ESTIMATE <- c(theta=ifelse(frailty=="none", NULL, theta),
+  ESTIMATE <- c(theta=theta,
+                nu=nu,
                 ESTIMATE, 
                 beta=beta)
   ################################################-ESTIMATE-###
@@ -276,16 +290,19 @@ parfm <- function(formula,
     var <- try(diag(solve(res$hessian)), silent=TRUE)
     if (class(var) == "try-error") 
       var <- rep(NA, ncol(res$hessian))
+    se.theta <- NULL
+    se.nu <- NULL
+ 
     if (!is.na(min(var)) && min(var[1:nFpar]) > 0) {
       if (frailty %in% c("gamma","ingau"))
         se.theta <- sqrt(var[1] * theta^2)
       else if (frailty == "possta")
-        se.theta <- sqrt(var[1] * (theta*log(theta))^2)
+        se.nu <- sqrt(var[1] * (nu*log(nu))^2)
     } else {
-      warning(paste("Negative estimated variance for parameter theta!\n",
+      warning(paste("Negative estimated variance for the frailty parameter!\n",
                     " Maybe the conditons for the Normal approximation",
                     " are not satisfied.\n",
-                    " Please, try other initial values 'initheta'\n",
+                    " Please, try other initial values 'iniFpar'\n",
                     " or other optimization methods 'method'.\n"))
       se.theta <- NA
     }
@@ -321,7 +338,8 @@ parfm <- function(formula,
   se.beta <- sqrt(var[-(1:(nFpar+nBpar))])
 
   # All together ########################################-SE-###
-  SE <- c(se.theta=ifelse(frailty=="none", NULL, se.theta),
+  SE <- c(se.theta=se.theta,
+          se.nu=se.nu,
           SE, 
           se.beta=se.beta)
   #######################################################-SE-###
