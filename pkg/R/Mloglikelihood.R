@@ -13,10 +13,10 @@
 #              list( time   = event/censoring times,                           #
 #                   [trunc  = left truncation times, ]                         #
 #                    event   = event indicators,                               #
-#                    x       = covariate data.frame,                           #
+#                    x       = covariate data.frame, intercept included        #
 #                    cluster = cluster ID vector,                              #
 #                    ncl     = number of clusters,                             #
-#                    di      = number of events per cluster                    #
+#                    di      = vector giving the numbers of events per cluster #
 #   - dist   : the baseline hazard distribution name                           #
 #   - frailty: the frailty distribution name                                   #
 #                                                                              #
@@ -31,7 +31,7 @@
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 20, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -39,7 +39,7 @@ Mloglikelihood <- function(p,
                            dist,
                            frailty) { 
   # ---- Assign the number of frailty parameters 'nFpar' ---------------------#
-  # ---- and compute the polynomials Omega for the Positive Stable frailty ---#
+  # ---- and compute Omega for the Positive Stable frailty -------------------#
   
   if (frailty == "none") 
     nFpar <- 0
@@ -51,23 +51,29 @@ Mloglikelihood <- function(p,
     nu <- exp(-exp(p[1]))
     nFpar <- 1
     D <- max(obs$di)
-    Omega <- matrix(NA, nrow=D+1, ncol=D)
-    Omega[, 1] <- rep(1, D+1)
-    
-    if (D==2) { Omega[3, 2] <- 1/(1 - nu) - 1 } else if (D>2) {
-      for(q in 3:(D+1))
-        Omega[q, q-1] <- (1 - nu)^(2 - q) * prod(q - 1 + nu - seq(2, q-1, 1))
-      for(m in 2:(D-1))
-        for(q in (m+2):(D+1))
-          Omega[q, m] <- Omega[q-1, m] + 
-            (Omega[q-1, m-1] * ((q - 2) / (1 - nu) - (q - m)))
+
+    Omega <- matrix(NA, nrow=D, ncol=D)
+    Omega[, 1] <- 1
+    if(D > 1) {
+      for(q in 2:D) {
+        Omega[q, q] <- (1 - nu)^(1 - q) *
+          prod(q - 1 + nu - seq(from=1, to=q-1, by=1))
+      }
+      if(D > 2) {
+        for(mPrime in 2:(D - 1)) {  #mPrime = m + 1
+          for(q in (mPrime + 1):D) {
+            Omega[q, mPrime] <- Omega[q - 1, mPrime] +
+              Omega[q - 1, mPrime - 1] * ((q - 1) / (1 - nu) - (q - (mPrime - 1)))
+          }
+        }
+      }
     }
   }
   
     
   # ---- Baseline hazard -----------------------------------------------------#
   
-  # Reparametrisation and naming of baseline parameters
+  # baseline parameters
   if (dist == "weibull") { 
     pars <- c(rho    = exp(p[nFpar+1]),
               lambda = exp(p[nFpar+2]))
@@ -124,7 +130,7 @@ Mloglikelihood <- function(p,
     
   logSurv <- NULL
   if (frailty=="none")
-    logSurv <- mapply(fr.none, cumhaz, what="logLT") else
+    logSurv <- mapply(fr.none, s=cumhaz, what="logLT") else
   if (frailty=="gamma")
     logSurv <- mapply(fr.gamma, 
                       k=obs$di, s=cumhaz, theta=rep(theta, obs$ncl), 
@@ -134,7 +140,6 @@ Mloglikelihood <- function(p,
                       k=obs$di, s=cumhaz, theta=rep(theta, obs$ncl), 
                       what="logLT") 
   else if (frailty=="possta"){
-    logSurv <- rep(NA, obs$ncl)
     logSurv <- sapply(1:obs$ncl, 
                       function(x) fr.possta(k=obs$di[x], s=cumhaz[x], 
                                             nu=nu, Omega=Omega, 

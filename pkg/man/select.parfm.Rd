@@ -8,7 +8,7 @@
 \usage{
 select.parfm(formula, cluster, data, 
              dist=c("exponential", "weibull", "gompertz", "loglogistic", "lognormal"),
-             frailty=c("gamma", "ingau", "possta"),
+             frailty=c("none", "gamma", "ingau", "possta"),
              method="BFGS", maxit=5000)
 }
 

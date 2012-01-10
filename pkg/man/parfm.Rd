@@ -12,7 +12,9 @@ parfm(formula, cluster, data, inip = NULL, initheta=NULL,
 \arguments{
   \item{formula}{A formula object, with the response on the left of a ~ operator, and the terms on the right.
 
-    The response must be a survival object as returned by the Surv function.}
+    The response must be a survival object as returned by the Surv function.
+    
+    The status indicator 'event' in the Surv object must be 0=alive, 1=dead.}
   \item{cluster}{The name of a cluster variable in data.}
   \item{data}{A data.frame in which to interpret the variables named in the formula.}
   \item{inip}{The vector of initial values of parameters.}

@@ -3,8 +3,8 @@
 ################################################################################
 #                                                                              #
 #  These are functions with parameters                                         #
-#   - pars: the distribution parameters vector                                 #
-#   - t   : the (positive) time                                                #
+#   - pars: the vector of parameters                                           #
+#   - t   : the time point                                                     #
 #   - what: the quantity to be returned by the function                        #
 #           either  "H", the cumulated hazard,                                 #
 #               or "lh", the log-hazard                                        #
@@ -23,7 +23,7 @@
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 21, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 
@@ -50,7 +50,7 @@
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 21, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 
@@ -75,10 +75,10 @@ weibull <- function(pars,
 #   Exponential baseline hazard function                                       #
 #                                                                              #
 #   Parameters:                                                                #
-#    [1] lambda                                                                #
+#    [1] lambda > 0                                                            #
 #                                                                              #
 #   Hazard:                                                                    #
-#    h(t) = \lambda > 0                                                        #
+#    h(t) = \lambda                                                            #
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
@@ -90,7 +90,7 @@ weibull <- function(pars,
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 21, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 exponential <- function(pars,
@@ -106,20 +106,6 @@ exponential <- function(pars,
   else if (what == "lh") 
     return(log(pars))
 }
-
-# exponential <- function(pars,
-#                         t, 
-#                         what){
-#   if (min(t) < 0)
-#     stop("All times 't' must be non-negative!")
-#   if (pars <=0)
-#     stop("The parameter ('lambda') must be positive!")
-#   
-#   if (what == "H")
-#     return(weibull(c(1, pars), t, what="H"))
-#   else if (what == "lh") 
-#     return(weibull(c(1, pars), t, what="lh"))
-# }
 
 
 
@@ -146,7 +132,7 @@ exponential <- function(pars,
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 21, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 gompertz <- function(pars,
@@ -185,13 +171,13 @@ gompertz <- function(pars,
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
-#   Comments: J ai utilise la fct dlnorm()                                     #
+#   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 21, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 lognormal <- function(pars,
@@ -202,29 +188,12 @@ lognormal <- function(pars,
 #   if (pars[2] <=0)
 #     stop("The second parameter ('sigma') must be positive!")
     
-  if (what == "H") 
+  if (what == "H")  #return - log (S)
     return(- log(1 - plnorm(t, meanlog=pars[1], sdlog=pars[2])))
-  else if (what == "lh") 
+  else if (what == "lh")  #return log(f) - log(S)
     return(dlnorm(t, meanlog=pars[1], sdlog=pars[2], log=TRUE) -
       log(1 - plnorm(t, meanlog=pars[1], sdlog=pars[2])))
 }
-
-# lognormal <- function(pars,
-#                       t, 
-#                       what){
-#   if (min(t) < 0)
-#     stop("All times 't' must be non-negative!")
-#   if (pars[2] <=0)
-#     stop("The second parameter ('sigma') must be positive!")
-#   
-#   z <- (log(t) - pars[1]) / pars[2]
-#                       
-#   if (what == "H") 
-#     return(-log(1 - pnorm(z)))
-#   else if (what == "lh") 
-#     return(log(dnorm(z)) - 
-#            log( pars[2] * t * (1-pnorm(z))))
-# }
 
 
 
@@ -252,7 +221,7 @@ lognormal <- function(pars,
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 21, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 loglogistic <- function(pars,

@@ -73,17 +73,22 @@ print.parfm <- function(x,
     x <- as.data.frame(x)
 
     # Significance of regression parameters with symbols
-    signif <-unlist(lapply(x$"p-val", function(x) { if (!is.na(x)){
-      if (x<.001) 4  else
-        if (x<.01) 3  else
-          if (x<.05) 2 else
-            if (x<.1) 1 else 0  } else 0 }
-    ))
-    signif <- factor(signif, levels=0:4, labels=c("",".  ","*  ","** ","***"))
+    if ("p-val" %in% colnames(x)) {
+      signif <-unlist(lapply(x$"p-val", function(x) { if (!is.na(x)){
+        if (x<.001) 4  else
+          if (x<.01) 3  else
+            if (x<.05) 2 else
+              if (x<.1) 1 else 0  } else 0 }
+      ))
+      signif <- factor(signif, levels=0:4, labels=c("",".  ","*  ","** ","***"))
+    }
 
     # Object to printed out
-    toprint <- cbind(round(x, digits), signif)
-    names(toprint)[length(names(toprint))] = ""
+    toprint <- round(x, digits)
+    if ("p-val" %in% colnames(x)) {
+      toprint <- cbind(toprint, signif)
+      names(toprint)[length(names(toprint))] = ""
+    }
     rownames(toprint) <- gsub("beta.","", rownames(toprint))
     
     # Output
@@ -95,8 +100,9 @@ print.parfm <- function(x,
               loglikelihood,
               "\n\n"))
     print(as.matrix(toprint), na.print=na.print, quote=FALSE)
-    cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
-    cat(paste("\nKendall's Tau:", round(tau, digits), "\n"))
+    if ("p-val" %in% colnames(x)) {
+      cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
+      cat(paste("\nKendall's Tau:", round(tau, digits), "\n"))
+    }
   } 
 }
-

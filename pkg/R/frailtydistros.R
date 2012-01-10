@@ -3,31 +3,30 @@
 ################################################################################
 #                                                                              #
 #  These are functions with parameters                                         #
-#   - k    : the order of the derivative of the Laplace transform              #
-#   - s    : the argument of the Laplace transform                             #
-#   - theta: the heterogeneity parameter of the frailty distribution           #
-#   - what : the quantity to be returned by the function                       #
-#            either "logLT", the log-Laplace transform and its derivaatives    #
-#              \log[ (-1)^k \mathcal L^(k)(s) ]                                #
-#              with \mathcal L(s) the Laplace transofrm                        #
-#              and \mathcal L^(k)(s) its k-th derivative                       #
-#            or "tau", the Kendall's Tau                                       #
+#   - k        : the order of the derivative of the Laplace transform          #
+#   - s        : the argument of the Laplace transform                         #
+#   - theta/nu : the heterogeneity parameter of the frailty distribution       #
+#   - what     : the quantity to be returned by the function,                  #
+#                either "logLT" for \log[ (-1)^k \mathcal L^(k)(s) ]           #                      #
+#                with \mathcal L(s) the Laplace transofrm                      #
+#                and \mathcal L^(k)(s) its k-th derivative,                    #
+#                or "tau", the Kendall's Tau                                   #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
 #                                                                              #
 ################################################################################
-#   Check status: still 1 to be checked                                        #
-#   Comments: J'ai remplace 'if ... else' par 'ifelse'                         #
-#             J'ai enleve 'stop ...'                                           #
+#   Check status: checked                                                      #
+#   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 20, 2011                                                 #
+#                                                                              #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 
@@ -42,17 +41,15 @@
 #   Date: December 21, 2011                                                    #
 #                                                                              #
 ################################################################################
-#   Check status: still to check                                               #
+#   Check status: checked                                                      #
 #   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date:                                                                   #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
-fr.none <- function(k,
-                    s,
-                    theta,
+fr.none <- function(s,
                     what="logLT"){
   if (what=="logLT")
     return(-s)
@@ -85,7 +82,7 @@ fr.none <- function(k,
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 20, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 fr.gamma <- function(k,
@@ -96,7 +93,7 @@ fr.gamma <- function(k,
     res <- ifelse(k == 0, 
                   - 1 / theta  * log(1 + theta * s),
                   - (k + 1 / theta) * log(1 + theta * s) +
-                    sum(log(1 + (seq(0, k-1) * theta))))
+                    sum(log(1 + (seq(from=0, to=k-1, by=1) * theta))))
     return(res)
   }
   else if (what == "tau")
@@ -122,11 +119,11 @@ fr.gamma <- function(k,
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
-#   Comments: Il y avait un signe '-' de trop, et un '-' qui devait etre '+'   #
+#   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 20, 2011                                                 #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 fr.ingau <- function(k, 
@@ -145,7 +142,7 @@ fr.ingau <- function(k,
   }
   else if (what == "tau") {
           integrand <- function(u) {
-        		return(exp(-u) / u)
+          	return(exp(-u) / u)
         	}
         	int <- integrate(integrand,
                            lower=(2/theta), 
@@ -153,7 +150,6 @@ fr.ingau <- function(k,
         	return(0.5 - (1 / theta) + (2 * theta^(-2) * exp(2 / theta) * int))
         }
 }
-
 
 
 
@@ -166,24 +162,25 @@ fr.ingau <- function(k,
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
-#   Comments: Dans la fct J, j'ai change 'q' en 'k'                            #
-#             J'ai mis J a l'exterieur, sinon J est recreee a chaque fois      #
+#   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 20, 2011                                                 #
+#                                                                              #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
-J <- function(k, s, nu, Omega){
-  if(k == 0){sum <- 1} else {
+J <- function(k, s, nu, Omega){  
+  if(k == 0) sum <- 1 else {
     sum <- 0
-    for(m in 0:(k - 1)){
-      sum <- sum + (Omega[k + 1, m + 1] * s^(-m * (1 - nu)))
+    for(m in 0:(k - 1)) {
+      sum <- sum + (Omega[k, m + 1] * s^(-m * (1 - nu)))
     }
   }
   return(sum)
 }
+
 
 
 ################################################################################
@@ -198,20 +195,20 @@ J <- function(k, s, nu, Omega){
 #   Arguments of fr.possta:                                                    #
 #     [1] k = 0, 1, ...                                                        #
 #     [2] s > 0                                                                #
-#     [3] nu, in (0, 1)                                                        #
+#     [3] nu in (0, 1)                                                         #
 #     [4] Omega is the matrix that contains the omega's                        #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
 #                                                                              #
 ################################################################################
 #   Check status: checked                                                      #
-#   Comments: Dans la fct J, j'ai change 'q' en 'k'                            #
-#             J'ai mis J a l'exterieur, sinon J est recreee a chaque fois      #
+#   Comments:                                                                  #
 #                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   On date: December 20, 2011                                                 #
+#                                                                              #
+#   On date: December 27, 2011                                                 #
 ################################################################################
 
 fr.possta <- function(k,
@@ -220,11 +217,10 @@ fr.possta <- function(k,
                       Omega,
                       what="logLT"){
   if (what=="logLT") {
-    res <- k * (log(1 - nu) + (-nu * log(s))) - s^(1 - nu) + 
+    res <- k * (log(1 - nu) - nu * log(s)) - s^(1 - nu) + 
       log(J(k, s, nu, Omega))
     return(res)
   }
   else if (what == "tau")
     return(nu)
 }
-
