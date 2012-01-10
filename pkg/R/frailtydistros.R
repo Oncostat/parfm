@@ -12,21 +12,15 @@
 #                and \mathcal L^(k)(s) its k-th derivative,                    #
 #                or "tau", the Kendall's Tau                                   #
 #                                                                              #
-#                                                                              #
+#   - correct  : (only for possta) the correction to use in case of many       #
+#                events per cluster to get non-infinity likelihood values.     #
+#                When correct!=0 the likelihood is divided by 10^correct       #
+#                for computation,                                              #
+#                but the value of the log-likelihood in the output             #
+#                is the re-adjusted value.                                     #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Last modification on: January 10, 2012                                     #
 ################################################################################
 
 
@@ -35,18 +29,9 @@
 #                                                                              #
 #   No frailty distribution                                                    #
 #                                                                              #
-#   Maybe to elimitate                                                         #
-#                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Last modification on: December 27, 2011                                    #
 ################################################################################
 
 fr.none <- function(s,
@@ -75,14 +60,7 @@ fr.none <- function(s,
 #     [3] theta > 0                                                            #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Last modification on: December 27, 2011                                    #
 ################################################################################
 
 fr.gamma <- function(k,
@@ -116,14 +94,7 @@ fr.gamma <- function(k,
 #     [3] theta > 0                                                            #
 #                                                                              #
 #   Date: December 20, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Last modification on: December 27, 2011                                    #
 ################################################################################
 
 fr.ingau <- function(k, 
@@ -159,20 +130,11 @@ fr.ingau <- function(k,
 #                                                                              #
 #                                                                              #
 #   Date: December 20, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Last modification on: January 10, 2012                                     #
 ################################################################################
 
-J <- function(k, s, nu, Omega){  
-  if(k == 0) sum <- 1 else {
+J <- function(k, s, nu, Omega, correct){  
+  if(k == 0) sum <- 10^-correct else {
     sum <- 0
     for(m in 0:(k - 1)) {
       sum <- sum + (Omega[k, m + 1] * s^(-m * (1 - nu)))
@@ -198,27 +160,19 @@ J <- function(k, s, nu, Omega){
 #     [3] nu in (0, 1)                                                         #
 #     [4] Omega is the matrix that contains the omega's                        #
 #                                                                              #
-#   Date: December 21, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Date: December 20, 2011                                                    #
+#   Last modification on: January 10, 2012                                     #
 ################################################################################
 
 fr.possta <- function(k,
                       s,
                       nu,
                       Omega,
-                      what="logLT"){
+                      what="logLT",
+                      correct){
   if (what=="logLT") {
     res <- k * (log(1 - nu) - nu * log(s)) - s^(1 - nu) + 
-      log(J(k, s, nu, Omega))
+      log(J(k, s, nu, Omega, correct))
     return(res)
   }
   else if (what == "tau")

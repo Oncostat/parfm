@@ -28,7 +28,8 @@ plot.select.parfm <- function(x, mar=c(2.5, 2, 1.5, .5)){
     xlim=c(.5, ncol(x$AIC) + .5), cex.lab=1.5)
   abline(v=1:ncol(x$AIC), col="grey")    
   
-  mtext(c(gamma="Ga",
+  mtext(c(none="No",
+          gamma="Ga",
           ingau="IG",
           possta="PS")[colnames(x$AIC)],
         side=1, at=1:ncol(x$AIC), padj=1)
@@ -60,7 +61,8 @@ plot.select.parfm <- function(x, mar=c(2.5, 2, 1.5, .5)){
     xlim=c(.5, ncol(x$BIC) + .5), cex.lab=1.5)
   abline(v=1:ncol(x$BIC), col="grey")    
   
-  mtext(c(gamma="Ga",
+  mtext(c(none="No",
+          gamma="Ga",
           ingau="IG",
           possta="PS")[colnames(x$BIC)],
         side=1, at=1:ncol(x$BIC), padj=1)

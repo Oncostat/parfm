@@ -19,25 +19,23 @@
 #                    di      = vector giving the numbers of events per cluster #
 #   - dist   : the baseline hazard distribution name                           #
 #   - frailty: the frailty distribution name                                   #
+#   - correct  : (only for possta) the correction to use in case of many       #
+#                events per cluster to get non-infinity likelihood values.     #
+#                When correct!=0 the likelihood is divided by 10^correct       #
+#                for computation,                                              #
+#                but the value of the log-likelihood in the output             #
+#                is the re-adjusted value.                                     #
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 27, 2011                                                 #
+#   Last modification on: January 10, 2012                                     #
 ################################################################################
 
 Mloglikelihood <- function(p,
                            obs,
                            dist,
-                           frailty) { 
+                           frailty,
+                           correct) { 
   # ---- Assign the number of frailty parameters 'nFpar' ---------------------#
   # ---- and compute Omega for the Positive Stable frailty -------------------#
   
@@ -52,21 +50,40 @@ Mloglikelihood <- function(p,
     nFpar <- 1
     D <- max(obs$di)
 
-    Omega <- matrix(NA, nrow=D, ncol=D)
-    Omega[, 1] <- 1
+#     Omega <- matrix(NA, nrow=D, ncol=D)
+#     Omega[, 1] <- 1
+#     if(D > 1) {
+#       for(q in 2:D) {
+#         Omega[q, q] <- (1 - nu)^(1 - q) *
+#           prod(q - 1 + nu - seq(from=1, to=q-1, by=1))
+#       }
+#       if(D > 2) {
+#         for(mPrime in 2:(D - 1)) {  #mPrime = m + 1
+#           for(q in (mPrime + 1):D) {
+#             Omega[q, mPrime] <- Omega[q - 1, mPrime] +
+#               Omega[q - 1, mPrime - 1] * ((q - 1) / (1 - nu) - (q - (mPrime - 1)))
+#           }
+#         }
+#       }
+#     }
+#     fact <- 10^correct
+    Omega <- matrix(NA, nrow=D, ncol=D, dimnames=list(q=1:D, m=0:(D-1)))
+    
+    Omega[, "0"] <- 10^-correct
+    
     if(D > 1) {
-      for(q in 2:D) {
-        Omega[q, q] <- (1 - nu)^(1 - q) *
-          prod(q - 1 + nu - seq(from=1, to=q-1, by=1))
-      }
-      if(D > 2) {
-        for(mPrime in 2:(D - 1)) {  #mPrime = m + 1
-          for(q in (mPrime + 1):D) {
-            Omega[q, mPrime] <- Omega[q - 1, mPrime] +
-              Omega[q - 1, mPrime - 1] * ((q - 1) / (1 - nu) - (q - (mPrime - 1)))
-          }
-        }
-      }
+      diag(Omega)[-1] <- sapply(2:D, function(q) {
+        (1 - nu)^(1 - q) *
+          prod( 10^(-correct / (q - 1)) *
+                (q - 1 + nu - seq(from=1, to=q-1, by=1))
+          )
+      })
+      if(D > 2)
+        for (q in 3:D)
+          Omega[q, 2:(q - 1)] <- sapply(1:(q - 2), function(m) {
+            Omega[q - 1, m + 1] +
+              Omega[q - 1, m] * ((q - 1) / (1 - nu) - (q - (m)))
+            })
     }
   }
   
@@ -143,7 +160,8 @@ Mloglikelihood <- function(p,
     logSurv <- sapply(1:obs$ncl, 
                       function(x) fr.possta(k=obs$di[x], s=cumhaz[x], 
                                             nu=nu, Omega=Omega, 
-                                            what="logLT") )
+                                            what="logLT",
+                                            correct=correct) )
   }
 
     

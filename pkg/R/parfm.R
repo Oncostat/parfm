@@ -23,19 +23,16 @@
 #   - method   : the optimisation method (See optim());                        #
 #   - maxit    : the maximum number of iteration (See optim());                #
 #   - showtime : is the execution time displayed?                              #
+#   - correct  : (only for possta) the correction to use in case of many       #
+#                events per cluster to get non-infinity likelihood values.     #
+#                When correct!=0 the likelihood is divided by 10^correct       #
+#                for computation,                                              #
+#                but the value of the log-likelihood in the output             #
+#                is the re-adjusted value.                                     #
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: checked                                                      #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date: December 29, 2011                                                 #
+#   Last modification on: January 10, 2012                                     #
 ################################################################################
 
 parfm <- function(formula,
@@ -47,7 +44,8 @@ parfm <- function(formula,
                   frailty="none",
                   method="BFGS",
                   maxit=5000,
-                  showtime=TRUE){
+                  showtime=TRUE,
+                  correct=0){
 
   #----- Check the baseline hazard and the frailty distribution ---------------#
   if (!(dist %in% 
@@ -204,13 +202,16 @@ parfm <- function(formula,
     extime <- system.time({
       res <- optim(par=pars, fn=Mloglikelihood, method=method, 
                    obs=obsdata, dist=dist, frailty=frailty,
+                   correct=correct,
                    hessian=TRUE, control=list(maxit=maxit))})[1]
     if(res$convergence > 0)
       warning("optimisation procedure did not converge,
               conv = ", bquote(.(res$convergence)), ": see optim() for details")
     
-    lL <- - res$value     #maximum value of the marginal loglikelihood
     it <- res$counts[1]   #number of iterations
+    lL <- - res$value     #maximum value of the marginal loglikelihood
+      if (frailty == "possta")
+        lL <- lL + correct * log(10) * obsdata$ncl
   }
   
   #----- Recover the estimates ------------------------------------------------#

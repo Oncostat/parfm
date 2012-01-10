@@ -40,14 +40,9 @@ select.parfm(formula, cluster, data,
 library(parfm)
 data(kidney)
 
-# With BFGS optimization method
-(models = select.parfm(Surv(time,status) ~ sex + age, 
-                       cluster="id", data=kidney))
-
-# With Nelder-Mead optimization method
-(models2 = select.parfm(Surv(time,status) ~ sex + age, 
-                        cluster="id", data=kidney,
-                        method="Nelder-Mead"))
+models <- select.parfm(Surv(time,status) ~ sex + age, 
+                       cluster="id", data=kidney)
+models
+plot(models)
 }
-
 %%\keyword{}

@@ -59,13 +59,26 @@ select.parfm <- function(formula,
                                    "possta"),
                          method="BFGS",
                          maxit=5000){
+                         
+  warn <- getOption("warn")
+  options(warn=-1)
   
   res <- list(AIC=NULL, BIC=NULL)
   res$AIC <- res$BIC <- matrix(NA, length(dist), length(frailty),
                                dimnames=list(dist, frailty))
+  cat("              Frailty\nBaseline    ")
+  cat(c(none="  None ", gamma=" Gamma ", ingau=" InvGau", possta=" PosSta")[frailty]
+    
+  )
   for (d in dist) {
+    cat("\n")
+    cat(c(exponential="exponential",
+             weibull="weibull    ",
+            gompertz="gompertz   ",
+         loglogistic="loglogistic",
+           lognormal="lognormal  ")[d])
     for (f in frailty) {
-      cat(".")
+      cat("    .   ")
       model <- try(parfm(formula=formula, 
                          cluster=cluster,
                          data=data,
@@ -83,6 +96,8 @@ select.parfm <- function(formula,
   }
   cat("\n")
   class(res) <- "select.parfm"
+
+  options(warn=warn)
   return(res)
 }
 
