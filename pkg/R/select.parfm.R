@@ -33,16 +33,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#                                                                              #
-################################################################################
-#   Check status: still to check                                               #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date:                                                                   #
+#   Last modification on: January, 10, 2012                                    #
 ################################################################################
 
 select.parfm <- function(formula,
@@ -66,19 +57,19 @@ select.parfm <- function(formula,
   res <- list(AIC=NULL, BIC=NULL)
   res$AIC <- res$BIC <- matrix(NA, length(dist), length(frailty),
                                dimnames=list(dist, frailty))
-  cat("              Frailty\nBaseline    ")
-  cat(c(none="  None ", gamma=" Gamma ", ingau=" InvGau", possta=" PosSta")[frailty]
+  cat("             Frailty\nBaseline    ")
+  cat(c(none=" None  ", gamma=" Gamma ", ingau=" InvGau", possta=" PosSta")[frailty]
     
   )
   for (d in dist) {
     cat("\n")
     cat(c(exponential="exponential",
-             weibull="weibull    ",
-            gompertz="gompertz   ",
-         loglogistic="loglogistic",
-           lognormal="lognormal  ")[d])
+              weibull="weibull....",
+             gompertz="gompertz...",
+          loglogistic="loglogistic",
+            lognormal="lognormal..")[d])
     for (f in frailty) {
-      cat("    .   ")
+      cat("..ok....")
       model <- try(parfm(formula=formula, 
                          cluster=cluster,
                          data=data,

@@ -24,15 +24,15 @@
 #   - maxit    : the maximum number of iteration (See optim());                #
 #   - showtime : is the execution time displayed?                              #
 #   - correct  : (only for possta) the correction to use in case of many       #
-#                events per cluster to get non-infinity likelihood values.     #
-#                When correct!=0 the likelihood is divided by 10^correct       #
-#                for computation,                                              #
+#                events per cluster to get finite likelihood values.           #
+#                When correct!=0 the likelihood is divided by                  #
+#                10^(#clusters * correct) for computation,                     #                                         #
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: January 10, 2012                                     #
+#   Last modification on: January 11, 2012                                     #
 ################################################################################
 
 parfm <- function(formula,
@@ -54,6 +54,17 @@ parfm <- function(formula,
   if (!(frailty %in% 
     c("none", "gamma", "ingau", "possta")))
     stop("invalid frailty distribution")
+  
+  #----- 'Correct' is useless except for frailty="possta" ---------------------#
+  if (frailty == "possta") {  #Do not exaggerate when setting 'correct' !
+    if (10^correct == Inf || 10^-correct == 0)
+      stop("'correct' is too large!")
+    if (10^correct == 0 || 10^-correct == Inf)
+      stop("'correct' is too small!")
+  }
+  else if (correct != 0)
+      warning(paste("'correct' has no effect when 'frailty = ", frailty, "'",
+                    sep=""))
   
   #----- Data for Mloglikelihood() --------------------------------------------#
   obsdata <- NULL
@@ -193,17 +204,30 @@ parfm <- function(formula,
   
   #----- Minimise Mloglikelihood() --------------------------------------------#
   if ((frailty == "none") && is.null(inip)) {
-    extime <- system.time({
-      res <- list(par=pars)})[1]
+    todo <- expression({res <- list(par=pars)})
+    if (showtime)
+      extime <- system.time(eval(todo))[1]
+    else {
+      eval(todo)
+      extime <- NULL
+    }
+ 
     it <- NULL
     lL <- coxMod$loglik[2]
   }
   else {
-    extime <- system.time({
+    todo <- expression({
       res <- optim(par=pars, fn=Mloglikelihood, method=method, 
                    obs=obsdata, dist=dist, frailty=frailty,
                    correct=correct,
-                   hessian=TRUE, control=list(maxit=maxit))})[1]
+                   hessian=TRUE, control=list(maxit=maxit))})
+    if (showtime)
+      extime <- system.time(eval(todo))[1]
+    else {
+      eval(todo)
+      extime <- NULL
+    }
+ 
     if(res$convergence > 0)
       warning("optimisation procedure did not converge,
               conv = ", bquote(.(res$convergence)), ": see optim() for details")
@@ -445,3 +469,4 @@ parfm <- function(formula,
   
   return(resmodel)
 }
+

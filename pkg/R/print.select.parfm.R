@@ -19,9 +19,9 @@ print.select.parfm <- function(x,
                                na.print="") {
   if (!is.null(x)){
     cat("\nAIC:\n")  
-    print(round(x$AIC, digits))
+    print(round(x$AIC, digits), na.print=na.print)
     
     cat("\n\nBIC:\n")  
-    print(round(x$BIC, digits))
+    print(round(x$BIC, digits), na.print=na.print)
   } 
 }

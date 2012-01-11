@@ -13,14 +13,14 @@
 #                or "tau", the Kendall's Tau                                   #
 #                                                                              #
 #   - correct  : (only for possta) the correction to use in case of many       #
-#                events per cluster to get non-infinity likelihood values.     #
-#                When correct!=0 the likelihood is divided by 10^correct       #
-#                for computation,                                              #
+#                events per cluster to get finite likelihood values.           #
+#                When correct!=0 the likelihood is divided by                  #
+#                10^(#clusters * correct) for computation,                     #                                         #
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: January 10, 2012                                     #
+#   Last modification on: January 11, 2012                                     #
 ################################################################################
 
 
@@ -39,7 +39,7 @@ fr.none <- function(s,
   if (what=="logLT")
     return(-s)
   else if (what == "tau")
-    return(NA)
+    return(NULL)
 }
 
 

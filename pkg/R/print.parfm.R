@@ -32,16 +32,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2012                                                   #
-#                                                                              #
-################################################################################
-#   Check status: still to check                                               #
-#   Comments:                                                                  #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
-#   On date:                                                                   #
+#   Last modification on: January, 11, 2012                                    #
 ################################################################################
 
 print.parfm <- function(x,
@@ -50,7 +41,8 @@ print.parfm <- function(x,
   if (!is.null(x)){
 
     # Which frailty distribution, pretty expression
-    frailty <- list(gamma  = "Gamma",
+    frailty <- list(none   = "None",
+                    gamma  = "Gamma",
                     possta = "Positive Stable",
                     ingau  = "Inverse Gaussian")[paste(attributes(x)$frailty)]
     
@@ -100,9 +92,9 @@ print.parfm <- function(x,
               loglikelihood,
               "\n\n"))
     print(as.matrix(toprint), na.print=na.print, quote=FALSE)
-    if ("p-val" %in% colnames(x)) {
+    if ("p-val" %in% colnames(x))
       cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
+    if (frailty != "None")
       cat(paste("\nKendall's Tau:", round(tau, digits), "\n"))
-    }
-  } 
+  }
 }
