@@ -54,6 +54,9 @@ parfm <- function(formula,
   if (!(frailty %in% 
     c("none", "gamma", "ingau", "possta")))
     stop("invalid frailty distribution")
+  if (frailty == "none" &&  !is.null(cluster))
+    warning(paste("With frailty='none' the cluster variable '",
+                  cluster, "' is not used!", sep=""))
   
   #----- 'Correct' is useless except for frailty="possta" ---------------------#
   if (frailty == "possta") {  #Do not exaggerate when setting 'correct' !

@@ -33,7 +33,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: January, 10, 2012                                    #
+#   Last modification on: January, 12, 2012                                    #
 ################################################################################
 
 select.parfm <- function(formula,
@@ -49,7 +49,8 @@ select.parfm <- function(formula,
                                    "ingau",
                                    "possta"),
                          method="BFGS",
-                         maxit=5000){
+                         maxit=5000,
+                         correct=0){
                          
   warn <- getOption("warn")
   options(warn=-1)
@@ -77,7 +78,8 @@ select.parfm <- function(formula,
                          frailty=f,
                          method=method,
                          maxit=maxit,
-                         showtime=FALSE),
+                         showtime=FALSE,
+                         correct=correct),
                    silent=TRUE)
       if (!("try-error" %in% class(model))){
         res$AIC[d, f] <- AIC(model)
