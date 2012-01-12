@@ -21,6 +21,14 @@
 #   - method   : the optimization method (See optim())                         #
 #   - maxit    : the maximum number of iterations (See optim())                #
 #   - showtime : show the execution time of each model? (See parfm())          #
+#   - correct  : the correction to use in case of many                         #
+#                events per cluster to get finite likelihood values.           #
+#                When correct!=0 the likelihood is divided by                  #
+#                10^(#clusters * correct) for computation,                     #
+#                but the value of the log-likelihood in the output             #
+#                is the re-adjusted value.                                     #
+#                It is used only for models with Positive Stable frailty       #
+#                                                                              #
 #                                                                              #
 #                                                                              #
 #  The function returns a list with elements                                   #

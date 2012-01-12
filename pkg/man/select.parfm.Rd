@@ -9,7 +9,7 @@
 select.parfm(formula, cluster, data, 
              dist=c("exponential", "weibull", "gompertz", "loglogistic", "lognormal"),
              frailty=c("none", "gamma", "ingau", "possta"),
-             method="BFGS", maxit=5000)
+             method="BFGS", maxit=5000, correct=0)
 }
 
 \arguments{
@@ -23,12 +23,16 @@ select.parfm(formula, cluster, data,
     It can include any of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
   \item{method}{The optimization method to pass to the function \code{\link{optim}()}.}
   \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
-  \item{showtime}{Show the execution time? (see \code{\link{parfm}()})}
+  \item{showtime}{Show the execution time? (see \code{\link{parfm}()}).}
+  \item{correct}{The correction to use in case of many events per cluster to get finite likelihood values.
+    When correct!=0 the likelihood is divided by 10^(#clusters * correct) for computation,
+    but the value of the log-likelihood in the output is the re-adjusted value.                                     #
+    It is used only for models with Positive Stable frailty.}
 }
 
 %%\details{}
 \value{An object of class \code{select.parfm}.}
-%%\references{}
+%%\references{Munda M, Rotolo F, Legrand C (2012). parfm: Parametric Frailty Models in R. Submitted}
 
 \author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@uclouvain.be>}
 

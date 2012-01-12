@@ -16,7 +16,7 @@
 #                as returned by the Surv() function;                           #
 #   - cluster  : the name of the variable in data containing cluster IDs;      #
 #   - data     : a data.frame containing all the variables;                    #
-#   - inip     : initial values for the baseline hazard & reg parameters;      #                                 #
+#   - inip     : initial values for the baseline hazard & reg parameters;      #
 #   - iniFpar  : initial value(s) for the heterogeneity parameter(s);          #
 #   - dist     : the baseline hazard;                                          #
 #   - frailty  : the frailty distribution;                                     #
@@ -26,7 +26,7 @@
 #   - correct  : (only for possta) the correction to use in case of many       #
 #                events per cluster to get finite likelihood values.           #
 #                When correct!=0 the likelihood is divided by                  #
-#                10^(#clusters * correct) for computation,                     #                                         #
+#                10^(#clusters * correct) for computation,                     #
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #

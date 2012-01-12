@@ -28,6 +28,10 @@ parfm(formula, cluster, data, inip = NULL, initheta=NULL,
   \item{method}{The optimization method to pass to the function \code{\link{optim}()}.}
   \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
   \item{showtime}{Show the execution time?}
+  \item{correct}{The correction to use in case of many events per cluster to get finite likelihood values.
+    When correct!=0 the likelihood is divided by 10^(#clusters * correct) for computation,
+    but the value of the log-likelihood in the output is the re-adjusted value.                                     #
+    It can be used only with Positive Stable frailty distribution.}
 }
 
 %%\details{}
@@ -35,9 +39,11 @@ parfm(formula, cluster, data, inip = NULL, initheta=NULL,
 \value{An object of class \code{parfm}.}
 
 \references{
-  Duchateau, L. & Janssen, P. (2008) The frailty model. Springer.
+% Munda M, Rotolo F, Legrand C (2012). parfm: Parametric Frailty Models in R. Submitted.
 
-  Wienke, A. (2010) Frailty Models in Survival Analysis. Chapman & Hall/CRC biostatistics series. Taylor and Francis.
+  Duchateau, L, Janssen, P (2008) The frailty model. Springer.
+
+  Wienke, A (2010) Frailty Models in Survival Analysis. Chapman & Hall/CRC biostatistics series. Taylor and Francis.
 }
 \author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@uclouvain.be>}
 %%\note{}
