@@ -45,7 +45,7 @@
 ################################################################################
 
 select.parfm <- function(formula,
-                         cluster,
+                         cluster=NULL,
                          data,
                          dist=c("exponential",
                                 "weibull",
