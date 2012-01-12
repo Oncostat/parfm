@@ -32,7 +32,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: January 11, 2012                                     #
+#   Last modification on: January 12, 2012                                     #
 ################################################################################
 
 parfm <- function(formula,
@@ -69,12 +69,12 @@ parfm <- function(formula,
   #----- Data for Mloglikelihood() --------------------------------------------#
   obsdata <- NULL
     #time
-  if (length(formula[[2]] == 3)) {          # --> without left truncation
+  if (length(formula[[2]]) == 3) {          # --> without left truncation
     obsdata$time <- eval(parse(text=paste("data$", 
                                           formula[[2]][[2]], sep="")))
     obsdata$event <- eval(parse(text=paste("data$", 
                                           formula[[2]][[3]], sep=""))) 
-  } else if (length(formula[[2]] == 4)) {   # --> with left truncation
+  } else if (length(formula[[2]]) == 4) {   # --> with left truncation
     obsdata$trunc <- eval(parse(text=paste("data$", 
                                           formula[[2]][[2]], sep="")))
     
@@ -451,6 +451,8 @@ parfm <- function(formula,
         
   #----- Output ---------------------------------------------------------------#
   resmodel <- cbind(ESTIMATE=ESTIMATE, SE=STDERR)
+  rownames(resmodel) <- gsub("beta.","", rownames(resmodel))
+  
   if (nRpar > 0)
     resmodel <- cbind(resmodel, "p-val"= PVAL)
 

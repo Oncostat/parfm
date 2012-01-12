@@ -81,7 +81,6 @@ print.parfm <- function(x,
       toprint <- cbind(toprint, signif)
       names(toprint)[length(names(toprint))] = ""
     }
-    rownames(toprint) <- gsub("beta.","", rownames(toprint))
     
     # Output
     cat(paste("\nFrailty distribution:", 
