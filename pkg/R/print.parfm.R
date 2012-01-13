@@ -94,6 +94,7 @@ print.parfm <- function(x,
     if ("p-val" %in% colnames(x))
       cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
     if (frailty != "None")
-      cat(paste("\nKendall's Tau:", round(tau, digits), "\n"))
+      cat(paste("\nKendall's Tau:", 
+                ifelse(is.numeric(tau), round(tau, digits), tau), "\n"))
   }
 }

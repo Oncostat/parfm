@@ -20,7 +20,7 @@
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: January 11, 2012                                     #
+#   Last modification on: January 13, 2012                                     #
 ################################################################################
 
 
@@ -94,7 +94,7 @@ fr.gamma <- function(k,
 #     [3] theta > 0                                                            #
 #                                                                              #
 #   Date: December 20, 2011                                                    #
-#   Last modification on: December 27, 2011                                    #
+#   Last modification on: January 13, 2012                                     #
 ################################################################################
 
 fr.ingau <- function(k, 
@@ -102,7 +102,8 @@ fr.ingau <- function(k,
                      theta, 
                      what="logLT"){
   if (what=="logLT") {
-    z <- sqrt(2 * theta^(-1) * (s + 0.5 * theta^(-1)))
+    # separate sqrt's for numerical reasons in case of very small theta!
+    z <- theta^(-0.5) * sqrt(2 * s + theta^(-1))
     res <- ifelse(k == 0,
                   1 / theta * (1 - sqrt(1 + 2 * theta * s)),
                   - k / 2 * log(2 * theta * s + 1) +
@@ -118,7 +119,11 @@ fr.ingau <- function(k,
         	int <- integrate(integrand,
                            lower=(2/theta), 
                            upper=Inf)$value
-        	return(0.5 - (1 / theta) + (2 * theta^(-2) * exp(2 / theta) * int))
+          tau <- 0.5 - (1 / theta) + (2 * theta^(-2) * exp(2 / theta) * int)
+          if (is.nan(tau) || tau < 0)
+            tau <- paste("The value of 'theta' is too small",
+                         "for computing the Kendall's Tau numerically!")
+        	return(tau)
         }
 }
 
