@@ -1,8 +1,8 @@
 Package: parfm
 Type: Package
 Title: Parametric Frailty Models
-Version: 0.55
-Date: 2012-01-13
+Version: 0.56
+Date: 2012-01-16
 Author: Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@uclouvain.be>
 Maintainer: Federico Rotolo <federico.rotolo@stat.unipd.it>
 Description: Parametric Frailty Models, fitted by maximum marginal likelihood method.
