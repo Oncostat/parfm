@@ -31,7 +31,7 @@
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   Date: December, 19, 2012                                                   #
+#   Date: December, 19, 2011                                                   #
 #   Last modification on: January, 11, 2012                                    #
 ################################################################################
 
@@ -47,12 +47,15 @@ print.parfm <- function(x,
                     ingau  = "Inverse Gaussian")[paste(attributes(x)$frailty)]
     
     # Kendall's Tau
-    tau <- eval(parse(text=paste("fr.", attributes(x)$frailty, sep="")))
-      if (attributes(x)$frailty %in% c("gamma", "ingau"))
-        tau <- tau(theta=x["theta", "ESTIMATE"], what="tau")
-      else if (attributes(x)$frailty == "possta")
-        tau <- tau(nu=x["nu", "ESTIMATE"], what="tau")
-      else nu <- "---"
+    if ((attributes(x)$frailty %in% c("gamma", "ingau", "possta") &&
+        (attributes(x)$shared))) {
+      tau <- eval(parse(text=paste("fr.", attributes(x)$frailty, sep="")))
+        if (attributes(x)$frailty %in% c("gamma", "ingau"))
+          tau <- tau(theta=x["theta", "ESTIMATE"], what="tau")
+        else if (attributes(x)$frailty == "possta")
+          tau <- tau(nu=x["nu", "ESTIMATE"], what="tau")
+    }
+      else tau <- NULL
     
     # Which baseline hazard, pretty expression
     baseline <- paste(toupper(substr(attributes(x)$dist, 1, 1)), 
@@ -93,7 +96,7 @@ print.parfm <- function(x,
     print(as.matrix(toprint), na.print=na.print, quote=FALSE)
     if ("p-val" %in% colnames(x))
       cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
-    if (frailty != "None")
+    if (!is.null(tau))
       cat(paste("\nKendall's Tau:", 
                 ifelse(is.numeric(tau), round(tau, digits), tau), "\n"))
   }

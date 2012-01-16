@@ -462,15 +462,17 @@ parfm <- function(formula,
   class(resmodel) <- c("parfm", class(resmodel))
   attributes(resmodel) <- c(attributes(resmodel), list(
     convergence = res$convergence,
-    it = it,
-    extime = extime,
-    nobs = nrow(data),
-    loglik = lL,
-    dist = dist,
-    frailty = frailty))
+    it          = it,
+    extime      = extime,
+    nobs        = nrow(data),
+    shared      = (nrow(data) > obsdata$ncl),
+    loglik      = lL,
+    dist        = dist,
+    frailty     = frailty))
 
-  if (showtime)
-    cat("\nExecution time:", extime, "second(s) \n")
+  if (showtime){
+    cat("\nExecution time:", extime, "seconds \n")
+  }
   
   return(resmodel)
 }
