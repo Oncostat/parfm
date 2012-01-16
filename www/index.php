@@ -37,6 +37,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <h2>Parametric Frailty Models in R</h2>
 <em>F.Rotolo, M.Munda</em>
 
+<p>Frailty models [<a href="#DJ08">1</a>, <a href="#W10">2</a>] are survival models for clustered or overdispersed time-to-event data.
+  They consist in proportional hazards Cox's models [<a href="#C72">3</a>] with the addition of a random effect,
+  accounting for different risk levels.
+
 <p>When the form of the baseline hazard is somehow known in advance, the parametric estimation approach can be used advantageously.
 The <b>parfm</b> package provides a wide range of parametric frailty models in <b>R</b>.
 The
