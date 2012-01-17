@@ -51,11 +51,6 @@ The
   
 <p>Parameter estimation is done by maximising the log-likelihood,
   with right-censored and possibly left-truncated data.
-The method is comparable to that of the Stata
-  <a href = "http://www.stata.com/help.cgi?streg"><tt>streg</tt></a> command [<a href="#G02">4</a>]
-  for Weibull (or Exponential) baseline hazard distribution.
-Nonetheless, the <tt>streg</tt> command fits an accelerated failure time model,
-  which can be tranlated into a proportional hazards model only in that case.
 
 
 <h3>Parametrisations</h3>
@@ -89,9 +84,9 @@ Nonetheless, the <tt>streg</tt> command fits an accelerated failure time model,
     (<i>2&theta;&pi;</i>)<i><sup>-1/2</sup> u<sup>-3/2</sup> </i>exp<i></i>{<i> </i>(<i>u-1</i>)<i><sup>2</sup> / 2u&theta; </i>}<i></i>,</p>
   <p>with <i>&theta;&gt;0</i>.</p>
 <p>The <B>Positive Stable</B> distribution is</p>
-  <p align="center"><i>f</i>(<i>u; &theta;</i>)<i> = 
-    -</i>&Sigma;<i><sub>k=1...&#8734;</sub></i>{<i>-u<sup>-&theta;k</sup> </i>sin<i></i>(<i>&theta;k&pi;</i>)<i> &Gamma;</i>(<i>k&theta;+1</i>)<i>/k!</i>}<i> / &pi;u</i>,</p>
-  <p>with <i>&theta;&gt;0</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
+  <p align="center"><i>f</i>(<i>u; &nu;</i>)<i> = 
+    -</i>&Sigma;<i><sub>k=1...&#8734;</sub></i>{<i>-u<sup>-(1-&nu;)k</sup> </i>sin<i></i>(<i>(1-&nu;)k&pi;</i>)<i> &Gamma;</i>(<i>(1-&nu;)k+1</i>)<i>/k!</i>}<i> / &pi;u</i>,</p>
+  <p>with <i>&nu;&in;(0, 1)</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
 
 <p><strong>Information about the project development can be found
   <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/">here</a>.</strong></p>

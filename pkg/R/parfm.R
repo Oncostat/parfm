@@ -43,7 +43,7 @@ parfm <- function(formula,
                   dist="weibull",
                   frailty="none",
                   method="BFGS",
-                  maxit=5000,
+                  maxit=500,
                   showtime=TRUE,
                   correct=0){
 
