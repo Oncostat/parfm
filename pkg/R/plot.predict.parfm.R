@@ -15,9 +15,17 @@
 #   Last modification on: February 03, 2012                                    #
 ################################################################################
 
-plot.predict.parfm <- function(x, sort="i", main="Marco latin lover") {
+plot.predict.parfm <- function(x, sort="i", main=NULL) {
   library(graphics)
   ylab = attr(x, "clustname")
+  if (is.null(main)) {
+    frailty <- attr(x, "frailty")
+    dist <- attr(x, "dist")
+    main <- paste(toupper(substr(frailty, 1, 1)), substr(frailty, 2, 100), 
+                  " frailty model\nwith ", 
+                  toupper(substr(dist, 1, 1)), substr(dist, 2, 100),
+                  " baseline", sep="", collapse="")
+  }
   if (sort == "i")
     x <- sort(x, decreasing=FALSE)
   else if (sort == "d")

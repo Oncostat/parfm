@@ -47,5 +47,7 @@ predict.parfm <- function(model) {
   
   class(res) <- "predict.parfm"
   attr(res, "clustname") <-attr(model, "clustname")
+  attr(res, "frailty") <-attr(model, "frailty")
+  attr(res, "dist") <-attr(model, "dist")
   return(res)
 }
