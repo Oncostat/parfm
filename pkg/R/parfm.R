@@ -103,8 +103,10 @@ parfm <- function(formula,
       #number of clusters
     obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
       #number of events in each cluster
-    obsdata$di <- aggregate(obsdata$event, 
-                            by=list(obsdata$cluster), FUN=sum)[, 2]
+    obsdata$di <-sapply(levels(as.factor(obsdata$cluster)),
+                 function(x){
+                   sum(obsdata$event[obsdata$cluster==x])
+                 })
   }
   
   #----- Dimensions -----------------------------------------------------------#
@@ -468,7 +470,13 @@ parfm <- function(formula,
     shared      = (nrow(data) > obsdata$ncl),
     loglik      = lL,
     dist        = dist,
-    frailty     = frailty))
+    cumhaz      = attributes(Mloglikelihood(p=res$par,
+                                 obs=obsdata, dist=dist, frailty=frailty,
+                                 correct=correct))$cumhaz,
+    di          = obsdata$di,
+    frailty     = frailty,
+    clustname   = cluster,
+    correct     = correct))
 
   if (showtime){
     cat("\nExecution time:", extime, "seconds \n")

@@ -7,7 +7,7 @@
 #   - s        : the argument of the Laplace transform                         #
 #   - theta/nu : the heterogeneity parameter of the frailty distribution       #
 #   - what     : the quantity to be returned by the function,                  #
-#                either "logLT" for \log[ (-1)^k \mathcal L^(k)(s) ]           #                      #
+#                either "logLT" for \log[ (-1)^k \mathcal L^(k)(s) ]           # 
 #                with \mathcal L(s) the Laplace transofrm                      #
 #                and \mathcal L^(k)(s) its k-th derivative,                    #
 #                or "tau", the Kendall's Tau                                   #
@@ -15,7 +15,7 @@
 #   - correct  : (only for possta) the correction to use in case of many       #
 #                events per cluster to get finite likelihood values.           #
 #                When correct!=0 the likelihood is divided by                  #
-#                10^(#clusters * correct) for computation,                     #                                         #
+#                10^(#clusters * correct) for computation,                     # 
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #

@@ -28,7 +28,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: January 11, 2012                                     #
+#   Last modification on: February 1, 2012                                     #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -49,25 +49,7 @@ Mloglikelihood <- function(p,
     nu <- exp(-exp(p[1]))
     nFpar <- 1
     D <- max(obs$di)
-    
-    Omega <- matrix(NA, nrow=D, ncol=D, dimnames=list(q=1:D, m=0:(D-1)))
-    
-    Omega[, "0"] <- 10^-correct
-    
-    if(D > 1) {
-      diag(Omega)[-1] <- sapply(2:D, function(q) {
-        (1 - nu)^(1 - q) *
-          prod(10^(-correct / (q - 1)) *
-          (q - 1 + nu - seq(from=1, to=q-1, by=1)))
-      })
-      if(D > 2)
-        for (q in 3:D)  #mPrime = m + 1
-          Omega[q, 2:(q - 1)] <- sapply(2:(q - 1), function(mPrime) { 
-            Omega[q - 1, mPrime] +
-              Omega[q - 1, mPrime - 1] * 
-              ((q - 1) / (1 - nu) - (q - (mPrime - 1)))
-            })
-    }
+    Omega <- Omega(D, correct=correct, nu=nu)
   }
   
     
@@ -106,16 +88,32 @@ Mloglikelihood <- function(p,
   # ---- Cumulative Hazard by cluster ----------------------------------------#
   
   cumhaz <- NULL
-  cumhaz <- aggregate(
-      dist(pars, obs$time, what="H") *
-      exp(as.matrix(obs$x) %*% c(0, beta)), 
-    by=list(obs$cluster), FUN=sum)[, 2]
+  cumhaz <- apply(sapply(levels(as.factor(obs$cluster)),
+                  function(x){
+                    time <- obs$time[obs$cluster==x]
+                    cov <- as.matrix(obs$x)[obs$cluster==x,]
+                    dist(pars, time, what="H") *
+                      exp(cov %*% c(0, beta))
+                  }), 2, sum)
+#   cumhaz <- aggregate(
+#     dist(pars, obs$time, what="H") *
+#       exp(as.matrix(obs$x) %*% c(0, beta)), 
+#     by=list(obs$cluster), FUN=sum)[, 2]
   
   # Possible truncation
-  if (!is.null(obs$trunc)) cumhaz <- cumhaz - aggregate(
-      dist(pars, obs$trunc, what="H") *
-      exp(as.matrix(obs$x) %*% c(0, beta)), 
-    by=list(obs$cluster), FUN=sum)[, 2]
+  if (!is.null(obs$trunc)) cumhaz <- cumhaz - 
+    apply(sapply(levels(as.factor(obs$cluster)),
+                 function(x){
+                   trunc <- obs$trunc[obs$cluster==x]
+                   cov <- as.matrix(obs$x)[obs$cluster==x,]
+                   dist(pars, trunc, what="H") *
+                     exp(cov %*% c(0, beta))
+                 }), 2, sum)
+    
+#   if (!is.null(obs$trunc)) cumhaz <- cumhaz - aggregate(
+#       dist(pars, obs$trunc, what="H") *
+#       exp(as.matrix(obs$x) %*% c(0, beta)), 
+#     by=list(obs$cluster), FUN=sum)[, 2]
 
     
   # ---- log-hazard by cluster -----------------------------------------------#
@@ -151,6 +149,7 @@ Mloglikelihood <- function(p,
   # ---- Minus the log likelihood --------------------------------------------#
   
   Mloglik <- -sum(loghaz + logSurv)
+  attributes(Mloglik)$cumhaz <- cumhaz
   return(Mloglik)
 }
 

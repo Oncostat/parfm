@@ -2,6 +2,8 @@ export(        parfm,
             ci.parfm,
          print.parfm,
         logLik.parfm,
+       predict.parfm, 
+  plot.predict.parfm, 
         select.parfm, 
    plot.select.parfm, 
   print.select.parfm)
