@@ -4,6 +4,7 @@ export(        parfm,
         logLik.parfm,
        predict.parfm, 
   plot.predict.parfm, 
+ print.predict.parfm, 
         select.parfm, 
    plot.select.parfm, 
   print.select.parfm)

@@ -12,10 +12,12 @@
 #            or any other value for keeping the current order                  #
 #                                                                              #
 #   Date: February 02, 2012                                                    #
-#   Last modification on: February 03, 2012                                    #
+#   Last modification on: February 07, 2012                                    #
 ################################################################################
 
-plot.predict.parfm <- function(x, sort="i", main=NULL) {
+plot.predict.parfm <- function(x, sort="i", 
+                               main=NULL,
+                               sub=NULL) {
   library(graphics)
   ylab = attr(x, "clustname")
   if (is.null(main)) {
@@ -33,7 +35,8 @@ plot.predict.parfm <- function(x, sort="i", main=NULL) {
   dotchart(as.numeric(x),
            xlab="Predicted frailty value", 
            ylab=ylab,
-           main=main)
+           main=main,
+           sub=sub)
   axis(side=2, at=1:length(x), label=names(x), las=1)
   abline(v=1)  
 }
