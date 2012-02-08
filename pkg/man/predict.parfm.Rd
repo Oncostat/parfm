@@ -31,6 +31,23 @@ model <- parfm(Surv(time,status) ~ sex + age,
 	       dist="exponential", frailty="gamma")
 u <- predict.parfm(model)
 u
-plot(u)
+
+
+par(mfrow=c(1,2))
+plot(u, sort="i",  sub="(a)",
+     main=paste("Parametric", "Gamma frailty model",
+                "with Exponential baseline", sep="\n"))
+                
+
+ukidney <- kidney[seq(2,76, 2), "frail"]
+names(ukidney) <- kidney[seq(2,76, 2), "id"]
+class(ukidney) <- "predict.parfm"
+attr(ukidney, "clustname") <- "id"
+plot(ukidney, sort="i", sub="(b)", 
+     main=paste("Semiparametric",
+                "Lognormal frailty model", sep="\n"))
+
 }
-%%\keyword{}
+\keyword{frailty}
+\keyword{prediction}
+\keyword{frailty prediction}
