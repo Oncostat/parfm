@@ -4,13 +4,13 @@
 \description{Fits parametric Frailty Models by maximizing the marginal likelihood.}
 
 \usage{
-parfm(formula, cluster, data, inip=NULL, initheta=NULL,
-      dist="weibull", frailty="none",
-      method="BFGS", maxit=500, showtime=TRUE)
+parfm(formula, cluster=NULL, data, inip=NULL, iniFpar=NULL,
+      dist="weibull", frailty="none", method="BFGS", 
+      maxit=500, showtime=TRUE, correct=0)
 }
 
 \arguments{
-  \item{formula}{A formula object, with the response on the left of a ~
+  \item{formula}{A \code{\link{formula}} object, with the response on the left of a ~
 operator,
 and the terms on the right.
     The response must be a survival object as returned by the
@@ -18,7 +18,7 @@ and the terms on the right.
 function.
     The status indicator 'event' in the Surv object must be 0=alive, 1=dead.}
   \item{cluster}{The name of a cluster variable in data.}
-  \item{data}{A data.frame in which to interpret the variables named in
+  \item{data}{A \code{\link{data.frame}} in which to interpret the variables named in
 the formula.}
   \item{inip}{The vector of initial values.
     First components are for the baseline hazard parameters according to
@@ -27,7 +27,7 @@ given in 'details';
     Other components are for the regression parameters according to the
 order given
 in 'formula'.}
-  \item{initheta}{The initial value of the frailty parameter.}
+  \item{iniFpar}{The initial value of the frailty parameter.}
   \item{dist}{
     The baseline hazard distribution.
     One of \code{weibull}, \code{exponential}, \code{gompertz},
@@ -102,12 +102,12 @@ with \eqn{0 < \nu < 1}{0 < nu < 1}.
 \value{An object of class \code{parfm}.}
 
 \references{
-% Munda M, Rotolo F, Legrand C (2012). parfm: Parametric Frailty Models in R.
-Submitted.
+%  Munda M., Rotolo F., Legrand C. (2012). parfm: Parametric Frailty Models in R.
+% Submitted.
 
-  Duchateau, L, Janssen, P (2008) The frailty model. Springer.
+  Duchateau L., Janssen P. (2008) The frailty model. Springer.
 
-  Wienke, A (2010) Frailty Models in Survival Analysis. Chapman & Hall/CRC
+  Wienke A. (2010) Frailty Models in Survival Analysis. Chapman & Hall/CRC
 biostatistics series. Taylor and Francis.
 }
 \author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda
@@ -132,11 +132,14 @@ parfm(Surv(time,status) ~ sex + age, cluster="id",
       data=kidney, dist="gompertz", frailty="possta", method="Nelder-Mead")
 #--------------------------
 
+
+
 #------Channing House dataset------
 library(boot)
-data(channing) # type 'help(channing)' for a description of the data set
-               # the life durations (exit) are left truncated since the data set 
-               # does not include those individuals who died before entering Channing House
+data(channing) 
+ # type 'help(channing)' for a description of the data set
+ # the life durations (exit) are left truncated since the data set 
+ # does not include those individuals who died before entering Channing House
 
 channing <- channing[-which(channing$entry >= channing$exit), ]
 parfm(Surv(entry, exit, cens) ~ sex,

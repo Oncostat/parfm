@@ -8,7 +8,7 @@
 #   - model  : the fitted model, object of class 'parfm'                       #
 #                                                                              #
 #   Date: February 02, 2012                                                    #
-#   Last modification on: February 03, 2012                                    #
+#   Last modification on: February 08, 2012                                    #
 ################################################################################
 
 predict.parfm <- function(model) {
@@ -29,8 +29,8 @@ predict.parfm <- function(model) {
 
   res <- sapply(clusters, FUN=function(h) {
     exp(diff(sapply(
-      paste("frailty(k=attributes(model)$di[", h, "]+", 0:1,
-                    ", s=cumhaz[", h, "], ",
+      paste("frailty(k=attributes(model)$di['", h, "']+", 0:1,
+                    ", s=cumhaz['", h, "'], ",
             paste(frPar, collapse="="), ", ",
             ifelse(attributes(model)$frailty == "possta", 
                    paste("Omega=Omega(D=max(di)+1, ",

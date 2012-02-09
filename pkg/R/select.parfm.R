@@ -57,7 +57,7 @@ select.parfm <- function(formula,
                                    "ingau",
                                    "possta"),
                          method="BFGS",
-                         maxit=5000,
+                         maxit=500,
                          correct=0){
                          
   warn <- getOption("warn")

@@ -32,7 +32,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: January 12, 2012                                     #
+#   Last modification on: February 09, 2012                                    #
 ################################################################################
 
 parfm <- function(formula,
@@ -99,14 +99,14 @@ parfm <- function(formula,
       stop(paste("if you specify a frailty distribution,\n",
                  "then you have to specify the cluster variable as well"))
   } else {
+    if (! cluster %in% names(data))
+      stop(paste("object '", cluster, "' not found", sep=""))
     obsdata$cluster <- eval(parse(text=paste("data$", cluster, sep="")))
       #number of clusters
     obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
       #number of events in each cluster
-    obsdata$di <-sapply(levels(as.factor(obsdata$cluster)),
-                 function(x){
-                   sum(obsdata$event[obsdata$cluster==x])
-                 })
+    obsdata$di <- aggregate(obsdata$event, 
+                            by=list(obsdata$cluster), FUN=sum)[, 2]
   }
   
   #----- Dimensions -----------------------------------------------------------#
@@ -477,9 +477,11 @@ parfm <- function(formula,
     frailty     = frailty,
     clustname   = cluster,
     correct     = correct))
-
+  names(attr(resmodel, "cumhaz")) <-
+    names(attr(resmodel, "di")) <- unique(obsdata$cluster)
+  
   if (showtime){
-    cat("\nExecution time:", extime, "seconds \n")
+    cat("\nExecution time:", extime, "second(s) \n")
   }
   
   return(resmodel)

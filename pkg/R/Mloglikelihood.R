@@ -19,10 +19,10 @@
 #                    di      = vector giving the numbers of events per cluster #
 #   - dist   : the baseline hazard distribution name                           #
 #   - frailty: the frailty distribution name                                   #
-##   - correct  : (only for possta) the correction to use in case of many       #
+#   - correct  : (only for possta) the correction to use in case of many       #
 #                events per cluster to get finite likelihood values.           #
 #                When correct!=0 the likelihood is divided by                  #
-#                10^(#clusters * correct) for computation,                     #                                         #
+#                10^(#clusters * correct) for computation,                     #
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #
@@ -88,33 +88,28 @@ Mloglikelihood <- function(p,
   # ---- Cumulative Hazard by cluster ----------------------------------------#
   
   cumhaz <- NULL
-  if (frailty == "none") {
+  if (frailty == "none") { ### NO FRAILTY
     cumhaz <- sum(dist(pars, obs$time, what="H") * 
-                  exp(as.matrix(obs$x) %*% c(0, beta)))
+      exp(as.matrix(obs$x) %*% c(0, beta)))
+   
     # Possible truncation
-    if (!is.null(obs$trunc)) cumhaz <- cumhaz - 
-      sum(dist(pars, obs$trunc, what="H") * 
-          exp(as.matrix(obs$x) %*% c(0, beta)))
-  } else {
-    cumhaz <- apply(sapply(levels(as.factor(obs$cluster)),
-                    function(x){
-                      time <- obs$time[obs$cluster==x]
-                      cov <- as.matrix(obs$x)[obs$cluster==x,]
-                      dist(pars, time, what="H") *
-                        exp(cov %*% c(0, beta))
-                    }), 2, sum)
+    if (!is.null(obs$trunc)) 
+      cumhaz <- cumhaz - 
+        sum(dist(pars, obs$trunc, what="H") * 
+        exp(as.matrix(obs$x) %*% c(0, beta)))
+  } else { ### FRAILTY
+  cumhaz <- aggregate(
+    dist(pars, obs$time, what="H") *
+    exp(as.matrix(obs$x) %*% c(0, beta)), 
+    by=list(obs$cluster), FUN=sum)[, 2]
     
     # Possible truncation
-    if (!is.null(obs$trunc)) cumhaz <- cumhaz - 
-      apply(sapply(levels(as.factor(obs$cluster)),
-                   function(x){
-                     trunc <- obs$trunc[obs$cluster==x]
-                     cov <- as.matrix(obs$x)[obs$cluster==x,]
-                     dist(pars, trunc, what="H") *
-                       exp(cov %*% c(0, beta))
-                   }), 2, sum)
-  }
-    
+    if (!is.null(obs$trunc)) 
+      cumhaz <- cumhaz - aggregate(
+        dist(pars, obs$trunc, what="H") *
+        exp(as.matrix(obs$x) %*% c(0, beta)), 
+        by=list(obs$cluster), FUN=sum)[, 2]
+  } 
     
   # ---- log-hazard by cluster -----------------------------------------------#
   
@@ -154,7 +149,7 @@ Mloglikelihood <- function(p,
   # ---- Minus the log likelihood --------------------------------------------#
   
   Mloglik <- -sum(loghaz + logSurv)
-  attributes(Mloglik)$cumhaz <- cumhaz
+  attr(Mloglik, "cumhaz") <- cumhaz
   return(Mloglik)
 }
 
