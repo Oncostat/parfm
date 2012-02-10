@@ -13,8 +13,7 @@ parfm(formula, cluster=NULL, data, inip=NULL, iniFpar=NULL,
   \item{formula}{A \code{\link{formula}} object, with the response on the left of a ~
 operator,
 and the terms on the right.
-    The response must be a survival object as returned by the
-\code{\link{Surv()}}
+    The response must be a survival object as returned by the \code{\link{Surv}()}
 function.
     The status indicator 'event' in the Surv object must be 0=alive, 1=dead.}
   \item{cluster}{The name of a cluster variable in data.}
@@ -36,17 +35,15 @@ in 'formula'.}
   \item{frailty}{
     The Frailty distribution.
     One of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
-  \item{method}{The optimization method from the function
-\code{\link{optim}()}.}
+  \item{method}{The optimisation method from the function \code{\link{optim}()}.}
   \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
   \item{showtime}{Show the execution time?}
   \item{correct}{A correction factor that does not change the marginal
-log-likelihood except for an additive constant given by
+    log-likelihood except for an additive constant given by
     #clusters * correct * log(10). It may be useful in order to get finite
-log-likelihood values in case of many events per cluster
-    with Positive Stable frailties. Of note, the value of the
-log-likelihood in the
-output is the re-adjusted value.}
+    log-likelihood values in case of many events per cluster
+    with Positive Stable frailties. Note that the value of the
+    log-likelihood in the output is the re-adjusted value.}
 }
 
 \details{
@@ -69,27 +66,27 @@ The Gompertz hazard (\code{dist="gompertz"}) is
 with \eqn{\gamma, \lambda > 0}{ gamma, lambda > 0}.
 
 The Lognormal hazard (\code{dist="lognormal"}) is
-\deqn{h(t; \mu, \sigma) = \frac{\phi \left( \tfrac{\log ( t ) - \mu}{\sigma}\right)}{\sigma t \left[ 1 - \Phi \left( \tfrac{\log ( t ) - \mu}{\sigma}\right)\right]}}{
+\deqn{h(t; \mu, \sigma) = \frac{\phi \left( \frac{\log ( t ) - \mu}{\sigma}\right)}{\sigma t \left[ 1 - \Phi \left( \frac{\log ( t ) - \mu}{\sigma}\right)\right]}}{
   h(t; mu, sigma) = phi ( (log(t) - mu) / sigma ) / {sigma * t * [1 - Phi( (log(t)- mu) / sigma ) )]}}
-with \eqn{\mu \in \mathbb{R}, \sigma > 0}{mu in R, sigma > 0}, and where
+with \eqn{\mu \in   {R}, \sigma > 0}{mu in R, sigma > 0}, and where
 \eqn{\phi}{phi} and \eqn{\Phi}{Phi} are the density and distribution functions of a standard Normal random variable.
 
 The Loglogistic hazard (\code{dist="loglogistic"}) is
 \deqn{h(t; \alpha, \kappa) = \frac{\exp ( \alpha ) \kappa t^{\kappa - 1}}{1 + \exp ( \alpha ) t^{\kappa}}}{
   h(t; alpha, kappa) = [exp(alpha) * kappa * t^(kappa - 1)] / [1 + exp(alpha) * t^(kappa)]}
-with \eqn{\alpha \in \mathbb{R}, \kappa > 0}{alpha in R, kappa > 0}.
+with \eqn{\alpha \in   {R}, \kappa > 0}{alpha in R, kappa > 0}.
 
 
 
 \strong{Frailty distributions}
 
 The Gamma frailty distribution (\code{frailty="gamma"}) is
-\deqn{f ( u ) = \cfrac{\theta^{-\tfrac{1}{\theta}} u^{\tfrac{1}{\theta} - 1} \exp \left( - u \slash \theta \right)}	{\Gamma ( 1 \slash \theta )}}{
+\deqn{f ( u ) = \frac{\theta^{-\frac{1}{\theta}} u^{\frac{1}{\theta} - 1} \exp \left( - u \slash \theta \right)}	{\Gamma ( 1 \slash \theta )}}{
 f(u) = [theta^(-1 / theta) * u^(1 / theta - 1) * exp(-u / theta)] / [Gamma(1 / theta)]}
 with \eqn{\theta > 0}{theta > 0} and where \eqn{\Gamma ( \cdot )}{Gamma(.)} is the gamma function.
 
 The Inverse Gaussian frailty distribution (\code{frailty="ingau"}) is
-\deqn{f(u) = \frac1{\sqrt{2 \pi \theta}} u^{- \tfrac32} \exp \left( - \frac{(u-1)^2}{2 \theta u}  \right)}{ 
+\deqn{f(u) = \frac1{\sqrt{2 \pi \theta}} u^{- \frac32} \exp \left( - \frac{(u-1)^2}{2 \theta u}  \right)}{ 
   f(u) = 1 / sqrt(2 * pi * theta) * u^(-3 / 2) * exp[- (u - 1)^2 / (2 * theta * u)]}
 with \eqn{\theta > 0}{theta > 0}.
 
@@ -114,12 +111,17 @@ biostatistics series. Taylor and Francis.
 <marco.munda@uclouvain.be>}
 %%\note{}
 
-\seealso{\code{\link{select.parfm}}}
+\seealso{
+  \code{\link{select.parfm}},
+  \code{\link{ci.parfm}},
+  \code{\link{predict.parfm}}
+}
 
 \examples{
 library(parfm)
 #------Kidney dataset------
-data(kidney) # type 'help(kidney)' for a description of the data set
+data(kidney) 
+ # type 'help(kidney)' for a description of the data set
 kidney$sex <- kidney$sex - 1
 
 parfm(Surv(time,status) ~ sex + age, cluster="id",

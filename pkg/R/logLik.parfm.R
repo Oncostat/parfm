@@ -12,9 +12,9 @@
 #                                                                              #
 ################################################################################
 
-logLik.parfm <- function(x) {
-  lL <- attributes(x)$loglik
-  attributes(lL)$df <- dim(x)[1]
-  attributes(lL)$nobs <- attributes(x)$nobs
+logLik.parfm <- function(object) {
+  lL <- attributes(object)$loglik
+  attributes(lL)$df <- dim(object)[1]
+  attributes(lL)$nobs <- attributes(object)$nobs
   return(lL)
 }

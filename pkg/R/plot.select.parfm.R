@@ -45,7 +45,8 @@ plot.select.parfm <- function(x, mar=c(2.5, 2, 1.5, .5)){
        ty="n")
   
   legend(c(.3, 1.7), c(.5, 1.5),
-    rownames(x$AIC),
+    paste(toupper(substr(rownames(x$AIC),1,1)),
+          substr(rownames(x$AIC),2,100), sep=""),
     pch=1:nrow(x$AIC), 
     bg="white", bty="n",
     ncol=1, cex=1.5, xjust=.5)

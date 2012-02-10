@@ -1,7 +1,7 @@
 \name{ci.parfm}
 \alias{ci.parfm}
 \title{Confidence Intervals for Regression Parameter Estimates of Parametric Frailty Models}
-\description{Computes confidence intervals of regression parameters' estimates for objects of class \code{parfm}.}
+\description{Computes confidence intervals of regression parameter estimates for objects of class \code{\link{parfm}}.}
 
 \usage{
   ci.parfm(x, level=.05, digits=3)
@@ -9,7 +9,7 @@
 
 \arguments{
   \item{x}{
-    The fitted model, object of class \code{parfm}, obtained as result of the \code{\link{parfm()}} function.}
+    The fitted model, object of class \code{parfm}, obtained as result of the \code{\link{parfm}()} function.}
   \item{level}{
     The coverage probability of the confidence interval.}
   \item{digits}{
@@ -23,10 +23,16 @@
 \author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@uclouvain.be>}
 
 %%\note{}
-\seealso{\code{\link{parfm}}}
+
+\seealso{
+  \code{\link{parfm}},
+  \code{\link{select.parfm}},
+  \code{\link{predict.parfm}}
+}
 
 \examples{
-  library("parfm")
+  library(parfm)
+
   #------Kidney dataset------
   data("kidney")
   kidney$sex <- kidney$sex - 1
@@ -35,6 +41,7 @@
                data=kidney, dist="exponential", frailty="gamma")
 
   ci.parfm(pfm)
+  #--------------------------
 }
 
 %%\keyword{}

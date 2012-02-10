@@ -14,19 +14,21 @@ select.parfm(formula, cluster=NULL, data,
 
 \arguments{
   \item{formula}{A \code{\link{formula}} object, with the response on the left of a ~ operator, and the terms on the right.
-    The response must be a survival object as returned by the Surv function.}
+    The response must be a survival object as returned by the \code{\link{Surv}} function.}
   \item{cluster}{The name of a cluster variable in data.}
   \item{data}{A \code{\link{data.frame}} in which to interpret the variables named in the formula.}
-  \item{dist}{The vector of the names of the baseline hazards.
+  \item{dist}{The vector of baseline hazards' names.
     It can include any of \code{weibull}, \code{exponential}, \code{gompertz}, \code{lognormal} or \code{loglogistic}.}
-  \item{frailty}{The vector of the names of the frailty distribution
+  \item{frailty}{The vector of  frailty distributions' names.
     It can include any of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
-  \item{method}{The optimization method to pass to the function \code{\link{optim}()}.}
+  \item{method}{The optimisation method from the function \code{\link{optim}()}.}
   \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
-  \item{correct}{The correction to use in case of many events per cluster to get finite likelihood values.
-    When correct!=0 the likelihood is divided by 10^(#clusters * correct) for computation,
-    but the value of the log-likelihood in the output is the re-adjusted value.                                     #
-    It is used only for models with Positive Stable frailty.}
+  \item{correct}{A correction factor that does not change the marginal
+    log-likelihood except for an additive constant given by
+    #clusters * correct * log(10). It may be useful in order to get finite
+    log-likelihood values in case of many events per cluster
+    with Positive Stable frailties. Note that the value of the
+    log-likelihood in the output is the re-adjusted value.}
 }
 
 %%\details{}
@@ -37,7 +39,12 @@ select.parfm(formula, cluster=NULL, data,
 
 %%\note{}
 
-\seealso{\code{\link{parfm}}}
+
+\seealso{
+  \code{\link{parfm}},
+  \code{\link{ci.parfm}},
+  \code{\link{predict.parfm}}
+}
 
 \examples{
 library(parfm)
