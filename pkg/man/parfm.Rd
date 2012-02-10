@@ -6,7 +6,7 @@
 \usage{
 parfm(formula, cluster=NULL, data, inip=NULL, iniFpar=NULL,
       dist="weibull", frailty="none", method="BFGS", 
-      maxit=500, showtime=TRUE, correct=0)
+      maxit=500, Fparscale=1, showtime=TRUE, correct=0)
 }
 
 \arguments{
@@ -37,6 +37,8 @@ in 'formula'.}
     One of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
   \item{method}{The optimisation method from the function \code{\link{optim}()}.}
   \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
+  \item{Fparscale}{the scaling value for the frailty parameter in \code{\link{optim}()}. 
+    Optimisation is performed on Fpar/Fparscale.}
   \item{showtime}{Show the execution time?}
   \item{correct}{A correction factor that does not change the marginal
     log-likelihood except for an additive constant given by

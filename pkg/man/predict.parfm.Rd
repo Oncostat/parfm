@@ -35,6 +35,7 @@ predict(object)
 \examples{
 library(parfm)
 data(kidney)
+kidney$sex <- kidney$sex - 1
 
 model <- parfm(Surv(time,status) ~ sex + age, 
                cluster="id", data=kidney,
@@ -56,7 +57,11 @@ class(ukidney) <- "predict.parfm"
 attr(ukidney, "clustname") <- "id"
 plot(ukidney, sort="i",
      main=paste("Semi-parametric",
-                "Lognormal frailty model", sep="\n"))
+                "Lognormal frailty model", sep="\n"),
+     hline=exp(.3821/2))
+ # horizontal line at exp(theta/2),
+ # i.e. the mean of Lognormal frailties
+ # with log-frailties N(0, theta)
 
 }
 \keyword{frailty}

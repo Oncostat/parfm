@@ -17,9 +17,11 @@
 
 plot.predict.parfm <- function(x, sort="i", 
                                main=NULL,
-                               sub=NULL) {
+                               sub=NULL,
+                               cex.axis=1,
+                               hline=1){
   library(graphics)
-  ylab = attr(x, "clustname")
+  xlab = attr(x, "clustname")
   if (is.null(main)) {
     frailty <- attr(x, "frailty")
     dist <- attr(x, "dist")
@@ -32,11 +34,15 @@ plot.predict.parfm <- function(x, sort="i",
     x <- sort(x, decreasing=FALSE)
   else if (sort == "d")
     x <- sort(x, decreasing=TRUE)
-  dotchart(as.numeric(x),
-           xlab="Predicted frailty value", 
-           ylab=ylab,
-           main=main,
-           sub=sub)
-  axis(side=2, at=1:length(x), label=names(x), las=1)
-  abline(v=1)  
+  plot(1, ty="n", 
+       ylab="Predicted frailty value", 
+       xlab=xlab,
+       main=main,
+       sub=sub,
+       xaxt="n",
+       xlim=c(1, length(as.numeric(x))),
+       ylim=c(0, max(as.numeric(x))))
+  abline(h=hline, col="gray")
+  points(1:length(as.numeric(x)), as.numeric(x))
+  axis(side=1, at=1:length(x), label=names(x), las=3, cex.axis=cex.axis)
 }

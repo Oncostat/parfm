@@ -22,6 +22,8 @@
 #   - frailty  : the frailty distribution;                                     #
 #   - method   : the optimisation method (See optim());                        #
 #   - maxit    : the maximum number of iteration (See optim());                #
+#   - Fparscale: the scaling value for all the frailty parameter(s) in optim() #
+#                Optimisation is performed on Fpar/Fparscale                   #
 #   - showtime : is the execution time displayed?                              #
 #   - correct  : (only for possta) the correction to use in case of many       #
 #                events per cluster to get finite likelihood values.           #
@@ -32,7 +34,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: February 09, 2012                                    #
+#   Last modification on: February 10, 2012                                    #
 ################################################################################
 
 parfm <- function(formula,
@@ -44,6 +46,7 @@ parfm <- function(formula,
                   frailty="none",
                   method="BFGS",
                   maxit=500,
+                  Fparscale=1,
                   showtime=TRUE,
                   correct=0){
 
@@ -225,7 +228,10 @@ parfm <- function(formula,
       res <- optim(par=pars, fn=Mloglikelihood, method=method, 
                    obs=obsdata, dist=dist, frailty=frailty,
                    correct=correct,
-                   hessian=TRUE, control=list(maxit=maxit))})
+                   hessian=TRUE, 
+                   control=list(maxit=maxit, 
+                                parscale=c(rep(Fparscale, nFpar),
+                                           rep(1, nBpar+nRpar))))})
     if (showtime)
       extime <- system.time(eval(todo))[1]
     else {
