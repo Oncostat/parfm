@@ -1,5 +1,7 @@
 \name{select.parfm}
 \alias{select.parfm}
+\alias{plot.select.parfm}
+\alias{print.select.parfm}
 \title{AIC and BIC values of several Parametric Frailty Models}
 
 \description{The function \code{select.parfm()} computes the AIC and BIC values

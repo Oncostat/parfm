@@ -16,7 +16,8 @@
 
 print.select.parfm <- function(x,
                                digits=3,
-                               na.print="") {
+                               na.print="",
+                               ...) {
   if (!is.null(x)){
     cat("\nAIC:\n")  
     print(round(x$AIC, digits), na.print=na.print)

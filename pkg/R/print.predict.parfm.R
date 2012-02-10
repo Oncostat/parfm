@@ -15,8 +15,9 @@
 ################################################################################
 
 print.predict.parfm <- function(x,
-                               digits=3,
-                               na.print="") {
+                                digits=3,
+                                na.print="",
+                                ...) {
   if (!is.null(x)){
     frailty <- attr(x, "frailty")
     dist <- attr(x, "dist")

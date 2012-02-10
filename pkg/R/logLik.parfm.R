@@ -12,7 +12,8 @@
 #                                                                              #
 ################################################################################
 
-logLik.parfm <- function(object) {
+logLik.parfm <- function(object,
+                         ...) {
   lL <- attributes(object)$loglik
   attributes(lL)$df <- dim(object)[1]
   attributes(lL)$nobs <- attributes(object)$nobs

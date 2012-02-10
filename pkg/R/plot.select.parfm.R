@@ -17,7 +17,9 @@
 #   On date:                                                                   #
 ################################################################################
 
-plot.select.parfm <- function(x, mar=c(2.5, 2, 1.5, .5)){
+plot.select.parfm <- function(x, 
+                              mar=c(2.5, 2, 1.5, .5),
+                              ...){
   par(mfrow=c(1, 3))
   
   ### --- AIC --- ###

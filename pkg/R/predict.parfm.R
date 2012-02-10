@@ -11,7 +11,8 @@
 #   Last modification on: February 10, 2012                                    #
 ################################################################################
 
-predict.parfm <- function(object) {
+predict.parfm <- function(object,
+                          ...) {
 # Frailty distribution
   if (attributes(object)$frailty == "none")
     stop("The model 'object' is is a simple Cox modelm with no frailties!")

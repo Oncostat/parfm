@@ -19,7 +19,8 @@ plot.predict.parfm <- function(x, sort="i",
                                main=NULL,
                                sub=NULL,
                                cex.axis=1,
-                               hline=1){
+                               hline=1,
+                               ...){
   library(graphics)
   xlab = attr(x, "clustname")
   if (is.null(main)) {

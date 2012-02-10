@@ -1,15 +1,18 @@
 \name{predict.parfm}
 \alias{predict.parfm}
+\alias{plot.predict.parfm}
+\alias{print.predict.parfm}
 \title{Predictions of frailty values for Parametric Frailty Models}
 
 \description{The function \code{predict.parfm()} computes predictions of frailty values for objects of class \code{\link{parfm}}.}
 
 \usage{
-predict(object)
+\method{predict}{parfm}(object, ...)
 }
 
 \arguments{
   \item{object}{A parametric frailty model, object of class \code{\link{parfm}}.}
+  \item{...}{see \code{\link{predict}()}}
 }
 
 %%\details{}

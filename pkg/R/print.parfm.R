@@ -37,7 +37,8 @@
 
 print.parfm <- function(x,
                         digits=3,
-                        na.print="") {
+                        na.print="",
+                        ...) {
   if (!is.null(x)){
 
     # Which frailty distribution, pretty expression
