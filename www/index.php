@@ -88,8 +88,9 @@ The
     -</i>&Sigma;<i><sub>k=1...&#8734;</sub></i>{<i>-u<sup>-(1-&nu;)k</sup> </i>sin<i></i>(<i>(1-&nu;)k&pi;</i>)<i> &Gamma;</i>(<i>(1-&nu;)k+1</i>)<i>/k!</i>}<i> / &pi;u</i>,</p>
   <p>with <i>&nu;&in;(0, 1)</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
 
-<p><strong>Information about the project development can be found
-  <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/">here</a>.</strong></p>
+<p><strong><a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/">
+  Information about the project development can be found here
+  </a>.</strong></p>
 
 
 <!--References--><hr>
@@ -107,6 +108,6 @@ The
   <a href="http://www.stata-journal.com/article.html?article=st0006">Parametric frailty and shared frailty survival models</a>.
   <em>Stata Journal</em> 2(1), 22-44.</p>
 <p> [<a name="MRL12">5</a>] Munda M., Rotolo F. and Legrand C. (2012?)
-  <a href=""><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>to apper</em>.</p>
+  <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>to apper</em>.</p>
 </body>
 </html>
