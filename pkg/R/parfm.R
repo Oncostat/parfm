@@ -34,7 +34,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: February 10, 2012                                    #
+#   Last modification on: February 15, 2012                                    #
 ################################################################################
 
 parfm <- function(formula,
@@ -310,8 +310,9 @@ parfm <- function(formula,
     else {
       seBeta <- sqrt(var[1:nRpar])
       PVAL <- c(rep(NA, nFpar+nBpar), 
-              2 * pt(q=- abs(beta / seBeta), 
-                     df=nrow(data) - length(ESTIMATE)))
+                2 * pnorm(q=- abs(beta / seBeta)))
+#                 2 * pt(q=- abs(beta / seBeta), 
+#                        df=nrow(data) - length(ESTIMATE)))
     }
       
     if (dist == "exponential") {
@@ -447,8 +448,9 @@ parfm <- function(formula,
                               NA)
         }
         PVAL <- c(rep(NA, nFpar+nBpar), 
-                2 * pt(q=- abs(beta / seBeta), 
-                       df=nrow(data) - length(ESTIMATE)))
+                  2 * pnorm(q=- abs(beta / seBeta)))
+#                   2 * pt(q=- abs(beta / seBeta), 
+#                          df=nrow(data) - length(ESTIMATE)))
       }
     
       
