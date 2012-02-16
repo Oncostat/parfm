@@ -12,7 +12,7 @@
 #            or any other value for keeping the current order                  #
 #                                                                              #
 #   Date: February 02, 2012                                                    #
-#   Last modification on: February 07, 2012                                    #
+#   Last modification on: February 16, 2012                                    #
 ################################################################################
 
 plot.predict.parfm <- function(x, sort="i", 
@@ -45,5 +45,5 @@ plot.predict.parfm <- function(x, sort="i",
        ylim=c(0, max(as.numeric(x))))
   abline(h=hline, col="gray")
   points(1:length(as.numeric(x)), as.numeric(x))
-  axis(side=1, at=1:length(x), label=names(x), las=3, cex.axis=cex.axis)
+  axis(side=1, at=1:length(x), labels=names(x), las=3, cex.axis=cex.axis)
 }
