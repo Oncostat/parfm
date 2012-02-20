@@ -36,6 +36,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <h2>Parametric Frailty Models in R</h2>
 <em>F.Rotolo, M.Munda</em>
+<p><a href="http://cran.r-project.org/web/packages/parfm/index.html">Information about the current plublic release on CRAN can be found here.</a>
+<br><a href="http://r-forge.r-project.org/projects/parfm/">Information about the project development can be found here.</a></p>
 
 <p>Frailty models [<a href="#DJ08">1</a>, <a href="#W10">2</a>] are survival models for clustered or overdispersed time-to-event data.
   They consist in proportional hazards Cox's models [<a href="#C72">3</a>] with the addition of a random effect,
@@ -88,9 +90,6 @@ The
     -</i>&Sigma;<i><sub>k=1...&#8734;</sub></i>{<i>-u<sup>-(1-&nu;)k</sup> </i>sin<i></i>(<i>(1-&nu;)k&pi;</i>)<i> &Gamma;</i>(<i>(1-&nu;)k+1</i>)<i>/k!</i>}<i> / &pi;u</i>,</p>
   <p>with <i>&nu;&in;(0, 1)</i> and <i>&Gamma;</i>(<i>.</i>)<i></i> the Gamma function.</p>
 
-<p><strong><a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/">
-  Information about the project development can be found here
-  </a>.</strong></p>
 
 
 <!--References--><hr>
