@@ -1,7 +1,7 @@
 Package: parfm
 Type: Package
 Title: Parametric Frailty Models
-Version: 0.66-2
+Version: 0.67
 Date: 2012-02-17
 Author: Federico Rotolo <federico.rotolo@stat.unipd.it>
   and Marco Munda <marco.munda@uclouvain.be>
@@ -11,4 +11,5 @@ Description: Parametric Frailty Models, fitted by maximum marginal likelihood me
  Possible Frailty distributions: Gamma, Inverse Gaussian and Positive Stable
 License: GPL-2
 LazyLoad: yes
-Depends: survival, eha, msm, graphics, boot
+Depends: survival, eha, msm, graphics, boot, R (>= 2.10)
+

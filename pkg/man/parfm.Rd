@@ -1,6 +1,7 @@
 \name{parfm}
 \alias{parfm}
 \alias{print.parfm}
+\alias{plot.parfm}
 \alias{logLik.parfm}
 \title{Parametric Frailty Models}
 \description{Fits parametric Frailty Models by maximizing the marginal likelihood.}
