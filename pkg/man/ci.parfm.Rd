@@ -1,9 +1,8 @@
 \name{ci.parfm}
 \alias{ci.parfm}
 \title{Confidence Intervals for Hazard Ratios of Covariates of Parametric Frailty Models}
-\description{Computes confidence intervals of hazard ratios
-  (exponentiated regression parameter estimates)
-  for objects of class \code{\link{parfm}}.}
+\description{Computes confidence intervals for hazard ratios
+  (exp(coef)) for objects of class \code{\link{parfm}}.}
 
 \usage{
   ci.parfm(x, level=.05, digits=3)

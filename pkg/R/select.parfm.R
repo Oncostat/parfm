@@ -47,6 +47,8 @@
 select.parfm <- function(formula,
                          cluster=NULL,
                          data,
+                         inip=NULL,
+                         iniFpar=NULL,
                          dist=c("exponential",
                                 "weibull",
                                 "gompertz",
@@ -58,8 +60,8 @@ select.parfm <- function(formula,
                                    "possta"),
                          method="BFGS",
                          maxit=500,
+                         Fparscale=1,
                          correct=0){
-                         
   warn <- getOption("warn")
   options(warn=-1)
   
@@ -82,10 +84,13 @@ select.parfm <- function(formula,
       model <- try(parfm(formula=formula, 
                          cluster=cluster,
                          data=data,
+                         inip=inip,
+                         iniFpar=iniFpar,
                          dist=d,
                          frailty=f,
                          method=method,
                          maxit=maxit,
+                         Fparscale=Fparscale,
                          showtime=FALSE,
                          correct=correct),
                    silent=TRUE)
