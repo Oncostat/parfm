@@ -39,17 +39,22 @@
     \item{Fevent:}{First observation of the patient? 1=yes, 0=no.}
   }
 }
-\source{Example 1.9 of Duchateau an Janssen (2008).}
-\references{
-  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
-  New York: Springer--Verlag.
+\author{
+  F. Rotolo and M. Munda. 
+  Original text and data by L. Duchateau and P. Janssen.
 }
+\source{Example 1.9 of Duchateau an Janssen (2008)
+  \url{http://www.vetstat.ugent.be/research/frailty/datasets/}}
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
   They are simulated data sets with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
+}
+\references{
+  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
+  New York: Springer--Verlag.
 }
 \keyword{datasets}
 \keyword{asthma}

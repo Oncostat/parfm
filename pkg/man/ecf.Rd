@@ -33,23 +33,18 @@ We also consider the binary covariate breed.
     \item{Breed:}{The cow's breed.}
   }
 }
-\source{Example 1.1 of Duchateau an Janssen (2008).}
-\references{
-  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
-  New York: Springer--Verlag.
-  
-  Risselada, M., van Bree, H., Kramer, M., Chiers, K., Duchateau, L. 
-  and Verleyen, P. (2006). 
-  Evaluation of nonunion fractures in dogs by use of Bmode ultrasonography, 
-  power Doppler ultrasonography, radiography, and histologic examination. 
-  \emph{Am. J. Vet. Res.} 67, 1354--1361.
-}
+\source{Example 1.1 of Duchateau an Janssen (2008)
+  \url{http://www.vetstat.ugent.be/research/frailty/datasets/}}
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
   They are simulated data sets with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
+}
+\references{
+  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
+  New York: Springer--Verlag.
 }
 \keyword{datasets}
 \keyword{ecf}

@@ -29,7 +29,15 @@ The censoring is due to the fact that dog owners do not show up anymore.
       \code{RX}, radiography, or \code{US}, ultrasound.}
   }
 }
-\source{Example 1.2 of Duchateau an Janssen (2008).}
+\source{Example 1.2 of Duchateau an Janssen (2008)
+  \url{http://www.vetstat.ugent.be/research/frailty/datasets/}}
+\note{
+  These data are downloaded from
+    \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
+  They are simulated data sets with exactly
+    the same structure as the real data used in the book,
+    that could not be made publicly available.    
+}
 \references{
   Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
   New York: Springer--Verlag.
@@ -39,13 +47,6 @@ The censoring is due to the fact that dog owners do not show up anymore.
   Evaluation of nonunion fractures in dogs by use of Bmode ultrasonography, 
   power Doppler ultrasonography, radiography, and histologic examination. 
   \emph{Am. J. Vet. Res.} 67, 1354--1361.
-}
-\note{
-  These data are downloaded from
-    \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
-    the same structure as the real data used in the book,
-    that could not be made publicly available.    
 }
 \keyword{datasets}
 \keyword{diagnosis}

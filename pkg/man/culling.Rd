@@ -31,17 +31,18 @@ Cows are further clustered within herds and this clustering needs
     \item{LogSCC:}{Logarithm of the somatic cell count.}
   }
 }
-\source{Example 1.7 of Duchateau an Janssen (2008).}
-\references{
-  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
-  New York: Springer--Verlag.
-}
+\source{Example 1.7 of Duchateau an Janssen (2008)
+  \url{http://www.vetstat.ugent.be/research/frailty/datasets/}}
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
   They are simulated data sets with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
+}
+\references{
+  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
+  New York: Springer--Verlag.
 }
 \keyword{datasets}
 \keyword{culling}

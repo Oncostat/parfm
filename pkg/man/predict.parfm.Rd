@@ -22,9 +22,9 @@
   Modelling Clustered Survival Data From Multicentre Clinical Trials. 
   Statistics in medicine, 23(3), 369--388.
 
-  McGilchrist C.A., Aisbett C.W. (1991). 
-  Regression with Frailty in Survival Analysis. Biometrics, pp. 461--466.
-  
+%  McGilchrist C.A., Aisbett C.W. (1991). 
+%  Regression with Frailty in Survival Analysis. Biometrics, pp. 461--466.
+%  
 %  Munda M., Rotolo F., Legrand C. (2012). parfm: Parametric Frailty Models in R.
 % Submitted.
 }
@@ -59,17 +59,19 @@ u.coxph <- exp(model.coxph$frail)
 par(mfrow=c(1,2))
 ylim <- c(0, max(c(u, u.coxph)))
 plot(u, sort="i",
-     main=paste("Parametric", "Gamma frailty model",
-                "with Exponential baseline", sep="\n"),
+     main=paste("Parametric", 
+                "Gamma frailty model",
+                "with Exponential baseline", 
+                sep="\n"),
      ylim=ylim)
                 
 names(u.coxph) <- kidney[seq(2,76, 2), "id"]
 class(u.coxph) <- "predict.parfm"
 attr(u.coxph, "clustname") <- "id"
 plot(u.coxph, sort="i",
-     main=paste("Semi-parametric",
-                "Gamma frailty model", sep="\n"),
-     ylim=ylim)
+    main=paste("Semi-parametric",
+               "Gamma frailty model", sep="\n"),
+    ylim=ylim)
 }
 \keyword{frailty}
 \keyword{prediction}

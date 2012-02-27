@@ -42,17 +42,18 @@ Parity is often converted into a binary covariate, grouping all the cows
     \item{Heifer:}{Multiparous cow (0) or primiparous cow (1).}
   }
 }
-\source{Example 1.3 of Duchateau an Janssen (2008).}
-\references{
-  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
-  New York: Springer--Verlag.
-}
+\source{Example 1.3 of Duchateau an Janssen (2008)
+  \url{http://www.vetstat.ugent.be/research/frailty/datasets/}}
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
   They are simulated data sets with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
+}
+\references{
+  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
+  New York: Springer--Verlag.
 }
 \keyword{datasets}
 \keyword{reconstitution}
