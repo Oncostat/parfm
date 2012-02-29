@@ -36,7 +36,7 @@ Cows are further clustered within herds and this clustering needs
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
+  They are simulated data, with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
 }
@@ -51,7 +51,6 @@ head(culling)
 
 culling <- culling[culling$Time > 0,]
 culling$TimeMonths <- culling$Time * 12 / 365.25
-# culling$SCC <- exp(culling$LogSCC)
 
 coxmod <- parfm(Surv(TimeMonths, Status)~LogSCC, data=culling,
                 dist="exponential", frailty="none")

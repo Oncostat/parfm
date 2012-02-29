@@ -55,7 +55,7 @@ We therefore have for each cow as many data lines as there are risk intervals.
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
+  They are simulated data, with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
 }

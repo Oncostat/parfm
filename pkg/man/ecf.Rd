@@ -38,7 +38,7 @@ We also consider the binary covariate breed.
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
+  They are simulated data, with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
 }
@@ -52,8 +52,8 @@ data(ecf)
 head(ecf)
 
 ################################################################################
-#Example 3.8:ECF contact                                                       #
-#Duchateau and Janssen (2008, page 112)                                        #
+#Example 3.8: Population and conditional hazard for time to ECF contact        #
+#Duchateau and Janssen (2008, page 113)                                        #
 ################################################################################
 pfm1 <- parfm(Surv(Time, Status)~1, cluster="Cowid", data=ecf,
               dist="weibull", frailty="gamma")

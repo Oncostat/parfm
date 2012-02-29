@@ -56,7 +56,7 @@ Other covariates that are used in the analysis are
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
+  They are simulated data, with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
 }
@@ -123,7 +123,7 @@ curve(1 - exp(-
         (365.25 / 12)^(-pfm["rho", 1]) *
         pfm["lambda", 1] * x^(pfm["rho", 1])),
       from=0, to=400, ylim=c(0, 1), 
-      main="Primiparous cows", 
+      main="Multiparous cows", 
       ylab="Cumulative distribution function", 
       xlab="Time to first insemination (days)")
 curve(1 - exp(-
@@ -178,9 +178,9 @@ fM <- function(x, heifer=0) {
 par(mfrow=c(1, 1))
 curve(fM, 0, 300, xlab="Median time to first insemination (days)",
       ylab="Density function of the median")
-curve(fM(x, heifer=1), add=TRUE, lty=2)
+curve(fM(x, heifer=1), add=TRUE, lty=3)
 legend("topright", legend=c("Multiparous", "Primiparous"),
-       lty=1:2)
+       lty=c(1, 3), bty="n")
 
 }
 \keyword{datasets}

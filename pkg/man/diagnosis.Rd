@@ -34,7 +34,7 @@ The censoring is due to the fact that dog owners do not show up anymore.
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
+  They are simulated data, with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
 }

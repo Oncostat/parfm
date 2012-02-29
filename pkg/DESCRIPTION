@@ -11,5 +11,5 @@ Description: Parametric Frailty Models, fitted by maximum marginal likelihood me
  Possible Frailty distributions: Gamma, Inverse Gaussian and Positive Stable
 License: GPL-2
 LazyLoad: yes
-Depends: survival, eha, msm, graphics, boot, R (>= 2.10)
+Depends: survival, eha, msm, graphics, R (>= 2.10)
 

@@ -75,7 +75,7 @@ The difference in teat end condition between front and rear quarters
 \note{
   These data are downloaded from
     \url{http://www.vetstat.ugent.be/research/frailty/datasets/}.
-  They are simulated data sets with exactly
+  They are simulated data, with exactly
     the same structure as the real data used in the book,
     that could not be made publicly available.    
 }
@@ -89,7 +89,7 @@ data(mastitis)
 head(mastitis)
 
 mastitis$timeto <- as.numeric((mastitis$Midpoint * 4 / 365.25))
-                       
+
 ################################################################################
 #Example 4.4: The gamma frailty model for the udder quarter infection data     #
 #Duchateau and Janssen (2008, page 136)                                        #
