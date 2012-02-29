@@ -80,7 +80,7 @@ select.parfm <- function(formula,
           loglogistic="loglogistic",
             lognormal="lognormal..")[d])
     for (f in frailty) {
-      cat("..ok....")
+      cat("..")
       model <- try(parfm(formula=formula, 
                          cluster=cluster,
                          data=data,
@@ -98,6 +98,7 @@ select.parfm <- function(formula,
         res$AIC[d, f] <- AIC(model)
         res$BIC[d, f] <- BIC(model)
       }
+      cat("ok....")
     }
   }
   cat("\n")

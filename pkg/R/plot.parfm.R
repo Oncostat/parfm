@@ -14,7 +14,7 @@
 #   - cex      : cex (see pars())                                              #
 #                                                                              #
 #   Date: February 21, 2012                                                    #
-#   Last modification on: February 21, 2012                                    #
+#   Last modification on: February 29, 2012                                    #
 ################################################################################
 
 plot.parfm <- function(x, 
@@ -32,7 +32,7 @@ plot.parfm <- function(x,
   coef <- coef[n:1]
   
   intervals <- cbind(exp(x[coef, "ESTIMATE"]),
-                     ci.parfm(x)[coef, ])
+                     ci.parfm(x)[coef, , drop=FALSE])
   
   if (is.null(xlim)) {
     range <- c(0, 
@@ -46,14 +46,16 @@ plot.parfm <- function(x,
   if (is.null(main)) {
     frailty <- attr(x, "frailty")
     dist <- attr(x, "dist")
-    main <- paste(toupper(substr(frailty, 1, 1)), substr(frailty, 2, 100), 
+    main <- paste(c(none=" None ", gamma=" Gamma ",
+                    ingau=" Inverse Gaussian ", 
+                    possta=" Positive Stable ")[frailty], 
                   " frailty model\nwith ", 
                   toupper(substr(dist, 1, 1)), substr(dist, 2, 100),
                   " baseline", sep="", collapse="")
   }
   
   if (signcol) {
-    color <- apply(intervals[, c("low", "up")], 1, 
+    color <- apply(intervals[, c("low", "up"), drop=FALSE], 1, 
                    function(int) {
                      if (is.na(int[1]) | is.na(int[2]) | (int[1]<1 & int[2]>1))  
                        "grey" else "black"
@@ -64,7 +66,8 @@ plot.parfm <- function(x,
   par(mar=c(5, 5, 4, 2) + .1)
   
   plot(as.vector(intervals), rep(1:n, 3),
-       xlim=range, 
+       xlim=range,
+       ylim=c(.2, n + .8),
        bty="]",
        xlab="HR", 
        ylab="", 

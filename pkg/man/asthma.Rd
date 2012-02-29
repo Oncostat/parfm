@@ -56,6 +56,27 @@
   Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
   New York: Springer--Verlag.
 }
+\examples{
+library(parfm)
+data(asthma)
+head(asthma)
+
+################################################################################
+#Example 2.4: The frailty model with the Weibull baseline for the recurrent    #
+#asthma data based on marginal likelihood maximisation                         #
+#Duchateau and Janssen (2008, page 56)                                         #
+################################################################################
+# Calendar time
+parfm(Surv(Begin, End, Status)~Drug, cluster="Patid", 
+      data=asthma[asthma$Fevent==0,],
+      dist="weibull", frailty="gamma")
+
+# Gap time
+asthma$time <- asthma$End - asthma$Begin
+parfm(Surv(time, Status)~Drug, cluster="Patid", data=asthma[asthma$Fevent==0,],
+      dist="weibull", frailty="gamma")
+}
+      
 \keyword{datasets}
 \keyword{asthma}
 \keyword{frailty}

@@ -83,17 +83,17 @@ The difference in teat end condition between front and rear quarters
   Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
   New York: Springer--Verlag.
 }
-\example{
+\examples{
 library(parfm)
 data(mastitis)
 head(mastitis)
 
+mastitis$timeto <- as.numeric((mastitis$Midpoint * 4 / 365.25))
+                       
 ################################################################################
 #Example 4.4: The gamma frailty model for the udder quarter infection data     #
 #Duchateau and Janssen (2008, page 136)                                        #
 ################################################################################
-mastitis <- data.frame(mastitis, 
-                       timeto=as.numeric((mastitis$Midpoint *4 / 365.25)))
 modParfm <- parfm(Surv(timeto, Status) ~ Heifer,
                   cluster="Cowid",
                   dist="weibull",
@@ -101,21 +101,6 @@ modParfm <- parfm(Surv(timeto, Status) ~ Heifer,
                   data=mastitis)
 modParfm
 
-}
-
-################################################################################
-#Example 4.10 The positive stable frailty model for the udder quarter          #
-#infection data                                                                #
-#Duchateau and Janssen (2008, page 169)                                        #
-################################################################################
-mastitis <- data.frame(mastitis, 
-                       timeto=as.numeric((mastitis$Midpoint *4 / 365.25)))
-modParfm <- parfm(Surv(timeto, Status) ~ Heifer,
-                  cluster="Cowid",
-                  dist="weibull",
-                  frailty="possta",
-                  data=mastitis)
-modParfm
 
 ################################################################################
 #Example 4.7 The inverse Gaussian frailty model for the udder quarter          #
@@ -130,6 +115,22 @@ modParfm <- parfm(Surv(timeto, Status) ~ Heifer,
                   frailty="ingau",
                   data=mastitis)
 modParfm
+
+
+################################################################################
+#Example 4.10 The positive stable frailty model for the udder quarter          #
+#infection data                                                                #
+#Duchateau and Janssen (2008, page 169)                                        #
+################################################################################
+mastitis <- data.frame(mastitis, 
+                       timeto=as.numeric((mastitis$Midpoint *4 / 365.25)))
+modParfm <- parfm(Surv(timeto, Status) ~ Heifer,
+                  cluster="Cowid",
+                  dist="weibull",
+                  frailty="possta",
+                  data=mastitis)
+modParfm
+}
 \keyword{datasets}
 \keyword{mastitis}
 \keyword{cows}

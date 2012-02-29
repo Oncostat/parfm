@@ -1,9 +1,9 @@
 \name{reconstitution}
 \docType{data}
 \alias{reconstitution}
-\title{Reconstitution of blood--milk barrier after mastitis}
+\title{Reconstitution of blood--milk barrier after reconstitution}
 \description{
-When an udder quarter of a cow is infected (mastitis), 
+When an udder quarter of a cow is infected (reconstitution), 
   the blood-milk barrier is partially destroyed and particular ions 
   can flow freely from blood to milk and vice versa, leading to higher 
   concentrations of, for instance, the sodium concentration Na. 
@@ -55,9 +55,28 @@ Parity is often converted into a binary covariate, grouping all the cows
   Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
   New York: Springer--Verlag.
 }
+\examples{
+library(parfm)
+data(reconstitution)
+head(reconstitution)
+                
+pfm1 <- parfm(Surv(Time, Status) ~ Heifer + Drug,
+              cluster="Cowid",
+              dist="loglogistic",
+              frailty="ingau",
+              data=reconstitution)
+plot(pfm1)
+
+pfm2 <- parfm(Surv(Time, Status) ~ Drug,
+              cluster="Cowid",
+              dist="loglogistic",
+              frailty="ingau",
+              data=reconstitution)
+plot(pfm2)
+}
 \keyword{datasets}
 \keyword{reconstitution}
-\keyword{mastitis}
+\keyword{reconstitution}
 \keyword{cows}
 \keyword{infection}
 \keyword{udder}
