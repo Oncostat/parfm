@@ -57,9 +57,11 @@
   New York: Springer--Verlag.
 }
 \examples{
+\donttest{
 library(parfm)
 data(asthma)
 head(asthma)
+asthma <- asthma[asthma$Fevent==0,]
 
 ################################################################################
 #Example 2.4: The frailty model with the Weibull baseline for the recurrent    #
@@ -68,13 +70,14 @@ head(asthma)
 ################################################################################
 # Calendar time
 parfm(Surv(Begin, End, Status)~Drug, cluster="Patid", 
-      data=asthma[asthma$Fevent==0,],
+      data=asthma,
       dist="weibull", frailty="gamma")
 
 # Gap time
 asthma$time <- asthma$End - asthma$Begin
-parfm(Surv(time, Status)~Drug, cluster="Patid", data=asthma[asthma$Fevent==0,],
+parfm(Surv(time, Status)~Drug, cluster="Patid", data=asthma,
       dist="weibull", frailty="gamma")
+}
 }
       
 \keyword{datasets}

@@ -45,10 +45,10 @@ Cows are further clustered within herds and this clustering needs
   New York: Springer--Verlag.
 }
 \examples{
+\donttest{
 library(parfm)
 data(culling)
 head(culling)
-
 culling <- culling[culling$Time > 0,]
 culling$TimeMonths <- culling$Time * 12 / 365.25
 
@@ -59,6 +59,7 @@ coxmod
 pfmod <- parfm(Surv(TimeMonths, Status)~LogSCC, cluster="Herd", data=culling,
                dist="exponential", frailty="gamma")
 pfmod
+}
 }
 \keyword{datasets}
 \keyword{culling}

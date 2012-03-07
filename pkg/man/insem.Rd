@@ -65,12 +65,13 @@ Other covariates that are used in the analysis are
   New York: Springer--Verlag.
 }
 \examples{
+\donttest{
 library(parfm)
 data(insem)
 head(insem)
 
 insem$TimeMonths <- insem$Time * 12 / 365.25
-                       
+  
 ################################################################################
 #Example 2.1: The parametric proportional hazards frailty model for the time   #
 #to first insemination based on marginal likelihood maximisation               #
@@ -181,7 +182,7 @@ curve(fM, 0, 300, xlab="Median time to first insemination (days)",
 curve(fM(x, heifer=1), add=TRUE, lty=3)
 legend("topright", legend=c("Multiparous", "Primiparous"),
        lty=c(1, 3), bty="n")
-
+}
 }
 \keyword{datasets}
 \keyword{insem}

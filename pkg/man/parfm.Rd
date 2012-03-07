@@ -140,7 +140,7 @@ parfm(Surv(time,status) ~ sex + age, cluster="id",
       data=kidney, dist="gompertz", frailty="possta", method="Nelder-Mead")
 #--------------------------
 
-
+\donttest{
 #------Asthma dataset------
 data(asthma)
 head(asthma)
@@ -150,6 +150,7 @@ parfm(Surv(Begin, End, Status)~Drug, cluster="Patid",
       data=asthma[asthma$Fevent==0,],
       dist="lognormal", frailty="ingau")
 #--------------------------
+}
 }
 
 \keyword{survival}

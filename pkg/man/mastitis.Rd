@@ -84,11 +84,13 @@ The difference in teat end condition between front and rear quarters
   New York: Springer--Verlag.
 }
 \examples{
+\donttest{
 library(parfm)
 data(mastitis)
 head(mastitis)
 
 mastitis$timeto <- as.numeric((mastitis$Midpoint * 4 / 365.25))
+
 
 ################################################################################
 #Example 4.4: The gamma frailty model for the udder quarter infection data     #
@@ -130,6 +132,7 @@ modParfm <- parfm(Surv(timeto, Status) ~ Heifer,
                   frailty="possta",
                   data=mastitis)
 modParfm
+}
 }
 \keyword{datasets}
 \keyword{mastitis}

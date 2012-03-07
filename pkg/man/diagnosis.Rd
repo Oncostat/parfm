@@ -62,6 +62,7 @@ diagnosis$TimeMonths <- diagnosis$Time * 12 / 365.25
 ################################################################################
 WeiGam <- parfm(Surv(TimeMonths, Status)~Method, cluster="Dogid", data=diagnosis,
                dist="weibull", frailty="gamma")
+\donttest{
 WeiGam
 
 curve(WeiGam["lambda", 1] * WeiGam["rho", 1] * x^(WeiGam["rho", 1] - 1),
@@ -71,15 +72,16 @@ curve(exp(WeiGam["Method", 1]) *
       WeiGam["lambda", 1] * WeiGam["rho", 1] * x^(WeiGam["rho", 1] - 1),
       add=TRUE, lty=2)
 legend("topleft", lty=1:2, legend=c("US", "RX"))
-
       
 ################################################################################
 #Example 4.8: Inverse Gaussian frailty models [...] for time to diagnosis      #
 #of being healed                                                               #
 #Duchateau and Janssen (2008, page 160)                                        #
 ################################################################################
+}
 WeiIG <- parfm(Surv(TimeMonths, Status)~Method, cluster="Dogid", data=diagnosis,
                dist="weibull", frailty="ingau")
+\donttest{
 WeiIG
 
 curve(WeiIG["lambda", 1] * WeiIG["rho", 1] * x^(WeiIG["rho", 1] - 1),
@@ -96,8 +98,10 @@ legend("topleft", lty=1:2, legend=c("US", "RX"))
 #of being healed                                                               #
 #Duchateau and Janssen (2008, page 172)                                        #
 ################################################################################
+}
 WeiPS <- parfm(Surv(TimeMonths, Status)~Method, cluster="Dogid", data=diagnosis,
                dist="weibull", frailty="possta")
+\donttest{
 WeiPS
 
 curve(WeiPS["lambda", 1] * WeiPS["rho", 1] * x^(WeiPS["rho", 1] - 1),
@@ -107,6 +111,7 @@ curve(exp(WeiPS["Method", 1]) *
       WeiPS["lambda", 1] * WeiPS["rho", 1] * x^(WeiPS["rho", 1] - 1),
       add=TRUE, lty=2)
 legend("topleft", lty=1:2, legend=c("US", "RX"))
+}
 }
 \keyword{datasets}
 \keyword{diagnosis}
