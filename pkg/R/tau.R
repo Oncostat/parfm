@@ -1,3 +1,18 @@
+################################################################################
+#  Kendall's Tau for Parametric Frailty Models                                 #
+################################################################################
+#                                                                              #
+#  Computes Kendall's Tau for Parametric Frailty Models                        #
+#                                                                              #
+#  Its only parameter is                                                       #
+#   - x         : the fitted model, object of class 'parfm'                    #
+#                                                                              #
+#                                                                              #
+#                                                                              #
+#   Date: March, 20, 2012                                                      #
+#   Last modification on: March, 20, 2012                                      #
+################################################################################
+
 tau <- function(x) {
   if (is.null(x))
     stop("The attribute 'x' is null!")
