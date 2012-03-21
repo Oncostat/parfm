@@ -47,50 +47,70 @@ Mloglikelihood <- function(p,
     Omega <- Omega(D, correct=correct, nu=nu)
   }
   
-    
+  
   # ---- Baseline hazard -----------------------------------------------------#
   
   # baseline parameters
-  if (dist == "weibull") { 
+  if (dist == "weibull") {
     pars <- cbind(rho    = exp(p[obs$nFpar + 1:obs$nstr]),
                   lambda = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))
     beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
-  } else
-    if (dist == "exponential") {
-      pars <- cbind(lambda = exp(p[obs$nFpar+1:obs$nstr]))
-      beta <- p[-(1:(obs$nFpar + obs$nstr))]
-    } else
-      if (dist == "gompertz") {
-        pars <- cbind(gamma  = exp(p[obs$nFpar + 1:obs$nstr]),
-                      lambda = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
-        beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
-      } else
-        if (dist == "lognormal") {
-          pars <- cbind(mu    = p[obs$nFpar + 1:obs$nstr],
-                        sigma = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
-          beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
-        } else
-          if (dist == "loglogistic") {
-            pars <- cbind(alpha = p[obs$nFpar + 1:obs$nstr],
-                          kappa = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
-            beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
+  } else if (dist == "exponential") {
+    pars <- cbind(lambda = exp(p[obs$nFpar+1:obs$nstr]))
+    beta <- p[-(1:(obs$nFpar + obs$nstr))]
+  } else if (dist == "gompertz") {
+    pars <- cbind(gamma  = exp(p[obs$nFpar + 1:obs$nstr]),
+                  lambda = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
+    beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
+  } else if (dist == "lognormal") {
+    pars <- cbind(mu    = p[obs$nFpar + 1:obs$nstr],
+                  sigma = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
+    beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
+  } else if (dist == "loglogistic") {
+    pars <- cbind(alpha = p[obs$nFpar + 1:obs$nstr],
+                  kappa = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
+    beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
   }
   rownames(pars) <- levels(as.factor(obs$strata))
   
   # baseline: from string to the associated function
   dist <- eval(parse(text=dist))
-
-    
+  
+  
   # ---- Cumulative Hazard by cluster and by strata --------------------------#
   
   cumhaz <- NULL
-  if (frailty == "none") { ### NO FRAILTY
+  if (frailty != "none") { ### FRAILTY
+    cumhaz <- matrix(unlist(
+      sapply(levels(as.factor(obs$strata)),
+             function(x) {t(
+               cbind(dist(pars[x, ], obs$time[obs$strata == x], what="H") * 
+                 exp(as.matrix(obs$x)[obs$strata == x, -1] %*% as.matrix(beta)),
+                     obs$cluster[obs$strata == x]))
+             })), ncol=2, byrow=TRUE)
+    cumhaz <- aggregate(cumhaz[, 1], by=list(cumhaz[, 2]), FUN=sum)[, 2, 
+                                                                    drop=FALSE]
+    
+    # Possible truncation
+    if (!is.null(obs$trunc)) {
+      cumhazT <- matrix(unlist(
+        sapply(levels(as.factor(obs$strata)),
+               function(x) {t(
+                 cbind(dist(pars[x, ], obs$trunc[obs$strata == x], what="H") * 
+                   exp(as.matrix(obs$x)[obs$strata == x, -1] %*% as.matrix(beta)),
+                       obs$cluster[obs$strata == x]))
+               })), ncol=2, byrow=TRUE)
+      cumhaz <- cumhaz - 
+        aggregate(cumhazT[, 1], by=list(cumhazT[, 2]), FUN=sum)[, 2, drop=FALSE]
+      rm(cumhaz2)
+    }
+  } else { ### NO FRAILTY
     cumhaz <- sum(apply(cbind(rownames(pars), pars), 1,
                         function(x) {
                           sum(dist(as.numeric(x[-1]), 
                                    obs$time[obs$strata==x[1]], what="H") * 
-                                     exp(as.matrix(obs$x[obs$strata==x[1], ]) %*% 
-                                     c(0, beta)))
+                                     exp(as.matrix(obs$x[obs$strata==x[1], -1]) %*% 
+                                     as.matrix(beta)))
                         }))
     
     # Possible truncation
@@ -100,78 +120,65 @@ Mloglikelihood <- function(p,
               function(x) {
                 sum(dist(as.numeric(x[-1]), 
                          obs$trunc[obs$strata==x[1]], what="H") * 
-                           exp(as.matrix(obs$x[obs$strata==x[1], ]) %*% 
-                           c(0, beta)))
+                           exp(as.matrix(obs$x[obs$strata==x[1], -1]) %*% 
+                           as.matrix(beta)))
               }))
-  } else { ### FRAILTY
-    cumhaz <- aggregate(
-      apply(cbind(t=obs$time, s=obs$strata, as.matrix(obs$x)), 1,
-            function(x) {
-              dist(pars[x["s"], ], x["t"], what="H") * 
-                     exp(x[-(1:2)] %*% c(0, beta))
-            }), 
-      by=list(obs$cluster), FUN=sum)[, 2]
-    
-    # Possible truncation
-    if (!is.null(obs$trunc)) 
-      cumhaz <- cumhaz - aggregate(
-        apply(cbind(t=obs$trunc, s=obs$strata, as.matrix(obs$x)), 1,
-              function(x) {
-                dist(pars[x["s"], ], x["t"], what="H") * 
-                  exp(x[-(1:2)] %*% c(0, beta))
-              }), 
-        by=list(obs$cluster), FUN=sum)[, 2]
   }
   
   # ---- log-hazard by cluster -----------------------------------------------#
   
   loghaz <- NULL
-  if (frailty == "none") {
+  if (frailty != "none")  {
+    loghaz <- matrix(unlist(
+      sapply(levels(as.factor(obs$strata)),
+             function(x) {t(
+               cbind(obs$event[obs$strata == x] *
+                 (dist(pars[x, ], obs$time[obs$strata == x], what="lh") + 
+                 as.matrix(obs$x)[obs$strata == x, -1] %*% as.matrix(beta)),
+                     obs$cluster[obs$strata == x]))
+             })), ncol=2, byrow=TRUE)
+    loghaz <- aggregate(loghaz[, 1], by=list(loghaz[, 2]), FUN=sum)[, 2, 
+                                                                    drop=FALSE]
+  } else {
     loghaz <- sum(apply(cbind(rownames(pars), pars), 1,
                         function(x) {
                           sum(obs$event[obs$strata==x[1]] * (
                             dist(as.numeric(x[-1]), 
                                  obs$time[obs$strata==x[1]], what="lh") + 
-                                   as.matrix(obs$x[obs$strata==x[1], ]) %*% 
-                                   c(0, beta)))
+                                   as.matrix(obs$x[obs$strata==x[1], -1]) %*% 
+                                   as.matrix(beta)))
                         }))
-  } else {
-    loghaz <- aggregate(
-      apply(cbind(t=obs$time, s=obs$strata, e=obs$event, as.matrix(obs$x)), 1,
-            function(x) {
-              x["e"] * (dist(pars[x["s"], ], x["t"], what="lh") + 
-                x[-(1:3)] %*% c(0, beta))
-            }), 
-      by=list(obs$cluster), FUN=sum)[, 2]
   }
-
-    
+  
+  
   # ---- log[ (-1)^di L^(di)(cumhaz) ]---------------------------------------#
-    
+  
   logSurv <- NULL
-  if (frailty=="none") {
-    logSurv <- mapply(fr.none, s=cumhaz, what="logLT")
-  } else if (frailty=="gamma") {
+  if (frailty=="gamma") {
     logSurv <- mapply(fr.gamma, 
-                      k=obs$di, s=cumhaz, theta=rep(theta, obs$ncl), 
+                      k=obs$di, s=as.numeric(cumhaz[[1]]), theta=rep(theta, obs$ncl), 
                       what="logLT") 
   } else if (frailty=="ingau") {
     logSurv <- mapply(fr.ingau, 
-                      k=obs$di, s=cumhaz, theta=rep(theta, obs$ncl), 
+                      k=obs$di, s=as.numeric(cumhaz[[1]]), theta=rep(theta, obs$ncl), 
                       what="logLT") 
   } else if (frailty=="possta") {
     logSurv <- sapply(1:obs$ncl, 
-                      function(x) fr.possta(k=obs$di[x], s=cumhaz[x], 
+                      function(x) fr.possta(k=obs$di[x], 
+                                            s=as.numeric(cumhaz[[1]])[x], 
                                             nu=nu, Omega=Omega, 
                                             what="logLT",
                                             correct=correct))
+  } else if (frailty=="none") {
+    logSurv <- mapply(fr.none, s=cumhaz, what="logLT")
   }
-
-    
+  
+  
   # ---- Minus the log likelihood --------------------------------------------#
   
-  Mloglik <- -sum(loghaz + logSurv)
-  attr(Mloglik, "cumhaz") <- cumhaz
+  Mloglik <- -sum(as.numeric(loghaz[[1]]) + logSurv)
+  attr(Mloglik, "cumhaz") <- as.numeric(cumhaz[[1]])
+  attr(Mloglik, "loghaz") <- as.numeric(loghaz[[1]])
+  attr(Mloglik, "logSurv") <- (logSurv)
   return(Mloglik)
 }
-

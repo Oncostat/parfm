@@ -118,7 +118,7 @@ parfm <- function(formula,
     #number of clusters
     obsdata$ncl <- 1
     #number of events in each cluster
-    obsdata$dqi <- obsdata$di <- sum(obsdata$event)
+    obsdata$di <- sum(obsdata$event)
   } else {
     if (! cluster %in% names(data)) {
       stop(paste("object '", cluster, "' not found", sep=""))
@@ -133,7 +133,6 @@ parfm <- function(formula,
     cnames <- obsdata$di[,1]
     obsdata$di <- as.vector(obsdata$di[,2])
     names(obsdata$di) <- cnames
-    obsdata$dqi <- obsdata$di
   }
   
   #strata
@@ -142,7 +141,7 @@ parfm <- function(formula,
     #number of strata
     obsdata$nstr <- 1
     #number of events in each stratum
-    obsdata$dqi <- obsdata$dq <- sum(obsdata$event)
+    obsdata$dq <- sum(obsdata$event)
   } else {
     if (! strata %in% names(data)) {
       stop(paste("object '", strata, "' not found", sep=""))
@@ -157,7 +156,6 @@ parfm <- function(formula,
     snames <- obsdata$dq[,1]
     obsdata$dq <- as.vector(obsdata$dq[,2])
     names(obsdata$dq) <- snames
-    obsdata$dqi <- obsdata$dq
   }
 
   #cluster+strata
@@ -169,7 +167,15 @@ parfm <- function(formula,
                                         FUN=sum))
     dimnames(obsdata$dqi) <- list(cluster=dimnames(obsdata$dqi)[[1]], 
                                   strata =dimnames(obsdata$dqi)[[2]])
+  } else if (!is.null(cluster)) {
+    obsdata$dqi <- obsdata$di
+  } else if (!is.null(strata)) {
+    obsdata$dqi <- obsdata$dq
+  } else {
+    obsdata$dqi <- sum(obsdata$event)
   }
+  
+  
   
   #----- Dimensions -----------------------------------------------------------#
   #nFpar: number of heterogeneity parameters
