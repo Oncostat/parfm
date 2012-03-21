@@ -1,8 +1,8 @@
 Package: parfm
 Type: Package
 Title: Parametric Frailty Models
-Version: 1.00
-Date: 2012-03-20
+Version: 1.01
+Date: 2012-03-21
 Author: Federico Rotolo <federico.rotolo@stat.unipd.it>
   and Marco Munda <marco.munda@uclouvain.be>
 Maintainer: Federico Rotolo <federico.rotolo@stat.unipd.it>
