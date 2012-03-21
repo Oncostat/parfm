@@ -102,7 +102,7 @@ Mloglikelihood <- function(p,
                })), ncol=2, byrow=TRUE)
       cumhaz <- cumhaz - 
         aggregate(cumhazT[, 1], by=list(cumhazT[, 2]), FUN=sum)[, 2, drop=FALSE]
-      rm(cumhaz2)
+      rm(cumhazT)
     }
   } else { ### NO FRAILTY
     cumhaz <- sum(apply(cbind(rownames(pars), pars), 1,
