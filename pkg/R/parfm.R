@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: March 21, 2012                                       #
+#   Last modification on: March 26, 2012                                       #
 ################################################################################
 
 parfm <- function(formula,
@@ -401,7 +401,7 @@ parfm <- function(formula,
       seBeta <- NULL
     } else {
       seBeta <- sqrt(var[1:nRpar])
-      PVAL <- c(rep(NA, nFpar+nBpar), 
+      PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
                 2 * pnorm(q=- abs(beta / seBeta)))
     }
 
