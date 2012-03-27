@@ -28,7 +28,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: March 21, 2012                                       #
+#   Last modification on: March 27, 2012                                       #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -85,7 +85,8 @@ Mloglikelihood <- function(p,
       sapply(levels(as.factor(obs$strata)),
              function(x) {t(
                cbind(dist(pars[x, ], obs$time[obs$strata == x], what="H") * 
-                 exp(as.matrix(obs$x)[obs$strata == x, -1] %*% as.matrix(beta)),
+                 exp(as.matrix(obs$x)[obs$strata == x, -1, 
+                                      drop=FALSE] %*% as.matrix(beta)),
                      obs$cluster[obs$strata == x]))
              })), ncol=2, byrow=TRUE)
     cumhaz <- aggregate(cumhaz[, 1], by=list(cumhaz[, 2]), FUN=sum)[, 2, 
@@ -97,7 +98,8 @@ Mloglikelihood <- function(p,
         sapply(levels(as.factor(obs$strata)),
                function(x) {t(
                  cbind(dist(pars[x, ], obs$trunc[obs$strata == x], what="H") * 
-                   exp(as.matrix(obs$x)[obs$strata == x, -1] %*% as.matrix(beta)),
+                   exp(as.matrix(obs$x)[obs$strata == x, -1, 
+                                        drop=FALSE] %*% as.matrix(beta)),
                        obs$cluster[obs$strata == x]))
                })), ncol=2, byrow=TRUE)
       cumhaz <- cumhaz - 
@@ -134,7 +136,8 @@ Mloglikelihood <- function(p,
              function(x) {t(
                cbind(obs$event[obs$strata == x] *
                  (dist(pars[x, ], obs$time[obs$strata == x], what="lh") + 
-                 as.matrix(obs$x)[obs$strata == x, -1] %*% as.matrix(beta)),
+                 as.matrix(obs$x)[obs$strata == x, -1, 
+                                  drop=FALSE] %*% as.matrix(beta)),
                      obs$cluster[obs$strata == x]))
              })), ncol=2, byrow=TRUE)
     loghaz <- aggregate(loghaz[, 1], by=list(loghaz[, 2]), FUN=sum)[, 2, 
@@ -145,7 +148,8 @@ Mloglikelihood <- function(p,
                           sum(obs$event[obs$strata==x[1]] * (
                             dist(as.numeric(x[-1]), 
                                  obs$time[obs$strata==x[1]], what="lh") + 
-                                   as.matrix(obs$x[obs$strata==x[1], -1]) %*% 
+                                   as.matrix(obs$x[obs$strata==x[1], -1, 
+                                                   drop=FALSE]) %*% 
                                    as.matrix(beta)))
                         }))
   }
@@ -156,11 +160,13 @@ Mloglikelihood <- function(p,
   logSurv <- NULL
   if (frailty=="gamma") {
     logSurv <- mapply(fr.gamma, 
-                      k=obs$di, s=as.numeric(cumhaz[[1]]), theta=rep(theta, obs$ncl), 
+                      k=obs$di, s=as.numeric(cumhaz[[1]]), 
+                      theta=rep(theta, obs$ncl), 
                       what="logLT") 
   } else if (frailty=="ingau") {
     logSurv <- mapply(fr.ingau, 
-                      k=obs$di, s=as.numeric(cumhaz[[1]]), theta=rep(theta, obs$ncl), 
+                      k=obs$di, s=as.numeric(cumhaz[[1]]), 
+                      theta=rep(theta, obs$ncl), 
                       what="logLT") 
   } else if (frailty=="possta") {
     logSurv <- sapply(1:obs$ncl, 
