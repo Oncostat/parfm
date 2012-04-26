@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: March 26, 2012                                       #
+#   Last modification on: April 18, 2012                                       #
 ################################################################################
 
 parfm <- function(formula,
@@ -51,7 +51,12 @@ parfm <- function(formula,
                   Fparscale=1,
                   showtime=TRUE,
                   correct=0){
-
+  if (missing(data)) {
+    data <- eval(parse(text=paste("data.frame(", 
+                                  paste(all.vars(formula), collapse=", "),
+                                  ")")))
+  }
+  
   #----- Check the baseline hazard and the frailty distribution ---------------#
   if (!(dist %in% 
     c("exponential", "weibull", "gompertz", "loglogistic", "lognormal"))) {
@@ -78,8 +83,8 @@ parfm <- function(formula,
       stop("'correct' is too small!")
     }
   } else if (correct != 0) {
-      warning(paste("'correct' has no effect when 'frailty = ", frailty, "'",
-                    sep=""))
+    warning(paste("'correct' has no effect when 'frailty = ", frailty, "'",
+                  sep=""))
   }
   
   #----- Data for Mloglikelihood() --------------------------------------------#
@@ -90,22 +95,22 @@ parfm <- function(formula,
     obsdata$time <- eval(parse(text=paste("data$", 
                                           formula[[2]][[2]], sep="")))
     obsdata$event <- eval(parse(text=paste("data$", 
-                                          formula[[2]][[3]], sep=""))) 
+                                           formula[[2]][[3]], sep=""))) 
   } else if (length(formula[[2]]) == 4) {   # --> with left truncation
     obsdata$trunc <- eval(parse(text=paste("data$", 
-                                          formula[[2]][[2]], sep="")))
+                                           formula[[2]][[2]], sep="")))
     
     obsdata$time <- eval(parse(text=paste("data$", 
                                           formula[[2]][[3]], sep="")))
     obsdata$event <- eval(parse(text=paste("data$", 
-                                          formula[[2]][[4]], sep="")))
+                                           formula[[2]][[4]], sep="")))
   }
   if (!all(levels(as.factor(obsdata$event)) %in% 0:1)) {
     stop(paste("The status indicator 'event' in the Surv object",
-                "in the left-hand side of the formula object",
-                "must be either 0 (no event) or 1 (event)."))
+               "in the left-hand side of the formula object",
+               "must be either 0 (no event) or 1 (event)."))
   }
-
+  
   #covariates (an intercept is automatically added)
   obsdata$x <- as.data.frame(model.matrix(formula, data=data))
   
@@ -157,7 +162,7 @@ parfm <- function(formula,
     obsdata$dq <- as.vector(obsdata$dq[,2])
     names(obsdata$dq) <- snames
   }
-
+  
   #cluster+strata
   if (!is.null(cluster) && !is.null(strata)) {
     #number of events in each cluster for each stratum
@@ -192,9 +197,9 @@ parfm <- function(formula,
   } else if (dist %in% c("weibull", "gompertz", "lognormal", "loglogistic")) {
     nBpar <- 2
   }
-#   if (!is.null(strata)) {
-#     nBpar <- nBpar #* obsdata$nstr
-#   }
+  #   if (!is.null(strata)) {
+  #     nBpar <- nBpar #* obsdata$nstr
+  #   }
   obsdata$nBpar <- nBpar
   
   #nRpar: number of regression parameters
@@ -259,7 +264,7 @@ parfm <- function(formula,
       substr(names(coxMod$coef), 5, 9) == "scale"])
     if (!is.null(strata) && dist=="exponential") {
       logscale <- logscale - c(0,
-      coxMod$coef[substr(names(coxMod$coef), 1, nchar(strata)) == strata])
+                               coxMod$coef[substr(names(coxMod$coef), 1, nchar(strata)) == strata])
     }
     
     
@@ -333,7 +338,7 @@ parfm <- function(formula,
       eval(todo)
       extime <- NULL
     }
- 
+    
     if(res$convergence > 0) {
       warning("optimisation procedure did not converge,
               conv = ", bquote(.(res$convergence)), ": see optim() for details")
@@ -404,7 +409,7 @@ parfm <- function(formula,
       PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
                 2 * pnorm(q=- abs(beta / seBeta)))
     }
-
+    
     if (obsdata$nstr == 1) {
       if (dist == "exponential") {
         seLambda <- sapply(1:obsdata$nstr, function(x) {
@@ -613,7 +618,7 @@ parfm <- function(formula,
         PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
                   2 * pnorm(q= -abs(beta / seBeta)))
       }
-    
+      
       #all together
       STDERR <- c(STDERR,
                   se.beta=seBeta)
@@ -624,7 +629,7 @@ parfm <- function(formula,
       }
     }
   }
-        
+  
   #----- Output ---------------------------------------------------------------#
   resmodel <- cbind(ESTIMATE=ESTIMATE, SE=STDERR)
   rownames(resmodel) <- gsub("beta.","", rownames(resmodel))
@@ -632,7 +637,7 @@ parfm <- function(formula,
   if (nRpar > 0) {
     resmodel <- cbind(resmodel, "p-val"= PVAL)
   }
-
+  
   class(resmodel) <- c("parfm", class(resmodel))
   attributes(resmodel) <- c(attributes(resmodel), list(
     convergence = res$convergence,
@@ -642,9 +647,9 @@ parfm <- function(formula,
     shared      = (nrow(data) > obsdata$ncl),
     loglik      = lL,
     dist        = dist,
-    cumhaz      = attributes(Mloglikelihood(p=res$par,
-                                 obs=obsdata, dist=dist, frailty=frailty,
-                                 correct=correct))$cumhaz,
+#     cumhaz      = attributes(Mloglikelihood(p=res$par,
+#                                             obs=obsdata, dist=dist, frailty=frailty,
+#                                             correct=correct))$cumhaz,
     di          = obsdata$di,
     dq          = obsdata$dq,
     dqi         = obsdata$dqi,
@@ -653,7 +658,7 @@ parfm <- function(formula,
     stratname   = strata,
     correct     = correct))
   if (frailty != "none") {
-    names(attr(resmodel, "cumhaz")) <-
+#     names(attr(resmodel, "cumhaz")) <-
       names(attr(resmodel, "di")) <- unique(obsdata$cluster)
   }
   if (showtime){
@@ -662,4 +667,3 @@ parfm <- function(formula,
   
   return(resmodel)
 }
-
