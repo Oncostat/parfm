@@ -415,8 +415,7 @@ parfm <- function(formula,
         seLambda <- sapply(1:obsdata$nstr, function(x) {
           deltamethod(g=~exp(- x1), 
                       mean=logscale[x],
-                      cov=var[paste("log(scale)", x, sep=":"), 
-                              paste("log(scale)", x, sep=":")],
+                      cov=var["log(scale)", "log(scale)"],
                       ses=TRUE)
         })
         STDERR <- c(seLambda=seLambda)
@@ -424,8 +423,7 @@ parfm <- function(formula,
         seRho <- sapply(1:obsdata$nstr, function(x) {
           deltamethod(g=~exp(x1), 
                       mean=logshape[x],
-                      cov=var[paste("log(shape)", x, sep=":"), 
-                              paste("log(shape)", x, sep=":")], 
+                      cov=var["log(shape)", "log(shape)"], 
                       ses=TRUE)
         })
         seLambda <- deltamethod(g=~exp(- exp(x2) * x1),
@@ -647,9 +645,9 @@ parfm <- function(formula,
     shared      = (nrow(data) > obsdata$ncl),
     loglik      = lL,
     dist        = dist,
-#     cumhaz      = attributes(Mloglikelihood(p=res$par,
-#                                             obs=obsdata, dist=dist, frailty=frailty,
-#                                             correct=correct))$cumhaz,
+    cumhaz      = attributes(Mloglikelihood(p=res$par,
+                                            obs=obsdata, dist=dist, frailty=frailty,
+                                            correct=correct))$cumhaz,
     di          = obsdata$di,
     dq          = obsdata$dq,
     dqi         = obsdata$dqi,
@@ -658,7 +656,7 @@ parfm <- function(formula,
     stratname   = strata,
     correct     = correct))
   if (frailty != "none") {
-#     names(attr(resmodel, "cumhaz")) <-
+     names(attr(resmodel, "cumhaz")) <-
       names(attr(resmodel, "di")) <- unique(obsdata$cluster)
   }
   if (showtime){

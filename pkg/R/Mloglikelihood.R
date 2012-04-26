@@ -210,11 +210,11 @@ Mloglikelihood <- function(p,
   if (!is.null(obs$trunc)) {
     Mloglik <- Mloglik + sum(logSurvT)
   }
-#   attr(Mloglik, "cumhaz") <- as.numeric(cumhaz[[1]])
-#   attr(Mloglik, "loghaz") <- as.numeric(loghaz[[1]])
-#   attr(Mloglik, "logSurv") <- (logSurv)
-#   if (!is.null(obs$trunc)) {
-#     attr(Mloglik, "logSurvT") <- (logSurvT)
-#   }
+   attr(Mloglik, "cumhaz") <- as.numeric(cumhaz[[1]])
+   attr(Mloglik, "loghaz") <- as.numeric(loghaz[[1]])
+   attr(Mloglik, "logSurv") <- (logSurv)
+   if (!is.null(obs$trunc)) {
+     attr(Mloglik, "logSurvT") <- (logSurvT)
+   }
   return(Mloglik)
 }
