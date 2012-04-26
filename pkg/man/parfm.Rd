@@ -149,7 +149,7 @@ head(asthma)
 
 parfm(Surv(Begin, End, Status)~Drug, cluster="Patid", 
       data=asthma[asthma$Fevent==0,],
-      dist="lognormal", frailty="ingau")
+      dist="lognormal", frailty="possta")
 #--------------------------
 }
 }
