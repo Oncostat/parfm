@@ -22,7 +22,7 @@
 #   - dist     : the baseline hazard;                                          #
 #   - frailty  : the frailty distribution;                                     #
 #   - method   : the optimisation method (See optim());                        #
-#   - maxit    : the maximum number of iteration (See optim());                #
+#   - maxit    : the maximum number of iterations (See optim());               #
 #   - Fparscale: the scaling value for all the frailty parameter(s) in optim() #
 #                Optimisation is performed on Fpar/Fparscale                   #
 #   - showtime : is the execution time displayed?                              #
@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: April 18, 2012                                       #
+#   Last modification on: May 15, 2012                                         #
 ################################################################################
 
 parfm <- function(formula,
@@ -646,8 +646,13 @@ parfm <- function(formula,
     loglik      = lL,
     dist        = dist,
     cumhaz      = attributes(Mloglikelihood(p=res$par,
-                                            obs=obsdata, dist=dist, frailty=frailty,
+                                            obs=obsdata, dist=dist, 
+                                            frailty=frailty,
                                             correct=correct))$cumhaz,
+    cumhazT     = attributes(Mloglikelihood(p=res$par,
+                                            obs=obsdata, dist=dist, 
+                                            frailty=frailty,
+                                            correct=correct))$cumhazT,
     di          = obsdata$di,
     dq          = obsdata$dq,
     dqi         = obsdata$dqi,

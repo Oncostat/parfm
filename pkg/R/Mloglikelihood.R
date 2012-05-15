@@ -28,7 +28,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: April 26, 2012                                       #
+#   Last modification on: May 15, 2012                                         #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -210,11 +210,16 @@ Mloglikelihood <- function(p,
   if (!is.null(obs$trunc)) {
     Mloglik <- Mloglik + sum(logSurvT)
   }
-   attr(Mloglik, "cumhaz") <- as.numeric(cumhaz[[1]])
-   attr(Mloglik, "loghaz") <- as.numeric(loghaz[[1]])
-   attr(Mloglik, "logSurv") <- (logSurv)
-   if (!is.null(obs$trunc)) {
-     attr(Mloglik, "logSurvT") <- (logSurvT)
-   }
+  attr(Mloglik, "cumhaz") <- as.numeric(cumhaz[[1]])
+  if (!is.null(obs$trunc)) {
+    attr(Mloglik, "cumhazT") <- as.numeric(cumhazT[[1]])
+  } else {
+    attr(Mloglik, "cumhazT") <- NULL
+  }
+  attr(Mloglik, "loghaz") <- as.numeric(loghaz[[1]])
+  attr(Mloglik, "logSurv") <- (logSurv)
+  if (!is.null(obs$trunc)) {
+    attr(Mloglik, "logSurvT") <- (logSurvT)
+  }
   return(Mloglik)
 }
