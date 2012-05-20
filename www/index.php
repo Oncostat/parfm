@@ -38,7 +38,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <em>F.Rotolo, M.Munda</em>
 <p><a href="http://cran.r-project.org/web/packages/parfm/index.html">Information about the current plublic release on CRAN can be found here.</a>
 <br><a href="http://r-forge.r-project.org/projects/parfm/">Information about the project development can be found here.</a>
-<br><a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05.pdf">A submitted paper giving more details on the theory of frailty models
+<br><a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05(2).pdf">A submitted paper giving more details on the theory of frailty models
  and on the use of the <b>parfm</b> package can be found here.</a><p>
 
 <p>Frailty models [<a href="#DJ08">1</a>, <a href="#W10">2</a>] are survival models for clustered or overdispersed time-to-event data.
