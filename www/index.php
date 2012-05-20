@@ -109,6 +109,6 @@ The
   <a href="http://www.stata-journal.com/article.html?article=st0006">Parametric frailty and shared frailty survival models</a>.
   <em>Stata Journal</em> 2(1), 22-44.</p>
 <p> [<a name="MRL12">5</a>] Munda M., Rotolo F. and Legrand C. (2012?)
-  <a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05.pdf"><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>Submitted</em>.</p>
+  <a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05(2).pdf"><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>Submitted</em>.</p>
 </body>
 </html>
