@@ -28,7 +28,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: May 15, 2012                                         #
+#   Last modification on: June, 26, 2012                                       #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -51,7 +51,7 @@ Mloglikelihood <- function(p,
   # ---- Baseline hazard ------------------------------------------------------#
   
   # baseline parameters
-  if (dist == "weibull") {
+  if (dist %in% c("weibull", "inweibull")) {
     pars <- cbind(rho    = exp(p[obs$nFpar + 1:obs$nstr]),
                   lambda = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))
     beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]

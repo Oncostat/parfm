@@ -4,8 +4,8 @@
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   Date: December 22, 2011                                                    #
-#   Last modification on: May 24, 2012                                         #
+#   Date:                 December 22, 2011                                    #
+#   Last modification on: June 27, 2012                                        #
 ################################################################################
 
 plot.select.parfm <- function(x, 
@@ -39,6 +39,7 @@ plot.select.parfm <- function(x,
   
   legend(c(.3, 1.7), c(1, 1.75),
          c(exponential="exponential", weibull="Weibull", 
+           inweibull="inverse Weibull",
            gompertz="Gompertz", loglogistic="loglogistic", 
            lognormal="lognormal")[rownames(x$AIC)],
          pch=1:nrow(x$AIC), 

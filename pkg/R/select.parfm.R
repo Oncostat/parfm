@@ -41,8 +41,8 @@
 #           with one column per frailty         distribution                   #
 #                                                                              #
 #                                                                              #
-#   Date: December 21, 2011                                                    #
-#   Last modification on: April 16, 2012                                       #
+#   Date:                 December 21, 2011                                    #
+#   Last modification on: June 27, 2012                                        #
 ################################################################################
 
 select.parfm <- function(formula,
@@ -53,6 +53,7 @@ select.parfm <- function(formula,
                          iniFpar=NULL,
                          dist=c("exponential",
                                 "weibull",
+                                "inweibull",
                                 "gompertz",
                                 "loglogistic",
                                 "lognormal"),
@@ -74,19 +75,20 @@ select.parfm <- function(formula,
             "Progress status:",
             "  'ok' = converged",
             "  'nc' = not converged\n",
-            "             Frailty",
-            "Baseline    ",
+            "                Frailty",
+            "Baseline           ",
             sep="\n"))
   cat(c(none=" None  ", gamma=" Gamma ", ingau=" InvGau", possta=" PosSta")[frailty]
-    
-  )
+      
+      )
   for (d in dist) {
     cat("\n")
-    cat(c(exponential="exponential",
-              weibull="weibull....",
-             gompertz="gompertz...",
-          loglogistic="loglogistic",
-            lognormal="lognormal..")[d])
+    cat(c(exponential = "exponential.......",
+          weibull     = "Weibull...........",
+          inweibull   = "inverse Weibull...",
+          gompertz    = "Gompertz..........",
+          loglogistic = "loglogistic.......",
+          lognormal   = "lognormal.........")[d])
     for (f in frailty) {
       cat("..")
       model <- try(parfm(formula=formula, 
@@ -112,7 +114,7 @@ select.parfm <- function(formula,
   }
   cat("\n")
   class(res) <- "select.parfm"
-
+  
   options(warn=warn)
   return(res)
 }

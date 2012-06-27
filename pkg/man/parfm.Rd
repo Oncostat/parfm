@@ -33,7 +33,7 @@ in 'formula'.}
   \item{iniFpar}{The initial value of the frailty parameter.}
   \item{dist}{
     The baseline hazard distribution.
-    One of \code{weibull}, \code{exponential}, \code{gompertz},
+    One of \code{weibull}, \code{inweibull}, \code{exponential}, \code{gompertz},
 \code{lognormal} or
 \code{loglogistic}.}
   \item{frailty}{
@@ -64,6 +64,13 @@ with \eqn{\lambda > 0}{lambda > 0}.
 The Weibull hazard (\code{dist="weibull"}) is
 \deqn{h(t; \rho, \lambda) = \rho \lambda t^{\rho - 1}}{
   h(t; rho, lambda) = rho * lambda * t^(rho - 1)}
+with \eqn{\rho, \lambda > 0}{rho, lambda > 0}.
+
+The inverse Weibull hazard (\code{dist="inweibull"}) is
+\deqn{h(t; \rho, \lambda) = \frac{\rho}{\lambda t^{\rho + 1} 
+  \left[ \exp\{\frac1{\lambda t^\rho}\} - 1 \right]}}{
+  h(t; rho, lambda) = rho / (lambda * t^(rho + 1) * 
+  [exp(1 / [lambda * t^rho]) - 1])}
 with \eqn{\rho, \lambda > 0}{rho, lambda > 0}.
 
 The Gompertz hazard (\code{dist="gompertz"}) is
@@ -136,6 +143,9 @@ parfm(Surv(time,status) ~ sex + age, cluster="id",
 
 parfm(Surv(time,status) ~ sex + age, cluster="id",
       data=kidney, dist="weibull", frailty="ingau")
+
+parfm(Surv(time,status) ~ sex + age, cluster="id",
+      data=kidney, dist="inweibull", frailty="ingau")
 
 parfm(Surv(time,status) ~ sex + age, cluster="id",
       data=kidney, dist="gompertz", frailty="possta", method="Nelder-Mead")

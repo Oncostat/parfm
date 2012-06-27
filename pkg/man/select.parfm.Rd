@@ -9,7 +9,7 @@
 
 \usage{
 select.parfm(formula, cluster=NULL, strata=NULL, data, inip=NULL, iniFpar=NULL,
-             dist=c("exponential", "weibull", "gompertz", "loglogistic", "lognormal"),
+             dist=c("exponential", "weibull", "inweibull", "gompertz", "loglogistic", "lognormal"),
              frailty=c("none", "gamma", "ingau", "possta"),
              method="BFGS", maxit=500, Fparscale=1, correct=0)
 }
@@ -29,7 +29,7 @@ order given
 in 'formula'.}
   \item{iniFpar}{The initial value of the frailty parameter.}
   \item{dist}{The vector of baseline hazards' names.
-    It can include any of \code{weibull}, \code{exponential}, \code{gompertz}, \code{lognormal} or \code{loglogistic}.}
+    It can include any of \code{weibull}, \code{inweibull}, \code{exponential}, \code{gompertz}, \code{lognormal} or \code{loglogistic}.}
   \item{frailty}{The vector of  frailty distributions' names.
     It can include any of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
   \item{method}{The optimisation method from the function \code{\link{optim}()}.}
@@ -68,6 +68,7 @@ kidney$sex <- kidney$sex - 1
 models <- select.parfm(Surv(time,status) ~ sex + age, 
                        dist=c("exponential", 
                               "weibull", 
+                              "inweibull",
                               "gompertz", 
                               "loglogistic", 
                               "lognormal"),

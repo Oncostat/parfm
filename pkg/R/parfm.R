@@ -34,8 +34,8 @@
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #                                                                              #
-#   Date: December 21, 2011                                                    #
-#   Last modification on: June 05, 2012                                        #
+#   Date:                 December 21, 2011                                    #
+#   Last modification on: June 27, 2012                                        #
 ################################################################################
 
 parfm <- function(formula,
@@ -59,7 +59,8 @@ parfm <- function(formula,
   
   #----- Check the baseline hazard and the frailty distribution ---------------#
   if (!(dist %in% 
-    c("exponential", "weibull", "gompertz", "loglogistic", "lognormal"))) {
+    c("exponential", "weibull", "inweibull", 
+      "gompertz", "loglogistic", "lognormal"))) {
     stop("invalid baseline hazard")
   }
   if (!(frailty %in% 
@@ -194,7 +195,8 @@ parfm <- function(formula,
   #nBpar: number of parameters in the baseline hazard
   if (dist == "exponential") {
     nBpar <- 1
-  } else if (dist %in% c("weibull", "gompertz", "lognormal", "loglogistic")) {
+  } else if (dist %in% c("weibull", "inweibull", "gompertz",
+                         "lognormal", "loglogistic")) {
     nBpar <- 2
   }
   #   if (!is.null(strata)) {
@@ -218,32 +220,24 @@ parfm <- function(formula,
                  nBpar * obsdata$nstr + nRpar))
     }
     p.init <- inip
-    if (dist %in% c("exponential", "weibull", "gompertz")) {
-      #1st initial par: log(lambda), log(rho), or log(gamma)
+    if (dist %in% c("exponential", "weibull", "inweibull", "gompertz")) {
+      #1st initial par: log(lambda), log(rho), log(rho), or log(gamma)
       if (p.init[1:obsdata$nstr] <= 0) {
         stop(paste("with that baseline, the 1st parameter has to be > 0"))
       }
       p.init[1:obsdata$nstr] <- log(p.init[1:obsdata$nstr]) 
     }
-    if (dist %in% c("weibull", "gompertz", "lognormal", "loglogistic")) {
-      #2nd initial par: log(lambda), log(lambda), log(sigma), or log(kappa)
+    if (dist %in% c("weibull", "inweibull", "gompertz", 
+                    "lognormal", "loglogistic")) {
+      #2nd initial par: log(lambda), log(lambda), log(lambda), 
+      #                 log(sigma), or log(kappa)
       if (p.init[obsdata$nstr + 1:obsdata$nstr] <= 0) {
         stop(paste("with that baseline, the 2nd parameter has to be > 0"))
       }
       p.init[obsdata$nstr + 1:obsdata$nstr] <- 
         log(p.init[obsdata$nstr + 1:obsdata$nstr]) 
     }
-  } else {
-    #if they are not specified, then fit a parametric Cox's model
-    require(eha)
-    
-    shape <- 0  #if zero or negative, the shape parameter is estimated
-    d <- dist
-    if (d == "exponential") {
-      d <- "weibull"
-      shape <- 1  #if positive, the shape parameter is fixed at that value
-    }
-    
+  } else {    
     coxformula <- formula
     if (!is.null(strata)) {
       if (dist!="exponential") {
@@ -255,38 +249,54 @@ parfm <- function(formula,
       }
     }
     
-    coxMod <- phreg(formula=coxformula, data=data,
-                    dist=d, shape=shape, 
-                    center=FALSE, control=list(maxiter=maxit))
-    logshape <- as.numeric(coxMod$coef[
-      substr(names(coxMod$coef), 5, 9) == "shape"])
-    logscale <- as.numeric(coxMod$coef[
-      substr(names(coxMod$coef), 5, 9) == "scale"])
-    if (!is.null(strata) && dist=="exponential") {
-      logscale <- logscale - c(0,
-                               coxMod$coef[substr(names(coxMod$coef), 1, nchar(strata)) == strata])
-    }
-    
-    
-    if (dist == "exponential") {
-      p.init <- - logscale                        #log(lambda)
-    } else if (dist == "weibull") {
-      p.init <- c(logshape,                       #log(rho)
-                  - exp(logshape) * logscale)     #log(lambda)
-    } else if (dist == "gompertz") {
-      p.init <- c(- logscale,                     #log(gamma)
-                  logshape)                       #log(lambda)
-    } else if (dist == "lognormal") {
-      p.init <- c(logscale,                       #mu
-                  - logshape)                     #log(sigma)
-    } else if (dist == "loglogistic") {
-      p.init <- c(- exp(logshape) * logscale,     #alpha
-                  logshape)                       #log(kappa)
-    }
-    
-    if (nRpar > 0) {
-      p.init <- c(p.init,
-                  as.numeric(coxMod$coef[1:nRpar]))   
+    if (dist != "inweibull") {
+      #if they are not specified, then fit a parametric Cox's model
+      require(eha)
+      
+      shape <- 0  #if zero or negative, the shape parameter is estimated
+      d <- dist
+      if (d == "exponential") {
+        d <- "weibull"
+        shape <- 1  #if positive, the shape parameter is fixed at that value
+      }
+      
+      coxMod <- phreg(formula=coxformula, data=data,
+                      dist=d, shape=shape, 
+                      center=FALSE, control=list(maxiter=maxit))
+      
+      logshape <- as.numeric(coxMod$coef[
+        substr(names(coxMod$coef), 5, 9) == "shape"])
+      logscale <- as.numeric(coxMod$coef[
+        substr(names(coxMod$coef), 5, 9) == "scale"])
+      if (!is.null(strata) && dist=="exponential") {
+        logscale <- logscale - 
+          c(0, coxMod$coef[substr(names(coxMod$coef), 1, nchar(strata)) == strata])
+      }
+      
+      
+      if (dist == "exponential") {
+        p.init <- - logscale                        #log(lambda)
+      } else if (dist == "weibull") {
+        p.init <- c(logshape,                       #log(rho)
+                    - exp(logshape) * logscale)     #log(lambda)
+      } else if (dist == "gompertz") {
+        p.init <- c(- logscale,                     #log(gamma)
+                    logshape)                       #log(lambda)
+      } else if (dist == "lognormal") {
+        p.init <- c(logscale,                       #mu
+                    - logshape)                     #log(sigma)
+      } else if (dist == "loglogistic") {
+        p.init <- c(- exp(logshape) * logscale,     #alpha
+                    logshape)                       #log(kappa)
+      }
+      
+      if (nRpar > 0) {
+        p.init <- c(p.init,
+                    as.numeric(coxMod$coef[1:nRpar]))   
+      }
+    } else { # inverse Weibull initialisation
+      coxMod <- coxph(formula=coxformula, data=data)
+      p.init = c(0, 0, coefficients(coxMod))
     }
   }
   
@@ -367,7 +377,7 @@ parfm <- function(formula,
   if (dist == "exponential") {
     lambda <- exp(res$par[nFpar + 1:obsdata$nstr])
     ESTIMATE <- c(lambda=lambda)
-  } else if (dist == "weibull") {
+  } else if (dist %in% c("weibull", "inweibull")) {
     rho <- exp(res$par[nFpar + 1:obsdata$nstr])
     lambda <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
     ESTIMATE <- c(rho=rho, lambda=lambda)
@@ -419,7 +429,7 @@ parfm <- function(formula,
                       ses=TRUE)
         })
         STDERR <- c(seLambda=seLambda)
-      } else if (dist == "weibull") {
+      } else if (dist %in% c("weibull", "inweibull")) {
         seRho <- sapply(1:obsdata$nstr, function(x) {
           deltamethod(g=~exp(x1), 
                       mean=logshape[x],
@@ -471,7 +481,7 @@ parfm <- function(formula,
                       ses=TRUE)
         })
         STDERR <- c(seLambda=seLambda)
-      } else if (dist == "weibull") {
+      } else if (dist %in% c("weibull", "inweibull")) {
         seRho <- sapply(1:obsdata$nstr, function(x) {
           deltamethod(g=~exp(x1), 
                       mean=logshape[x],
@@ -566,7 +576,7 @@ parfm <- function(formula,
           ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * lambda[x]^2), NA)
         })
         STDERR <- c(seLambda=seLambda)
-      } else if (dist == "weibull") {
+      } else if (dist %in% c("weibull", "inweibull")) {
         seRho <- sapply(1:obsdata$nstr, function(x){
           ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * rho[x]^2), NA)
         })
@@ -672,7 +682,7 @@ parfm <- function(formula,
     terms       = attr(Terms, "term.labels")
     ))
   if (frailty != "none") {
-     names(attr(resmodel, "cumhaz")) <-
+    names(attr(resmodel, "cumhaz")) <-
       names(attr(resmodel, "di")) <- unique(obsdata$cluster)
   }
   if (showtime){
