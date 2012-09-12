@@ -51,7 +51,7 @@ The
   <ul> <li>Gamma,</li> <li>Inverse Gaussian and</li> <li>Positive Stable</li> </ul>
   frailty distributions can be specified,
   together with five different baseline hazard families:
-  <ul> <li>Weibull,</li> <li>inverse Weibull,</li> <li>Exponential,</li> <li>Gompertz,</li> <li>Lognormal,</li> <li>Loglogistic.</li> </ul>
+  <ul> <li>Weibull,</li> <li>Exponential,</li> <li>Gompertz,</li> <li>Lognormal,</li> <li>Loglogistic.</li> </ul>
   
 <p>Parameter estimation is done by maximising the log-likelihood,
   with right-censored and possibly left-truncated data.
@@ -64,10 +64,6 @@ The
   <p>with <i>&lambda;&gt;0</i>.</p>
 <p>The <B>Weibull</B> model is</p>
   <p align="center"><i>h</i>(<i>t; &rho;, &lambda;</i>)<i> = &rho; &lambda; t<sup>&rho;-1</sup></i>,</p>
-  <p>with <i>&rho;,&lambda;&gt;0</i>.</p>
-<p>The <B>inverse Weibull</B> model is</p>
-  <p align="center"><i>h</i>(<i>t; &rho;, &lambda;</i>)<i> = &rho; / </i>(<i>&lambda; t<sup>&rho;+1</sup></i> [
-    exp{<i>1 / </i>(<i>&lambda; t<sup>&rho;</sup></i>)}<i> - 1 </i>]),</p>
   <p>with <i>&rho;,&lambda;&gt;0</i>.</p>
 <p>The <B>Gompertz</B> model is</p>
   <p align="center"><i>h</i>(<i>t; &gamma;, &lambda;</i>)<i> = &lambda; </i>e<i><sup>&gamma;t</sup></i>,</p>
