@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: June 27, 2012                                        #
+#   Last modification on: September 12, 2012                                   #
 ################################################################################
 
 parfm <- function(formula,
@@ -93,18 +93,28 @@ parfm <- function(formula,
   
   #time
   if (length(formula[[2]]) == 3) {          # --> without left truncation
-    obsdata$time <- eval(parse(text=paste("data$", 
-                                          formula[[2]][[2]], sep="")))
-    obsdata$event <- eval(parse(text=paste("data$", 
-                                           formula[[2]][[3]], sep=""))) 
+    obsdata$time <- eval(#parse(text=paste("data$", 
+      formula[[2]][[2]], 
+      envir=data #sep=""))
+      )
+    obsdata$event <- eval(#parse(text=paste("data$", 
+      formula[[2]][[3]],
+      envir=data #sep=""))
+      )
   } else if (length(formula[[2]]) == 4) {   # --> with left truncation
-    obsdata$trunc <- eval(parse(text=paste("data$", 
-                                           formula[[2]][[2]], sep="")))
+    obsdata$trunc <- eval(#parse(text=paste("data$", 
+      formula[[2]][[2]],
+      envir=data #sep=""))
+      )
     
-    obsdata$time <- eval(parse(text=paste("data$", 
-                                          formula[[2]][[3]], sep="")))
-    obsdata$event <- eval(parse(text=paste("data$", 
-                                           formula[[2]][[4]], sep="")))
+    obsdata$time <- eval(#parse(text=paste("data$", 
+      formula[[2]][[3]] ,
+      envir=data #sep=""))
+      )
+    obsdata$event <- eval(#parse(text=paste("data$", 
+      formula[[2]][[4]], 
+      envir=data #sep=""))
+      )
   }
   if (!all(levels(as.factor(obsdata$event)) %in% 0:1)) {
     stop(paste("The status indicator 'event' in the Surv object",
@@ -129,11 +139,14 @@ parfm <- function(formula,
     if (! cluster %in% names(data)) {
       stop(paste("object '", cluster, "' not found", sep=""))
     }
-    obsdata$cluster <- eval(parse(text=paste("data$", cluster, sep="")))
+    obsdata$cluster <- eval(#parse(text=paste("data$", 
+      as.name(cluster),
+      envir=data #sep=""))
+      )
     #number of clusters
     obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
     #number of events in each cluster
-    obsdata$di <- aggregate(obsdata$event, 
+    obsdata$di <- aggregate(obsdata$event,
                             by=list(obsdata$cluster), 
                             FUN=sum)[,, drop=FALSE]
     cnames <- obsdata$di[,1]
@@ -152,7 +165,10 @@ parfm <- function(formula,
     if (! strata %in% names(data)) {
       stop(paste("object '", strata, "' not found", sep=""))
     }
-    obsdata$strata <- eval(parse(text=paste("data$", strata, sep="")))
+    obsdata$strata <- eval(#parse(text=paste("data$", 
+      as.name(strata), 
+      envir=data #sep=""))
+      )
     #number of strata
     obsdata$nstr <- length(levels(as.factor(obsdata$strata)))
     #number of events in each stratum
