@@ -42,7 +42,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: June 27, 2012                                        #
+#   Last modification on: September 20, 2012                                   #
 ################################################################################
 
 select.parfm <- function(formula,
@@ -53,7 +53,6 @@ select.parfm <- function(formula,
                          iniFpar=NULL,
                          dist=c("exponential",
                                 "weibull",
-                                "inweibull",
                                 "gompertz",
                                 "loglogistic",
                                 "lognormal"),
@@ -85,7 +84,6 @@ select.parfm <- function(formula,
     cat("\n")
     cat(c(exponential = "exponential.......",
           weibull     = "Weibull...........",
-          inweibull   = "inverse Weibull...",
           gompertz    = "Gompertz..........",
           loglogistic = "loglogistic.......",
           lognormal   = "lognormal.........")[d])
