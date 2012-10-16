@@ -41,8 +41,8 @@
 #           with one column per frailty         distribution                   #
 #                                                                              #
 #                                                                              #
-#   Date:                 December 21, 2011                                    #
-#   Last modification on: September 20, 2012                                   #
+#   Date: December 21, 2011                                                    #
+#   Last modification on: October 16, 2012                                     #
 ################################################################################
 
 select.parfm <- function(formula,
@@ -59,7 +59,8 @@ select.parfm <- function(formula,
                          frailty=c("none",
                                    "gamma",
                                    "ingau",
-                                   "possta"),
+                                   "possta",
+                                   "lognormal"),
                          method="BFGS",
                          maxit=500,
                          Fparscale=1,
@@ -77,7 +78,8 @@ select.parfm <- function(formula,
             "                Frailty",
             "Baseline           ",
             sep="\n"))
-  cat(c(none=" None  ", gamma=" Gamma ", ingau=" InvGau", possta=" PosSta")[frailty]
+  cat(c(none=" none  ", gamma=" gamma ", ingau=" invGau", 
+        possta=" posSta", lognormal=" lognor")[frailty]
       
       )
   for (d in dist) {

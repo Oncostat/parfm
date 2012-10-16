@@ -33,12 +33,12 @@ in 'formula'.}
   \item{iniFpar}{The initial value of the frailty parameter.}
   \item{dist}{
     The baseline hazard distribution.
-    One of \code{weibull}, \code{inweibull}, \code{exponential}, \code{gompertz},
+    One of \code{weibull}, \code{exponential}, \code{gompertz},
 \code{lognormal} or
 \code{loglogistic}.}
   \item{frailty}{
     The Frailty distribution.
-    One of: \code{none}, \code{gamma}, \code{ingau} or \code{possta}.}
+    One of: \code{none}, \code{gamma}, \code{ingau}, \code{possta} or \code{lognormal}.}
   \item{method}{The optimisation method from the function \code{\link{optim}()}.}
   \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
   \item{Fparscale}{the scaling value for the frailty parameter in \code{\link{optim}()}. 
@@ -64,13 +64,6 @@ with \eqn{\lambda > 0}{lambda > 0}.
 The Weibull hazard (\code{dist="weibull"}) is
 \deqn{h(t; \rho, \lambda) = \rho \lambda t^{\rho - 1}}{
   h(t; rho, lambda) = rho * lambda * t^(rho - 1)}
-with \eqn{\rho, \lambda > 0}{rho, lambda > 0}.
-
-The inverse Weibull hazard (\code{dist="inweibull"}) is
-\deqn{h(t; \rho, \lambda) = \frac{\rho}{\lambda t^{\rho + 1} 
-  \left[ \exp\{\frac1{\lambda t^\rho}\} - 1 \right]}}{
-  h(t; rho, lambda) = rho / (lambda * t^(rho + 1) * 
-  [exp(1 / [lambda * t^rho]) - 1])}
 with \eqn{\rho, \lambda > 0}{rho, lambda > 0}.
 
 The Gompertz hazard (\code{dist="gompertz"}) is
@@ -142,10 +135,10 @@ parfm(Surv(time,status) ~ sex + age, cluster="id",
       data=kidney, dist="exponential", frailty="gamma")
 
 parfm(Surv(time,status) ~ sex + age, cluster="id",
-      data=kidney, dist="weibull", frailty="ingau")
+      data=kidney, dist="exponential", frailty="lognormal")
 
 parfm(Surv(time,status) ~ sex + age, cluster="id",
-      data=kidney, dist="inweibull", frailty="ingau")
+      data=kidney, dist="weibull", frailty="ingau")
 
 parfm(Surv(time,status) ~ sex + age, cluster="id",
       data=kidney, dist="gompertz", frailty="possta", method="Nelder-Mead")

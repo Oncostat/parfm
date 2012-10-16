@@ -4,8 +4,8 @@
 #                                                                              #
 #                                                                              #
 #                                                                              #
-#   Date:                 December 22, 2011                                    #
-#   Last modification on: June 27, 2012                                        #
+#   Date: December 22, 2011                                                    #
+#   Last modification on: October 16, 2012                                     #
 ################################################################################
 
 plot.select.parfm <- function(x, 
@@ -55,7 +55,8 @@ plot.select.parfm <- function(x,
                 c(none="none",
                   gamma="gamma",
                   ingau="inverse Gaussian",
-                  possta="positive stable")[colnames(x$AIC)],
+                  possta="positive stable",
+                  lognormal="lognormal")[colnames(x$AIC)],
                 sep=" = "),
          bg="white", bty="n",
          ncol=1, cex=1.5, xjust=.5)

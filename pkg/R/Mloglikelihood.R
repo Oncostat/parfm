@@ -27,8 +27,8 @@
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #                                                                              #
-#   Date: December, 19, 2011                                                   #
-#   Last modification on: June, 26, 2012                                       #
+#   Date: December 19, 2011                                                    #
+#   Last modification on: October 16, 2012                                     #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -39,7 +39,7 @@ Mloglikelihood <- function(p,
   # ---- Assign the number of frailty parameters 'obs$nFpar' ------------------#
   # ---- and compute Omega for the Positive Stable frailty --------------------#
   
-  if (frailty %in% c("gamma","ingau")) {
+  if (frailty %in% c("gamma", "ingau", "lognormal")) {
     theta <- exp(p[1])
   } else if (frailty == "possta") {
     nu <- exp(-exp(p[1]))
@@ -175,6 +175,11 @@ Mloglikelihood <- function(p,
                                             nu=nu, Omega=Omega, 
                                             what="logLT",
                                             correct=correct))
+  } else if (frailty=="lognormal") {
+    logSurv <- mapply(fr.lognormal, 
+                      k=obs$di, s=as.numeric(cumhaz[[1]]), 
+                      theta=rep(theta, obs$ncl), 
+                      what="logLT")
   } else if (frailty=="none") {
     logSurv <- mapply(fr.none, s=cumhaz, what="logLT")
   }
@@ -199,6 +204,11 @@ Mloglikelihood <- function(p,
                                                nu=nu, Omega=Omega, 
                                                what="logLT",
                                                correct=correct))
+    } else if (frailty=="lognormal") {
+      logSurvT <- mapply(fr.lognormal, 
+                         k=0, s=as.numeric(cumhazT[[1]]), 
+                         theta=rep(theta, obs$ncl), 
+                         what="logLT") 
     } else if (frailty=="none") {
       logSurvT <- mapply(fr.none, s=cumhazT, what="logLT")
     }

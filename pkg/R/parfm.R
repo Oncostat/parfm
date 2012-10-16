@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: September 20, 2012                                   #
+#   Last modification on: October 16, 2012                                     #
 ################################################################################
 
 parfm <- function(formula,
@@ -64,7 +64,7 @@ parfm <- function(formula,
     stop("invalid baseline hazard")
   }
   if (!(frailty %in% 
-    c("none", "gamma", "ingau", "possta"))) {
+    c("none", "gamma", "ingau", "possta", "lognormal"))) {
     stop("invalid frailty distribution")
   }
   if (frailty == "none" &&  !is.null(cluster)) {
@@ -204,7 +204,7 @@ parfm <- function(formula,
   #nFpar: number of heterogeneity parameters
   if (frailty == "none") {
     nFpar <- 0
-  } else if (frailty %in% c("gamma", "ingau", "possta")) {
+  } else if (frailty %in% c("gamma", "ingau", "possta", "lognormal")) {
     nFpar <- 1
   }
   obsdata$nFpar <- nFpar
@@ -315,7 +315,7 @@ parfm <- function(formula,
   #--- frailty parameters initialisation ---#
   if (frailty == "none") {
     pars <- NULL
-  } else if (frailty %in% c("gamma", "ingau")) {
+  } else if (frailty %in% c("gamma", "ingau", "lognormal")) {
     if (is.null(iniFpar)) {
       iniFpar <- 1
     } else if (iniFpar <= 0) {
@@ -350,7 +350,7 @@ parfm <- function(formula,
                    obs=obsdata, dist=dist, frailty=frailty,
                    correct=correct,
                    hessian=TRUE, 
-                   control=list(maxit=maxit, 
+                   control=list(maxit=maxit,
                                 parscale=c(rep(Fparscale, nFpar),
                                            rep(1, nBpar  * obsdata$nstr + 
                                              nRpar))))})
@@ -374,7 +374,7 @@ parfm <- function(formula,
   
   #----- Recover the estimates ------------------------------------------------#
   #heterogeneity parameter
-  if (frailty %in% c("gamma", "ingau")) {
+  if (frailty %in% c("gamma", "ingau", "lognormal")) {
     theta <- exp(res$par[1:nFpar])
     nu <- NULL
   } else if (frailty == "possta") {
@@ -570,7 +570,7 @@ parfm <- function(formula,
       }
       
       #heterogeneity parameter(s)
-      if (frailty %in% c("gamma", "ingau")) {
+      if (frailty %in% c("gamma", "ingau", "lognormal")) {
         seTheta <- sapply(1:nFpar, function(x){
           ifelse(var[x] > 0, sqrt(var[x] * theta[x]^2), NA)
         })

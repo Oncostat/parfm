@@ -20,7 +20,7 @@
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: January 13, 2012                                     #
+#   Last modification on: October 16, 2012                                     #
 ################################################################################
 
 
@@ -113,18 +113,18 @@ fr.ingau <- function(k,
     return(res)
   }
   else if (what == "tau") {
-          integrand <- function(u) {
-          	return(exp(-u) / u)
-        	}
-        	int <- integrate(integrand,
-                           lower=(2/theta), 
-                           upper=Inf)$value
-          tau <- 0.5 - (1 / theta) + (2 * theta^(-2) * exp(2 / theta) * int)
-          if (is.nan(tau) || tau < 0)
-            tau <- paste("The value of 'theta' is too small",
-                         "for computing the Kendall's Tau numerically!")
-        	return(tau)
-        }
+    integrand <- function(u) {
+      return(exp(-u) / u)
+    }
+    int <- integrate(integrand,
+                     lower=(2/theta), 
+                     upper=Inf)$value
+    tau <- 0.5 - (1 / theta) + (2 * theta^(-2) * exp(2 / theta) * int)
+    if (is.nan(tau) || tau < 0)
+      tau <- paste("The value of 'theta' is too small",
+                   "for computing the Kendall's Tau numerically!")
+    return(tau)
+  }
 }
 
 
@@ -182,4 +182,52 @@ fr.possta <- function(k,
   }
   else if (what == "tau")
     return(nu)
+}
+
+
+
+################################################################################
+#                                                                              #
+#   Lognormal frailty distribution                                             #
+#                                                                              #
+#   Density:                                                                   #
+#    f(u) = -\frac1{\sqrt{2\pi \theta}}                                        #
+#           \exp\{ -\frac{u^2}{2\theta}\}                                      #
+#                                                                              #
+#   Arguments of fr.lognormal:                                                 #
+#     [1] k = 0, 1, ...                                                        #
+#     [2] s > 0                                                                #
+#     [3] theta > 0                                                            #
+#                                                                              #
+#   Date: October 16, 2012                                                     #
+#   Last modification on: October 16, 2012                                     #
+################################################################################
+g <- function(w, k, s, theta) {
+  k * w - exp(w) * s - .5 * w^2 / theta
+}
+Ng2 <- function(w, k, s, theta) {
+  exp(w) * s + 1 / theta    
+} 
+
+fr.lognormal <- function(k,
+                         s,
+                         theta,
+                         what="logLT"){
+  if (what=="logLT") {
+    # Find wTilde = max(g(w)) so that g'(wTilde; k, s, theta) = 0
+    WARN <- getOption("warn")
+    options(warn=-1)
+    wTilde <- optimize(f=g, c(-1e10, 1e10), maximum=TRUE,
+                       k=k, s=s, theta=theta)$maximum
+    options(warn=WARN)
+    
+    # Approximate the integral via Laplacian method
+    res <- -.5 * log(theta * Ng2(w=wTilde, k=k, s=s, theta=theta)) +
+      g(w=wTilde, k=k, s=s, theta=theta)
+    
+    
+    return(res)
+  }
+  else if (what == "tau")
+    return(NA)
 }
