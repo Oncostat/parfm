@@ -104,11 +104,13 @@ The
   <p align="center"><i>f</i>(<i>u; &nu;</i>)<i> = 
     (<i>2&theta;&pi;</i>)<i><sup>-1/2</sup> u<sup>-1</sup> </i>exp<i></i>{<i> </i>(log<i>u</i>)<i><sup>2</sup> / 2&theta; </i>}<i></i>,</p>
   <p>with <i>&theta;&gt;0</i>.</p>
+As the Laplace tranform of the lognormal frailties does not exist in closed form,
+  the saddlepoint approximation is used [<a href="#GC99">4</a>].
 
 
 <!--References--><hr>
 <h3>References</h3>
-<p> [<a name="DJ08">1</a>] Duchateau L. & Janssen P. (2008)
+<p> [<a name="DJ08">1</a>] Duchateau L., Janssen P. (2008)
   <em><a href="http://www.springer.com/statistics/life+sciences,+medicine+%26+health/book/978-0-387-72834-6">The frailty model</a></em>.
   Springer.</p>
 <p> [<a name="W10">2</a>] Wienke A. (2010)
@@ -117,9 +119,9 @@ The
 <p> [<a name="C72">3</a>] Cox D.R. (1972)
   <a href="http://www.jstor.org/stable/2985181">Regression models and life-tables</a>. 
   <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 34, 187–220.</p>
-<p> [<a name="G02">4</a>] Gutierrez R. G.  (2002)
-  <a href="http://www.stata-journal.com/article.html?article=st0006">Parametric frailty and shared frailty survival models</a>.
-  <em>Stata Journal</em> 2(1), 22-44.</p>
+<p> [<a name="GC99">4</a>] Goutis C., Casella G.  (1999)
+  <a href="http://dx.doi.org/10.1080/00031305.1999.10474463">Explaining the Saddlepoint Approximation</a>.
+  <em>The American Statistician</em> 53(3), 216-224.</p>
 <p> [<a name="MRL12">5</a>] Munda M., Rotolo F. and Legrand C. (2012)
   <a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05_new.pdf"><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>Journal of Statistical Software</em>.</p>
 </body>
