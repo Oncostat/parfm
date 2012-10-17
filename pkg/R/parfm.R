@@ -374,14 +374,21 @@ parfm <- function(formula,
   
   #----- Recover the estimates ------------------------------------------------#
   #heterogeneity parameter
-  if (frailty %in% c("gamma", "ingau", "lognormal")) {
+  if (frailty %in% c("gamma", "ingau")) {
     theta <- exp(res$par[1:nFpar])
+    sigma2 <- NULL
+    nu <- NULL
+  } else if (frailty == "lognormal") {
+    theta <- NULL
+    sigma2 <- exp(res$par[1:nFpar])
     nu <- NULL
   } else if (frailty == "possta") {
-    nu <- exp(-exp(res$par[1:nFpar]))
     theta <- NULL
+    sigma2 <- NULL
+    nu <- exp(-exp(res$par[1:nFpar]))
   } else if (frailty == "none"){
     theta <- NULL
+    sigma2 <- NULL
     nu <- NULL
   }
   
@@ -417,6 +424,7 @@ parfm <- function(formula,
   
   #all together
   ESTIMATE <- c(theta=theta,
+                sigma2=sigma2,
                 nu=nu,
                 ESTIMATE,
                 beta=beta)
@@ -570,16 +578,21 @@ parfm <- function(formula,
       }
       
       #heterogeneity parameter(s)
-      if (frailty %in% c("gamma", "ingau", "lognormal")) {
+      if (frailty %in% c("gamma", "ingau")) {
         seTheta <- sapply(1:nFpar, function(x){
           ifelse(var[x] > 0, sqrt(var[x] * theta[x]^2), NA)
         })
-        seNu <- NULL
+        seSigma2 <- seNu <- NULL
+      } else if (frailty == "lognormal") {
+        seSigma2 <- sapply(1:nFpar, function(x){
+          ifelse(var[x] > 0, sqrt(var[x] * sigma2[x]^2), NA)
+        })
+        seTheta <- seNu <- NULL
       } else if (frailty == "possta") {
         seNu <- sapply(1:nFpar, function(x){
           ifelse(var[x] > 0, sqrt(var[x] * (nu * log(nu))^2), NA)
         })
-        seTheta <- NULL
+        seTheta <- seSigma2 <- NULL
       }
       
       #baseline hazard parameter(s)
@@ -644,6 +657,7 @@ parfm <- function(formula,
                   se.beta=seBeta)
       if (frailty != "none") {
         STDERR <- c(se.theta=seTheta,
+                    se.sigma2=seSigma2,
                     se.nu=seNu,
                     STDERR)
       }
