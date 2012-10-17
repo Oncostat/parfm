@@ -42,7 +42,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 21, 2011                                                    #
-#   Last modification on: October 16, 2012                                     #
+#   Last modification on: October 17, 2012                                     #
 ################################################################################
 
 select.parfm <- function(formula,
@@ -70,7 +70,7 @@ select.parfm <- function(formula,
   
   res <- list(AIC=NULL, BIC=NULL)
   res$AIC <- res$BIC <- matrix(NA, length(dist), length(frailty),
-                               dimnames=list(dist, frailty))
+                               dimnames=list(dist, substr(frailty, 1, 6)))
   cat(paste("\n\n### - Parametric frailty models - ###",
             "Progress status:",
             "  'ok' = converged",
@@ -106,8 +106,8 @@ select.parfm <- function(formula,
                          correct=correct),
                    silent=TRUE)
       if (!("try-error" %in% class(model))){
-        res$AIC[d, f] <- AIC(model)
-        res$BIC[d, f] <- BIC(model)
+        res$AIC[d, substr(f, 1, 6)] <- AIC(model)
+        res$BIC[d, substr(f, 1, 6)] <- BIC(model)
         cat("ok....")
       } else cat("nc....")
     }

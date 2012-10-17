@@ -5,7 +5,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 22, 2011                                                    #
-#   Last modification on: October 16, 2012                                     #
+#   Last modification on: October 17, 2012                                     #
 ################################################################################
 
 plot.select.parfm <- function(x, 
@@ -24,7 +24,8 @@ plot.select.parfm <- function(x,
   mtext(c(none="No",
           gamma="Ga",
           ingau="IG",
-          possta="PS")[colnames(x$AIC)],
+          possta="PS",
+          lognor="LN")[colnames(x$AIC)],
         side=1, at=1:ncol(x$AIC), padj=1)
   
   for (i in 1:nrow(x$AIC)) points(
@@ -51,12 +52,13 @@ plot.select.parfm <- function(x,
                 c(none="No",
                   gamma="Ga",
                   ingau="IG",
-                  possta="PS")[colnames(x$AIC)],
-                c(none="none",
+                  possta="PS",
+                  lognor="LN")[colnames(x$AIC)],
+                c(none="no frailty",
                   gamma="gamma",
                   ingau="inverse Gaussian",
                   possta="positive stable",
-                  lognormal="lognormal")[colnames(x$AIC)],
+                  lognor="lognormal")[colnames(x$AIC)],
                 sep=" = "),
          bg="white", bty="n",
          ncol=1, cex=1.5, xjust=.5)
@@ -75,7 +77,8 @@ plot.select.parfm <- function(x,
   mtext(c(none="No",
           gamma="Ga",
           ingau="IG",
-          possta="PS")[colnames(x$BIC)],
+          possta="PS",
+          lognor="LN")[colnames(x$BIC)],
         side=1, at=1:ncol(x$BIC), padj=1)
   
   for (i in 1:nrow(x$BIC)) points(

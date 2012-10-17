@@ -100,7 +100,6 @@ The positive stable frailty distribution (\code{frailty="poosta"}) is
 \deqn{f(u) = f(u) = - \frac1{\pi u} \sum_{k=1}^{\infty} \frac{\Gamma ( k (1 - \nu ) + 1 )}{k!} \left( - u^{ \nu - 1} \right)^{k} \sin ( ( 1 - \nu ) k \pi )}{
 f(u) = - 1 / (pi * u) * sum_(k=1, 2, ..., infiny) [Gamma(k * (1 - nu) + 1) / k! * (-u^(nu - 1))^k * sin((1 - nu) * k * pi)]}
 with \eqn{0 < \nu < 1}{0 < nu < 1}.
-}
 
 The lognormal frailty distribution (\code{frailty="lognormal"}) is
 \deqn{f(u) = \frac1{\sqrt{2 \pi \theta}} u^{-1} \exp \left( - \frac{\log(u)^2}{2 \theta}  \right)}{ 
@@ -109,6 +108,7 @@ with \eqn{\theta > 0}{theta > 0}.
 As the Laplace tranform of the lognormal frailties does not exist in closed form,
   the saddlepoint approximation is used (Goutis and Casella, 1999).
 
+}
 
 \value{An object of class \code{parfm}.}
 

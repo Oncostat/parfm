@@ -68,15 +68,15 @@ kidney$sex <- kidney$sex - 1
 
 models <- select.parfm(Surv(time,status) ~ sex + age, 
                        dist=c("exponential", 
-                              "weibull", 
-                              "inweibull",
+                              "weibull",
                               "gompertz", 
                               "loglogistic", 
                               "lognormal"),
                        frailty=c("none", 
                                  "gamma", 
                                  "ingau", 
-                                 "possta"),
+                                 "possta", 
+                                 "lognormal"),
                        cluster="id", data=kidney)
 models
 plot(models)
