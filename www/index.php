@@ -102,7 +102,7 @@ The
   <p>with <i>&nu;&in;(0, 1)</i> and <i>&Gamma;</i>(<i>.</i>) the Gamma function.</p>
 <p>The <B>lognormal</B> distribution is</p>
   <p align="center"><i>f</i>(<i>u; &nu;</i>)<i> = 
-    (<i>2&theta;&pi;</i>)<i><sup>-1/2</sup> u<sup>-1</sup> </i>exp{(log <i>u</i>)<i><sup>2</sup> / 2&theta; </i>},</p>
+    (<i>2&theta;&pi;</i>)<i><sup>-1/2</sup> u<sup>-1</sup> </i>exp{-(log <i>u</i>)<i><sup>2</sup> / 2&theta; </i>},</p>
   <p>with <i>&theta;&gt;0</i>.</p>
 As the Laplace tranform of the lognormal frailties does not exist in closed form,
   the saddlepoint approximation is used [<a href="#GC99">4</a>].
