@@ -38,7 +38,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <em>F.Rotolo, M.Munda</em>
 <p><a href="http://cran.r-project.org/web/packages/parfm/index.html">Information about the current plublic release on CRAN can be found here.</a>
 <br><a href="http://r-forge.r-project.org/projects/parfm/">Information about the project development can be found here.</a>
-<br><a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05_new.pdf">A paper in press giving more details on the theory of frailty models and on the use of the <b>parfm</b> package can be found here [<a href="#MRL12">5</a>].</a><p>
+<br><a href="http://www.jstatsoft.org/v51/i11">A published paper giving more details on the theory of frailty models and on the use of the <b>parfm</b> package can be found here [<a href="#MRL12">5</a>].</a><p>
 
 <p>Frailty models [<a href="#DJ08">1</a>, <a href="#W10">2</a>] are survival models for clustered or overdispersed time-to-event data.
   They consist in proportional hazards Cox's models [<a href="#C72">3</a>] with the addition of a random effect,
@@ -123,6 +123,6 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
   <a href="http://dx.doi.org/10.1080/00031305.1999.10474463">Explaining the Saddlepoint Approximation</a>.
   <em>The American Statistician</em> 53(3), 216-224.</p>
 <p> [<a name="MRL12">5</a>] Munda M., Rotolo F. and Legrand C. (2012)
-  <a href="http://www.uclouvain.be/cps/ucl/doc/stat/documents/DP2012_05_new.pdf"><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>Journal of Statistical Software</em>.</p>
+  <a href="http://www.jstatsoft.org/v51/i11"><b>parfm</b>: Parametric frailty models in <b>R</b></a>. <em>Journal of Statistical Software</em> 51(11).</p>
 </body>
 </html>
