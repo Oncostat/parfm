@@ -21,7 +21,7 @@
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #   Date: December, 19, 2011                                                   #
-#   Last modification on: October 17, 2012                                     #
+#   Last modification on: May 1, 2013                                          #
 ################################################################################
 
 
@@ -201,7 +201,7 @@ fr.possta <- function(k,
 #     [3] sigma > 0                                                            #
 #                                                                              #
 #   Date: October 16, 2012                                                     #
-#   Last modification on: October 17, 2012                                     #
+#   Last modification on: May 1, 2013                                          #
 ################################################################################
 
 g <- function(w, k, s, sigma2) {
