@@ -436,7 +436,7 @@ parfm <- function(formula,
     if (nRpar == 0) {
       seBeta <- NULL
     } else {
-      seBeta <- sqrt(var[1:nRpar])
+      seBeta <- sqrt(diag(var)[1:nRpar])
       PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
                 2 * pnorm(q=- abs(beta / seBeta)))
     }
