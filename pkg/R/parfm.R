@@ -308,7 +308,11 @@ parfm <- function(formula,
     
     if (nRpar > 0) {
       p.init <- c(p.init,
-                  as.numeric(coxMod$coef[1:nRpar]))   
+                  #                   as.numeric(coxMod$coef[1:nRpar]))   
+                  as.numeric(coxMod$coef[
+                    setdiff(names(coxMod$coef), 
+                            c("(Intercept)", "log(scale)", "log(shape)"))
+                    ]))   
     }
   }
   
