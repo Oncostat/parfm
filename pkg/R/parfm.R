@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: October 16, 2012                                     #
+#   Last modification on: March 22, 2014                                       #
 ################################################################################
 
 parfm <- function(formula,
@@ -267,7 +267,7 @@ parfm <- function(formula,
     }
     
     #if they are not specified, then fit a parametric Cox's model
-    require(eha)
+    #     require(eha)
     
     shape <- 0  #if zero or negative, the shape parameter is estimated
     d <- dist
