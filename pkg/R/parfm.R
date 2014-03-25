@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: March 22, 2014                                       #
+#   Last modification on: March 25, 2014                                       #
 ################################################################################
 
 parfm <- function(formula,
@@ -267,7 +267,7 @@ parfm <- function(formula,
     }
     
     #if they are not specified, then fit a parametric Cox's model
-    #     require(eha)
+    require(eha)
     
     shape <- 0  #if zero or negative, the shape parameter is estimated
     d <- dist
@@ -440,7 +440,9 @@ parfm <- function(formula,
     if (nRpar == 0) {
       seBeta <- NULL
     } else {
-      seBeta <- sqrt(diag(var)[1:nRpar])
+      seBeta <- sqrt(diag(var)[
+        setdiff(names(coxMod$coef), 
+                c("(Intercept)", "log(scale)", "log(shape)"))])
       PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
                 2 * pnorm(q=- abs(beta / seBeta)))
     }
