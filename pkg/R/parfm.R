@@ -267,7 +267,7 @@ parfm <- function(formula,
     }
     
     #if they are not specified, then fit a parametric Cox's model
-    require(eha)
+    #     library(eha)
     
     shape <- 0  #if zero or negative, the shape parameter is estimated
     d <- dist
