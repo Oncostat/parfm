@@ -47,7 +47,6 @@ We also consider the binary covariate breed.
   New York: Springer--Verlag.
 }
 \examples{
-library(parfm)
 data(ecf)
 head(ecf)
 

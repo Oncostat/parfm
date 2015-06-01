@@ -87,8 +87,8 @@ Mloglikelihood <- function(p,
       sapply(levels(as.factor(obs$strata)),
              function(x) {t(
                cbind(dist(pars[x, ], obs$time[obs$strata == x], what="H") * 
-                 exp(as.matrix(obs$x)[obs$strata == x, -1, 
-                                      drop=FALSE] %*% as.matrix(beta)),
+                       exp(as.matrix(obs$x)[obs$strata == x, -1, 
+                                            drop=FALSE] %*% as.matrix(beta)),
                      obs$cluster[obs$strata == x]))
              })), ncol=2, byrow=TRUE)
     cumhaz <- aggregate(cumhaz[, 1], by=list(cumhaz[, 2]), FUN=sum)[, 2, 
@@ -100,8 +100,8 @@ Mloglikelihood <- function(p,
         sapply(levels(as.factor(obs$strata)),
                function(x) {t(
                  cbind(dist(pars[x, ], obs$trunc[obs$strata == x], what="H") * 
-                   exp(as.matrix(obs$x)[obs$strata == x, -1, 
-                                        drop=FALSE] %*% as.matrix(beta)),
+                         exp(as.matrix(obs$x)[obs$strata == x, -1, 
+                                              drop=FALSE] %*% as.matrix(beta)),
                        obs$cluster[obs$strata == x]))
                })), ncol=2, byrow=TRUE)
       cumhazT <- aggregate(cumhazT[, 1], by=list(cumhazT[, 2]), 
@@ -112,9 +112,9 @@ Mloglikelihood <- function(p,
                         function(x) {
                           sum(dist(as.numeric(x[-1]), 
                                    obs$time[obs$strata==x[1]], what="H") * 
-                                     exp(as.matrix(obs$x[obs$strata==x[1], -1, 
-                                                         drop=FALSE]) %*% 
-                                     as.matrix(beta)))
+                                exp(as.matrix(obs$x[obs$strata==x[1], -1, 
+                                                    drop=FALSE]) %*% 
+                                      as.matrix(beta)))
                         }))
     
     # Possible truncation
@@ -124,9 +124,9 @@ Mloglikelihood <- function(p,
               function(x) {
                 sum(dist(as.numeric(x[-1]), 
                          obs$trunc[obs$strata==x[1]], what="H") * 
-                           exp(as.matrix(obs$x[obs$strata==x[1], -1, 
-                                               drop=FALSE]) %*% 
-                           as.matrix(beta)))
+                      exp(as.matrix(obs$x[obs$strata==x[1], -1, 
+                                          drop=FALSE]) %*% 
+                            as.matrix(beta)))
               }))
     }
   }
@@ -139,9 +139,9 @@ Mloglikelihood <- function(p,
       sapply(levels(as.factor(obs$strata)),
              function(x) {t(
                cbind(obs$event[obs$strata == x] *
-                 (dist(pars[x, ], obs$time[obs$strata == x], what="lh") + 
-                 as.matrix(obs$x)[obs$strata == x, -1, 
-                                  drop=FALSE] %*% as.matrix(beta)),
+                       (dist(pars[x, ], obs$time[obs$strata == x], what="lh") + 
+                          as.matrix(obs$x)[obs$strata == x, -1, 
+                                           drop=FALSE] %*% as.matrix(beta)),
                      obs$cluster[obs$strata == x]))
              })), ncol=2, byrow=TRUE)
     loghaz <- aggregate(loghaz[, 1], by=list(loghaz[, 2]), FUN=sum)[, 2, 
@@ -152,9 +152,9 @@ Mloglikelihood <- function(p,
                           sum(obs$event[obs$strata==x[1]] * (
                             dist(as.numeric(x[-1]), 
                                  obs$time[obs$strata==x[1]], what="lh") + 
-                                   as.matrix(obs$x[obs$strata==x[1], -1, 
-                                                   drop=FALSE]) %*% 
-                                                     as.matrix(beta)))
+                              as.matrix(obs$x[obs$strata==x[1], -1, 
+                                              drop=FALSE]) %*% 
+                              as.matrix(beta)))
                         }))
   }
   

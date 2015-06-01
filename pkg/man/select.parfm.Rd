@@ -68,7 +68,6 @@ in 'formula'.}
 
 \examples{
 \donttest{
-library(parfm)
 data(kidney)
 kidney$sex <- kidney$sex - 1
 

@@ -38,7 +38,6 @@
 \seealso{\code{\link{parfm}}}
 
 \examples{
-library(parfm)
 data(kidney)
 kidney$sex <- kidney$sex - 1
 

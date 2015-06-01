@@ -28,8 +28,6 @@ biostatistics series. Taylor and Francis.
 }
 
 \examples{
-library(parfm)
-
 #------Kidney dataset------
 data(kidney) 
  # type 'help(kidney)' for a description of the data set
