@@ -49,6 +49,7 @@ The censoring is due to the fact that dog owners do not show up anymore.
   \emph{Am. J. Vet. Res.} 67, 1354--1361.
 }
 \examples{
+library(parfm)
 data(diagnosis)
 head(diagnosis)
 

@@ -58,6 +58,7 @@
 }
 \examples{
 \donttest{
+library(parfm)
 data(asthma)
 head(asthma)
 asthma <- asthma[asthma$Fevent==0,]

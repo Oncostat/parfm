@@ -134,7 +134,7 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
 
 }
 \author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda
-<marco.munda@arlenda.be>}
+<marco.munda@uclouvain.be>}
 %%\note{}
 
 \seealso{
@@ -144,6 +144,8 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
 }
 
 \examples{
+library(parfm)
+
 #------Kidney dataset------
 data(kidney) 
  # type 'help(kidney)' for a description of the data set

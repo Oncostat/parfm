@@ -56,6 +56,7 @@ Parity is often converted into a binary covariate, grouping all the cows
   New York: Springer--Verlag.
 }
 \examples{
+library(parfm)
 data(reconstitution)
 head(reconstitution)
                 

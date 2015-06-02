@@ -46,6 +46,7 @@ Cows are further clustered within herds and this clustering needs
 }
 \examples{
 \donttest{
+library(parfm)
 data(culling)
 head(culling)
 culling <- culling[culling$Time > 0,]
