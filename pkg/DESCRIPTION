@@ -11,5 +11,6 @@ Description: Parametric Frailty Models, fitted by maximum marginal likelihood me
  Possible Frailty distributions: gamma, inverse Gaussian, positive stable and lognormal
 License: GPL-2
 LazyLoad: yes
-Depends: R (>= 2.10), survival
-Imports: eha, msm
+Depends: R (>= 2.10)
+Imports: eha, msm, survival
+Additional_repositories: http://cran.rstudio.com/
