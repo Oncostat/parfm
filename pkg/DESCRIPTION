@@ -2,7 +2,7 @@ Package: parfm
 Type: Package
 Title: Parametric Frailty Models
 Version: 2.5.8
-Date: 2015-06-02
+Date: 2015-06-07
 Author: Federico Rotolo <federico.rotolo@gustaveroussy.fr>
   and Marco Munda <marco.munda@uclarlenda.com>
 Maintainer: Federico Rotolo <federico.rotolo@gustaveroussy.fr>
