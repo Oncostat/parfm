@@ -12,4 +12,4 @@ Description: Fits Parametric Frailty Models by maximum marginal likelihood.
 License: GPL-2
 LazyLoad: yes
 Depends: R (>= 3.0), survival
-Imports: eha, msm
+Imports: eha, msm, graphics
