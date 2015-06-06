@@ -22,4 +22,4 @@ S3method(print, predict.parfm)
 S3method(plot, select.parfm)
 S3method(print, select.parfm)
 
-import(msm, eha, graphics)
+import(msm, eha, graphics, survival)
