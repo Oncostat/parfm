@@ -239,7 +239,7 @@ parfm <- function(formula,
     p.init <- inip
     if (dist %in% c("exponential", "weibull", "gompertz")) {
       #1st initial par: log(lambda), log(rho), log(rho), or log(gamma)
-      if (p.init[1:obsdata$nstr] <= 0) {
+      if (any(p.init[1:obsdata$nstr] <= 0)) {
         stop(paste("with that baseline, the 1st parameter has to be > 0"))
       }
       p.init[1:obsdata$nstr] <- log(p.init[1:obsdata$nstr]) 
@@ -248,7 +248,7 @@ parfm <- function(formula,
                     "lognormal", "loglogistic")) {
       #2nd initial par: log(lambda), log(lambda), log(lambda), 
       #                 log(sigma), or log(kappa)
-      if (p.init[obsdata$nstr + 1:obsdata$nstr] <= 0) {
+      if (any(p.init[obsdata$nstr + 1:obsdata$nstr] <= 0)) {
         stop(paste("with that baseline, the 2nd parameter has to be > 0"))
       }
       p.init[obsdata$nstr + 1:obsdata$nstr] <- 
