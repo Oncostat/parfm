@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: March 25, 2014                                       #
+#   Last modification on: July 6, 2015                                         #
 ################################################################################
 
 parfm <- function(formula,
