@@ -1,6 +1,6 @@
 Changes in Version 2.5.10 (September 2015)
 
-  o Kendall's tau for the lognormal frailty distrubution available
+  o added Kendall's tau for the lognormal frailty distrubution
 
 
 Changes in Version 2.5 (October 2012)
@@ -20,4 +20,4 @@ Changes in Version 1.01 (March 2012)
 
 Changes in Version 0.66-2 (February 2012)
 
-  o Added exaple datasets
+  o Added example datasets
