@@ -19,9 +19,9 @@
   Wienke A. (2010) Frailty Models in Survival Analysis. Chapman & Hall/CRC
 biostatistics series. Taylor and Francis.
 }
-\author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda
-<marco.munda@arlenda.be>}
-%% \note{}
+\author{
+  \packageAuthor{parfm}
+}
 
 \seealso{
   \code{\link{parfm}}

@@ -133,9 +133,10 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
     target="_blank">10.1080/00031305.1999.10474463</a>
 
 }
-\author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda
-<marco.munda@arlenda.com>}
-%%\note{}
+\author{
+  \packageAuthor{parfm}
+}
+
 
 \seealso{
   \code{\link{select.parfm}},

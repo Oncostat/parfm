@@ -48,7 +48,9 @@ in 'formula'.}
 %%\details{}
 \value{An object of class \code{select.parfm}.}
 
-\author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@arlenda.be>}
+\author{
+  \packageAuthor{parfm}
+}
 
 %%\note{}
 \references{

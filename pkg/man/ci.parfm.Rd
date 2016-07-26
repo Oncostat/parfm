@@ -26,7 +26,9 @@
   URL http://www.jstatsoft.org/v51/i11/.
 }
 
-\author{Federico Rotolo <federico.rotolo@stat.unipd.it> and Marco Munda <marco.munda@arlenda.be>}
+\author{
+  \packageAuthor{parfm}
+}
 
 %%\note{}
 
