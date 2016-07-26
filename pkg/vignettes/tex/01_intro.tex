@@ -85,8 +85,11 @@ For a deeper overview of who supports what, and for a comparison of some of the 
 
 
 % % Objective
-Hereinbelow, we illustrate \pkg{parfm} \citep{R:parfm}, a new \proglang{R} package that fits the gamma, the inverse Gaussian, and the positive stable proportional hazards frailty models 
-  with either exponential, Weibull, Gompertz, lognormal, or loglogistic baseline.
+Hereinbelow, we illustrate \pkg{parfm} \citep{R:parfm}, a new \proglang{R} package that fits 
+    the gamma, the positive stable, the inverse Gaussian, and lognormal
+    proportional hazards frailty models 
+    with either exponential, Weibull, Gompertz, lognormal, 
+    or loglogistic baseline.
 The main advantage of \pkg{parfm} therefore relies on the large choice 
   of frailty distributions and parametric baseline hazards it supports.
 Parameter estimation is done by maximising the marginal log-likelihood.
@@ -94,7 +97,7 @@ Parameter estimation is done by maximising the marginal log-likelihood.
 
 The model and the marginal log-likelihood are shown in Section~\ref{sec:model}.
 There, we also outline the estimation method,
-  while Sections~\ref{sec:model:gamma}--\ref{sec:model:IG} provide details 
+  while Sections~\ref{sec:model:gamma}--\ref{sec:model:LN} provide details 
   for the three frailty distributions supported by \pkg{parfm}.
 In Section~\ref{sec:rexample}, we apply \pkg{parfm} to a real dataset in order to illustrate its use and its output.
 Section~\ref{sec:concl} concludes with remarks.
