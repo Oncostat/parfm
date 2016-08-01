@@ -1,74 +1,45 @@
 The lognormal frailty distribution $\mathrm{LN}^\star(\theta)$ has density
+\begin{equation}
+    f(u; ν) = (2\sigma 2\pi)^{-\frac12} u^{-1} \exp\left\{-\frac{(\log u)^2}{2\sigma^2} \right\},
+\end{equation}
+with $\sigma>0$.
 
-[TO DO]
-% \begin{equation*} 
-% %\label{eq:model.LN}
-%   f(u) = \frac1{\sqrt{2 \pi \theta}} u^{- \tfrac32} \exp \left( - \frac{(u-1)^2}{2 \theta u}  \right),
-%   \qquad \theta > 0.
-% \end{equation*}
+If $U \sim \text{LN}(\theta)$, then the Laplace transform does not exist in closed form.
+Consequently
+\begin{align*}
+\mathcal{L}^{(q)}(x)
+ & = (-1)^q \int_0^\infty u^q \exp(-u x) f(u) \, \textrm{d}u \\
+ & = (-1)^q \frac{1}{\sqrt{2 \pi \theta}} \int_0^\infty u^q \exp(-u x) \frac{1}{u} 
+ \exp \bigg( - \frac{1}{2 \theta} \Big( \log(u) \Big)^2 \bigg) \, \textrm{d}u
+\end{align*}
+needs to be approximated ($x \geq 0$). By using the change of variable $w = \log(u)$, we have
+\begin{align*}
+\mathcal{L}^{(q)}(x)
+  & = (-1)^q \frac{1}{\sqrt{2 \pi \theta}} \int_{-\infty}^\infty 
+  \Big( \exp(w) \Big)^q \exp \left( -\exp(w) x \vphantom{\Big)} \right) \exp \left( - \frac{w^2}{2\theta} \right) \, \textrm{d}w \\
+  & = (-1)^q \frac{1}{\sqrt{2 \pi \theta}} \int_{-\infty}^\infty \exp \left\{ qw - \exp(w) x - \frac{w^2}{2 \theta} \right\} \, \textrm{d}w.
+\end{align*}
+We approximate this by means of the Laplace approximation of integrals.
+Let 
+\begin{align*}
+g(w;\, x, \theta)       & := - qw + \exp(w) x + \frac{w^2}{2 \theta} \\
+g^{(1)}(w;\, x, \theta) & := \frac{\textrm{d} g}{\textrm{d} w}(w;\, x, \theta) = - q + \exp(w) x + \frac{w}{\theta}\\
+g^{(2)}(w;\, x, \theta) & := \frac{\textrm{d}^2 g}{\textrm{d} w^2}(w;\, x, \theta) =  \exp(w) x + \frac{1}{\theta} > 0 
+\end{align*}
+
+The approximation consists of replacing $g(\cdot)$ by the first three terms of its Taylor series expansion around some $\tilde{w}$,
+\[
+g(w;\, x, \theta) \approx g(\tilde{w};\, x, \theta) + (w - \tilde{w}) g^{(1)}(\tilde{w};\, x, \theta) + 
+  \frac{(w - \tilde{w})^2}{2} g^{(2)}(\tilde{w};\, x, \theta)
+\]
 % 
-% The mean and the variance are 1 and $\theta$, respectively.
-% For the Laplace transform, one has
-% \begin{equation*}
-% %\label{eq:LT.LN}
-%   \mathcal L(s) = \exp \left( \frac1\theta \left(1  - \sqrt{1 + 2\theta s} \right) \right),
-%   \qquad s\ge 0,
-% \end{equation*}
-% and, for $q \geq 1$,
-% \begin{equation}
-% \mathcal{L}^{(q)} ( s ) = ( - 1 )^{q}  \left( 2 \theta s + 1 \right)^{- \tfrac{q}{2}}
-%   \cfrac{K_{q - (1 \slash 2)} \left( \sqrt{2 \theta^{-1} ( s + \tfrac{1}{2 \theta} )} \right)}{K_{1 \slash 2} \left( \sqrt{2 \theta^{-1} ( s + \tfrac{1}{2 \theta} )} \right)} 
-%   \mathcal{L} ( s ),
-% \label{eq:invGauss}   
-% \end{equation}
-% where $K$ is the modified Bessel function of the second kind \cite[Section A.4.2]{Hougaard00}
-% \begin{equation*}
-%   K_\gamma(\omega) = \frac12 \int_0^\infty t^{\gamma-1} \exp\left\{ -\frac\omega2 \left(t+\frac1t \right) \right\}
-%     \mathrm d t,
-%     \qquad \gamma\in\mathbb R, \omega > 0.
-% \end{equation*}
-% 
-% % \begin{nota}
-% % For half integer values, there is an explicit expression for the Bessel function \cite[Section A.4.2]{Hougaard00}:
-% % \[
-% % K_{\tfrac{1}{2}} ( \omega ) = \sqrt{\frac{\pi}{2 \omega}} \exp(- \omega),
-% % \]
-% % and
-% % \[
-% % K_{n + \tfrac{1}{2}} ( \omega ) = \sqrt{\frac{\pi}{2 \omega}} \exp(- \omega) \left\{1 + \sum_{j = 1}^{n} \frac{(n + j)!}{(n - j)! j!} ( 2 \omega )^{-j} \right\}, \qquad n = 1, 2, \ldots{}
-% % \]
-% % Hence, in equation (\ref{invGauss}) we have
-% % \begin{gather}
-% % \cfrac{K_{q - (1 \slash 2)} \left( \sqrt{2 \theta^{-1} ( s + \tfrac{1}{2 \theta} )} \right)} {K_{1 \slash 2} \left( \sqrt{2 \theta^{-1} ( s + \tfrac{1}{2 \theta} )} \right)} = \notag \\
-% % 	\left\{
-% % 	\begin{array}{ll}
-% % 	1 & \textrm{ if } q = 1, \\
-% % 	\displaystyle 1 + \sum_{j = 1}^{q - 1} \binom{q - 1}{j} \left[ \prod_{k = 0}^{j - 1} ( q - 1 + j - k ) \right] 
-% % 		\left( 8 \theta^{-1} \left( s + \tfrac{1}{2 \theta} \right) \right)^{- \tfrac{j}{2}} & \textrm{ if } q = 2, 3, \ldots{}
-% % 	\end{array}
-% % 	\right. \notag
-% % \end{gather}
-% % \end{nota}
-% 
-% The proof of this result, given in Appendix~\ref{app:derLTLN},
-%   sketches a general constructive method to obtain the derivatives of the Laplace transform
-%   for any distribution for which the moments of 
-%   $U \mid \bm z_i; \bm\psi, \bm\beta, \xi$, 
-%   the conditional frailty given the data, 
-%   are known.
-%   
-% Noting that $K_{1 \slash 2} ( \omega ) = \sqrt{\frac{\pi}{2 \omega}} \exp(- \omega)$, we have
-% \begin{align}
-% \log \left( ( - 1 )^{q} \mathcal{L}^{( q )} ( s ) \right) = - \frac{q}{2} \log ( 2 \theta s + 1) +  & \log \left( K_{q - (1 \slash 2)} ( z ) \right) -  \nonumber \\
-% 	& \left[ \frac{1}{2} \left( \log \left( \frac{\pi}{2 z} \right) \right) - z \right]
-% 	+ \frac{1}{\theta} \left( 1 - \sqrt{1 + 2 \theta s} \right),
-% \label{eqn:ingau}
-% \end{align}
-% with $z = \sqrt{ 2 \theta^{-1} ( s + \tfrac{1}{2 \theta} ) }$.
-% 
-% With multivariate data, an inverse Gaussian distributed frailty yields a Kendall's tau given by
-% \begin{equation*}
-%   \tau = \frac12 - \frac1\theta + 2 \frac{\exp(2/\theta)}{\theta^2}
-%           \int_{2 / \theta}^\infty \frac{\exp(-u)}u \mathrm d u
-%   \in (0, 1/2).
-% \end{equation*}
+The value of $\tilde{w}$ is chosen such that $g^{(1)}(\tilde{w};\, x, \theta) = 0$, so that $\mathcal{L}^{(q)}(x)$ can be approximated by 
+\begin{align*}
+\mathcal{L}^{(q)}(x) 
+  \approx& (-1)^q \, \frac{1}{\sqrt{2 \pi \theta}} \exp \left\{ - g(\tilde{w};\, x, \theta) \right\} \\
+  & {\times \int_{-\infty}^\infty \exp \left\{ - \frac{(w - \tilde{w})^2}{2} g^{(2)}(\tilde{w};\, x, \theta) \right\} \, \textrm{d}w} \\
+  =& (-1)^q \, \frac{1}{\sqrt{\theta}} \exp \left\{- g(\tilde{w};\, x, \theta) \vphantom{\Big\}} \right\} \left[ g^{(2)}(\tilde{w};\, x, \theta) \right]^{- 1 \slash 2}
+\end{align*}
+where the last line follows by recognising the kernel of a normal density with mean $\tilde{w}$ and variance $1 / g^{(2)}(\tilde{w};\, x, \theta)$.
+This is known as the Laplace approximation. The underlying idea is that the main contribution to the integral comes from where $g(\cdot)$ is close to its minimum.
+We refer to \cite{GoutisCasella99} for further motivation and explanation of this kind of approximation.
