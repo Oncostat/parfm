@@ -58,15 +58,21 @@ parfm <- function(formula,
   }
   
   #----- Check the baseline hazard and the frailty distribution ---------------#
-  if (!(dist %in% 
-    c("exponential", "weibull",
-      "gompertz", "loglogistic", "lognormal"))) {
-    stop("invalid baseline hazard")
-  }
-  if (!(frailty %in% 
-    c("none", "gamma", "ingau", "possta", "lognormal"))) {
-    stop("invalid frailty distribution")
-  }
+  #   if (!(
+  dist <- match.arg(tolower(dist), 
+                    #                     %in% 
+                    c("exponential", "weibull",
+                      "gompertz", "loglogistic", "lognormal"))
+  #   ) {
+  #     stop("invalid baseline hazard")
+  #   }
+  #   if (!(
+  frailty <- match.arg(tolower(frailty),
+                       #                        %in% 
+    c("none", "gamma", "ingau", "possta", "lognormal"))
+  #   ) {
+  #     stop("invalid frailty distribution")
+  #   }
   if (frailty == "none" &&  !is.null(cluster)) {
     warning(paste("With frailty='none' the cluster variable '",
                   cluster, "' is not used!", sep=""))
