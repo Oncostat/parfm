@@ -51,7 +51,7 @@ The
     <li>gamma,</li> 
     <li>inverse Gaussian,</li> 
     <li>positive stable and</li> 
-    <li>lognormal <img src="./new.png"></li>
+    <li>lognormal</li>
   </ul>
   frailty distributions can be specified,
   together with five different baseline hazard families:
