@@ -282,9 +282,11 @@ parfm <- function(formula,
             shape <- 1  #if positive, the shape parameter is fixed at that value
         }
         
-        coxMod <- try(phreg(formula=coxformula, data=data,
+        coxMod <- tryCatch(phreg(formula=coxformula, data=data,
                             dist=d, shape=shape, 
-                            center=FALSE, control=list(maxiter=maxit)))
+                            center=FALSE, control=list(maxiter=maxit)),
+                           error = function(e) {1},
+                           warning = function(w) {2})
         
         if (class(coxMod) %in% c('try-error', 'numeric')) {
             logshape <- logscale <- 0
