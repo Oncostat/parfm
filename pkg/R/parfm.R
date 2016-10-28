@@ -309,7 +309,7 @@ parfm <- function(formula,
                         - exp(logshape) * logscale)     #log(lambda)
         } else if (dist == "gompertz") {
             p.init <- c(- logscale,                     #log(gamma)
-                        logshape)                       #log(lambda)
+                        logshape - logscale)                       #log(lambda)
         } else if (dist == "lognormal") {
             p.init <- c(logscale,                       #mu
                         - logshape)                     #log(sigma)
