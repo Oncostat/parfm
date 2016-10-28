@@ -9,7 +9,7 @@
 \usage{
 parfm(formula, cluster=NULL, strata=NULL, data, inip=NULL, iniFpar=NULL,
       dist="weibull", frailty="none", method="BFGS", 
-      maxit=500, Fparscale=1, showtime=TRUE, correct=0)
+      maxit=500, Fparscale=1, showtime=FALSE, correct=0)
 }
 
 \arguments{

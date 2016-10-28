@@ -35,7 +35,7 @@
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: July 6, 2015                                         #
+#   Last modification on: October 28, 2016                                     #
 ################################################################################
 
 parfm <- function(formula,
@@ -49,7 +49,7 @@ parfm <- function(formula,
                   method="BFGS",
                   maxit=500,
                   Fparscale=1,
-                  showtime=TRUE,
+                  showtime=FALSE,
                   correct=0){
     if (missing(data)) {
         data <- eval(parse(text=paste("data.frame(", 
