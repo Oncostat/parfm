@@ -69,7 +69,7 @@ parfm <- function(formula,
     #   if (!(
     frailty <- match.arg(tolower(frailty),
                          #                        %in% 
-                         c("none", "gamma", "ingau", "possta", "lognormal"))
+                         c("none", "gamma", "ingau", "possta", "lognormal", "loglogistic"))
     #   ) {
     #     stop("invalid frailty distribution")
     #   }
@@ -283,8 +283,8 @@ parfm <- function(formula,
         }
         
         coxMod <- tryCatch(phreg(formula=coxformula, data=data,
-                            dist=d, shape=shape, 
-                            center=FALSE, control=list(maxiter=maxit)),
+                            dist=d, shape=shape, center=FALSE,
+                            control=list(maxiter=maxit)),
                            error = function(e) {1},
                            warning = function(w) {2})
         
@@ -314,7 +314,7 @@ parfm <- function(formula,
             p.init <- c(logscale,                       #mu
                         - logshape)                     #log(sigma)
         } else if (dist == "loglogistic") {
-            p.init <- c(- exp(logshape) * logscale,     #alpha
+            p.init <- c(logshape - exp(logshape) * logscale,     #alpha
                         logshape)                       #log(kappa)
         }
         
@@ -356,17 +356,17 @@ parfm <- function(formula,
     res <- NULL
     
     #----- Minimise Mloglikelihood() --------------------------------------------#
-    if ((frailty == "none") && is.null(inip)) {
-        todo <- expression({res <- list(par=pars)})
-        if (showtime) {
-            extime <- system.time(eval(todo))[1]
-        } else {
-            eval(todo)
-            extime <- NULL
-        } 
-        it <- NULL
-        lL <- coxMod$loglik[2]
-    } else {
+    # if ((frailty == "none") && is.null(inip)) {
+    #     todo <- expression({res <- list(par=pars)})
+    #     if (showtime) {
+    #         extime <- system.time(eval(todo))[1]
+    #     } else {
+    #         eval(todo)
+    #         extime <- NULL
+    #     } 
+    #     it <- NULL
+    #     lL <- coxMod$loglik[2]
+    # } else {
         todo <- expression({
             res <- optim(par=pars, fn=Mloglikelihood, method=method, 
                          obs=obsdata, dist=dist, frailty=frailty,
@@ -392,7 +392,7 @@ parfm <- function(formula,
         if (frailty == "possta") {
             lL <- lL + correct * log(10) * obsdata$ncl
         }
-    }
+    # }
     
     #----- Recover the estimates ------------------------------------------------#
     #heterogeneity parameter
