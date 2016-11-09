@@ -26,4 +26,4 @@ import(msm, eha, graphics, survival)
 importFrom("stats", 
            "AIC", "BIC", "aggregate", "delete.response", "dlnorm", "formula",
            "integrate", "model.matrix", "nlm", "optimize", "pchisq", "plnorm",
-           "pnorm", "qnorm", "terms", "update.formula", "xtabs")
+           "pnorm", "qnorm", "symnum", "terms", "update.formula", "xtabs")
