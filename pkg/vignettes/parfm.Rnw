@@ -32,7 +32,7 @@
              Catherine Legrand}
              
 \title{\pkg{parfm}: Parametric Frailty Models in \proglang{R}
-        \\[.5em]\small{Package vignette, V.~1.2 (September 12th, 2016)}}
+        \\[.5em]\small{Package vignette, V.~1.3 (November 10th, 2016)}}
 \Plaintitle{parfm: Parametric Frailty Models in R} %% without formatting
 
 \Abstract{ \input{tex/00_abs.tex} }
@@ -76,8 +76,8 @@
   114, Rue Edouard Vaillant\\
   94805 Villejuif, France\\
   E-mail: \email{federico.rotolo@gustaveroussy.fr}\\
-  
-  
+
+
   Catherine Legrand\\
   Institut de Statistique, Biostatistique et Sciences Actuarielles\\
   Universit\'e catholique de Louvain\\
@@ -100,8 +100,10 @@
 % \makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+\SweaveOpts{concordance=FALSE}
 
-This vignette has been published in the Journal of Statistical Software in 2012:
+This vignette is an up-to-date versuib of the paper
+    published in the Journal of Statistical Software in 2012:
 \cite{MundaEtal12}.
 
 \section{Introduction}
@@ -128,7 +130,7 @@ This vignette has been published in the Journal of Statistical Software in 2012:
 \section{Case study}
   \label{sec:rexample}
   \input{tex/03_rexample.tex}
-  
+
 \section{Discussion}
   \label{sec:concl}
   \input{tex/05_concl.tex}
@@ -142,17 +144,17 @@ This vignette has been published in the Journal of Statistical Software in 2012:
 \clearpage
 \appendix
 \section{Proofs}
-\subsection{Derivatives of the Laplace transform of the inverse Gaussian frailty distribution} 
+\subsection{Derivatives of the Laplace transform of the inverse Gaussian frailty distribution}
   \label{app:derLTIG}
   \input{tex/99.1_derLTIG.tex}
-  
+
 \clearpage
 \subsection{Conditional expectation of frailty terms}
   \label{app:condEfrailty}
   \input{tex/99.2_condEfrailty.tex}
 
 \clearpage
-\subsection{Conditional distribution of inverse Gaussian frailty} 
+\subsection{Conditional distribution of inverse Gaussian frailty}
   \label{app:condIG}
   \input{tex/99.3_condIG.tex}
 
