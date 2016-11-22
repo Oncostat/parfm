@@ -22,7 +22,7 @@
 #   - dist     : the baseline hazard;                                          #
 #   - frailty  : the frailty distribution;                                     #
 #   - method   : the optimisation method (See optim());                        #
-#   - maxit    : the maximum number of iterations (See optim());               #
+#   - maxit    : the mamumum number of iterations (See optim());               #
 #   - Fparscale: the scaling value for all the frailty parameter(s) in optim() #
 #                Optimisation is performed on Fpar/Fparscale                   #
 #   - showtime : is the execution time displayed?                              #
@@ -58,21 +58,15 @@ parfm <- function(formula,
     }
     
     #----- Check the baseline hazard and the frailty distribution ---------------#
-    #   if (!(
     dist <- match.arg(tolower(dist), 
                       #                     %in% 
                       c("exponential", "weibull",
-                        "gompertz", "loglogistic", "lognormal"))
-    #   ) {
-    #     stop("invalid baseline hazard")
-    #   }
-    #   if (!(
+                        "gompertz", "loglogistic", "lognormal",
+                        "logskewnormal"))
+    
     frailty <- match.arg(tolower(frailty),
-                         #                        %in% 
-                         c("none", "gamma", "ingau", "possta", "lognormal", "loglogistic"))
-    #   ) {
-    #     stop("invalid frailty distribution")
-    #   }
+                         c("none", "gamma", "ingau",
+                           "possta", "lognormal", "loglogistic"))
     if (frailty == "none" &&  !is.null(cluster)) {
         warning(paste("With frailty='none' the cluster variable '",
                       cluster, "' is not used!", sep=""))
@@ -98,27 +92,27 @@ parfm <- function(formula,
     obsdata <- NULL
     
     #time
-    if (length(formula[[2]]) == 3) {          # --> without left truncation
-        obsdata$time <- eval(#parse(text=paste("data$", 
+    if (length(formula[[2]]) == 3) {# --> without left truncation
+        obsdata$time <- eval(
             formula[[2]][[2]], 
-            envir=data #sep=""))
+            envir=data
         )
-        obsdata$event <- eval(#parse(text=paste("data$", 
+        obsdata$event <- eval(
             formula[[2]][[3]],
-            envir=data #sep=""))
+            envir=data
         )
-    } else if (length(formula[[2]]) == 4) {   # --> with left truncation
-        obsdata$trunc <- eval(#parse(text=paste("data$", 
+    } else if (length(formula[[2]]) == 4) {# --> with left truncation
+        obsdata$trunc <- eval(
             formula[[2]][[2]],
-            envir=data #sep=""))
+            envir=data
         )    
-        obsdata$time <- eval(#parse(text=paste("data$", 
+        obsdata$time <- eval(
             formula[[2]][[3]] ,
-            envir=data #sep=""))
+            envir=data
         )
-        obsdata$event <- eval(#parse(text=paste("data$", 
+        obsdata$event <- eval(
             formula[[2]][[4]], 
-            envir=data #sep=""))
+            envir=data
         )
     }
     if (!all(levels(as.factor(obsdata$event)) %in% 0:1)) {
@@ -172,9 +166,9 @@ parfm <- function(formula,
         if (! strata %in% names(data)) {
             stop(paste("object '", strata, "' not found", sep=""))
         }
-        obsdata$strata <- eval(#parse(text=paste("data$", 
+        obsdata$strata <- eval(
             as.name(strata), 
-            envir=data #sep=""))
+            envir=data
         )
         #number of strata
         obsdata$nstr <- length(levels(as.factor(obsdata$strata)))
@@ -221,10 +215,9 @@ parfm <- function(formula,
     } else if (dist %in% c("weibull", "gompertz",
                            "lognormal", "loglogistic")) {
         nBpar <- 2
+    } else if (dist %in% c("logskewnormal")) {
+        nBpar <- 3
     }
-    #   if (!is.null(strata)) {
-    #     nBpar <- nBpar #* obsdata$nstr
-    #   }
     obsdata$nBpar <- nBpar
     
     #nRpar: number of regression parameters
@@ -244,31 +237,31 @@ parfm <- function(formula,
         }
         p.init <- inip
         if (dist %in% c("exponential", "weibull", "gompertz")) {
-            #1st initial par: log(lambda), log(rho), log(rho), or log(gamma)
+            #1st initial par: log(lambda), log(rho), or log(gamma)
             if (any(p.init[1:obsdata$nstr] <= 0)) {
                 stop(paste("with that baseline, the 1st parameter has to be > 0"))
             }
             p.init[1:obsdata$nstr] <- log(p.init[1:obsdata$nstr]) 
         }
         if (dist %in% c("weibull", "gompertz", 
-                        "lognormal", "loglogistic")) {
-            #2nd initial par: log(lambda), log(lambda), log(lambda), 
-            #                 log(sigma), or log(kappa)
+                        "lognormal", "loglogistic", "logskewnormal")) {
+            #2nd initial par: log(lambda), log(lambda), 
+            #                 log(sigma), log(kappa), or log(sigma)
             if (any(p.init[obsdata$nstr + 1:obsdata$nstr] <= 0)) {
                 stop(paste("with that baseline, the 2nd parameter has to be > 0"))
             }
             p.init[obsdata$nstr + 1:obsdata$nstr] <- 
                 log(p.init[obsdata$nstr + 1:obsdata$nstr]) 
         }
-    } else {    
+    } else {
         coxformula <- formula
         if (!is.null(strata)) {
             if (dist!="exponential") {
-                coxformula <- eval(parse(text=
-                                             paste("update(formula, .~.+strata(", strata, "))", sep="")))
+                coxformula <- eval(parse(text = paste(
+                    "update(formula, .~.+strata(", strata, "))", sep="")))
             } else {
-                coxformula <- eval(parse(text=
-                                             paste("update(formula, .~.+", strata, ")", sep="")))
+                coxformula <- eval(parse(text = paste(
+                    "update(formula, .~.+", strata, ")", sep="")))
             }
         }
         
@@ -281,10 +274,13 @@ parfm <- function(formula,
             d <- "weibull"
             shape <- 1  #if positive, the shape parameter is fixed at that value
         }
+        if (d == "logskewnormal") {
+            d <- "lognormal"
+        }
         
         coxMod <- tryCatch(phreg(formula=coxformula, data=data,
-                            dist=d, shape=shape, center=FALSE,
-                            control=list(maxiter=maxit)),
+                                 dist=d, shape=shape, center=FALSE,
+                                 control=list(maxiter=maxit)),
                            error = function(e) {1},
                            warning = function(w) {2})
         
@@ -303,19 +299,23 @@ parfm <- function(formula,
         
         
         if (dist == "exponential") {
-            p.init <- - logscale                        #log(lambda)
+            p.init <- - logscale                             # log(lambda)
         } else if (dist == "weibull") {
-            p.init <- c(logshape,                       #log(rho)
-                        - exp(logshape) * logscale)     #log(lambda)
+            p.init <- c(logshape,                            # log(rho)
+                        - exp(logshape) * logscale)          # log(lambda)
         } else if (dist == "gompertz") {
-            p.init <- c(- logscale,                     #log(gamma)
-                        logshape - logscale)                       #log(lambda)
+            p.init <- c(- logscale,                          # log(gamma)
+                        logshape - logscale)                 # log(lambda)
         } else if (dist == "lognormal") {
-            p.init <- c(logscale,                       #mu
-                        - logshape)                     #log(sigma)
+            p.init <- c(logscale,                            # mu
+                        - logshape)                          # log(sigma)
         } else if (dist == "loglogistic") {
-            p.init <- c(logshape - exp(logshape) * logscale,     #alpha
-                        logshape)                       #log(kappa)
+            p.init <- c(logshape - exp(logshape) * logscale, # alpha
+                        logshape)                            # log(kappa)
+        } else if (dist == "logskewnormal") {
+            p.init <- c(logscale,                            # mu
+                        - logshape,                          # log(sigma)
+                        0)                                   # alpha
         }
         
         if (nRpar > 0) {
@@ -356,42 +356,31 @@ parfm <- function(formula,
     res <- NULL
     
     #----- Minimise Mloglikelihood() --------------------------------------------#
-    # if ((frailty == "none") && is.null(inip)) {
-    #     todo <- expression({res <- list(par=pars)})
-    #     if (showtime) {
-    #         extime <- system.time(eval(todo))[1]
-    #     } else {
-    #         eval(todo)
-    #         extime <- NULL
-    #     } 
-    #     it <- NULL
-    #     lL <- coxMod$loglik[2]
-    # } else {
-        todo <- expression({
-            res <- optim(par=pars, fn=Mloglikelihood, method=method, 
-                         obs=obsdata, dist=dist, frailty=frailty,
-                         correct=correct,
-                         hessian=TRUE, 
-                         control=list(maxit=maxit,
-                                      parscale=c(rep(Fparscale, nFpar),
-                                                 rep(1, nBpar  * obsdata$nstr + 
-                                                         nRpar))))})
-        if (showtime) {
-            extime <- system.time(eval(todo))[1]
-        } else {
-            eval(todo)
-            extime <- NULL
-        }
-        
-        if(res$convergence > 0) {
-            warning("optimisation procedure did not converge,
+    todo <- expression({
+        res <- optim(par=pars, fn=Mloglikelihood, method=method, 
+                     obs=obsdata, dist=dist, frailty=frailty,
+                     correct=correct,
+                     hessian=TRUE, 
+                     control=list(maxit=maxit,
+                                  parscale=c(rep(Fparscale, nFpar),
+                                             rep(1, nBpar  * obsdata$nstr + 
+                                                     nRpar))))})
+    if (showtime) {
+        extime <- system.time(eval(todo))[1]
+    } else {
+        eval(todo)
+        extime <- NULL
+    }
+    
+    if(res$convergence > 0) {
+        warning("optimisation procedure did not converge,
               conv = ", bquote(.(res$convergence)), ": see optim() for details")
-        }
-        it <- res$counts[1]   #number of iterations
-        lL <- - res$value     #maximum value of the marginal loglikelihood
-        if (frailty == "possta") {
-            lL <- lL + correct * log(10) * obsdata$ncl
-        }
+    }
+    it <- res$counts[1]   #number of iterations
+    lL <- - res$value     #mamumum value of the marginal loglikelihood
+    if (frailty == "possta") {
+        lL <- lL + correct * log(10) * obsdata$ncl
+    }
     # }
     
     #----- Recover the estimates ------------------------------------------------#
@@ -434,6 +423,11 @@ parfm <- function(formula,
         alpha <- res$par[nFpar + 1:obsdata$nstr]
         kappa <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         ESTIMATE <- c(alpha=alpha, kappa=kappa)
+    } else if (dist == "logskewnormal") {
+        mu <- res$par[nFpar + 1:obsdata$nstr]
+        sigma <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        alpha <- res$par[nFpar + 2 * obsdata$nstr + 1:obsdata$nstr]
+        ESTIMATE <- c(mu = mu, sigma = sigma, alpha = alpha)
     }
     
     #regression parameter(s)
@@ -445,11 +439,11 @@ parfm <- function(formula,
     }
     
     #all together
-    ESTIMATE <- c(theta=theta,
-                  sigma2=sigma2,
-                  nu=nu,
+    ESTIMATE <- c(theta = theta,
+                  sigma2 = sigma2,
+                  nu = nu,
                   ESTIMATE,
-                  beta=beta)
+                  beta = beta)
     
     #----- Recover the standard errors ------------------------------------------#
     if ((frailty == "none") && is.null(inip)) {
@@ -514,6 +508,14 @@ parfm <- function(formula,
                                        cov=var["log(shape)", "log(shape)"], 
                                        ses=TRUE)
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
+            } else if (dist == "logskewnormal") {
+                seMu <- sqrt(var["log(scale)", "log(scale)"])
+                seSigma <- deltamethod(g=~exp(- x1), 
+                                       mean=logshape, 
+                                       cov=var["log(shape)", "log(shape)"], 
+                                       ses=TRUE)
+                seAlpha <- NA
+                STDERR <- c(seXI = seMu, seSigma = seSigma, seAlpha = seAlpha)
             }
         } else {
             if (dist == "exponential") {
@@ -584,10 +586,22 @@ parfm <- function(formula,
                                 ses=TRUE)
                 })
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
+            } else if (dist == "logskewnormal") {
+                seMu <- sqrt(diag(var[substr(rownames(var),5,9) == "scale",
+                                      substr(rownames(var),5,9) == "scale"]))
+                seSigma <- sapply(1:obsdata$nstr, function(x) {
+                    deltamethod(g=~exp(- x1), 
+                                mean=logshape, 
+                                cov=var[paste("log(shape)", x, sep=":"), 
+                                        paste("log(shape)", x, sep=":")], 
+                                ses=TRUE)
+                })
+                seAlpha <- rep(NA, length(seSigma))
+                STDERR <- c(seXI = seMu, seSigma = seSigma, seAlpha = seAlpha)
             }
         }
         STDERR <- c(STDERR,
-                    se.beta=seBeta)
+                    se.beta = seBeta)
     } else {
         var <- try(diag(solve(res$hessian)), silent=TRUE)
         if (class(var) == "try-error") {
@@ -661,6 +675,19 @@ parfm <- function(formula,
                            sqrt(var[nFpar + obsdata$nstr + x] * kappa[x]^2), NA)
                 })
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
+            } else if (dist == "logskewnormal") {
+                seMu <- sapply(1:obsdata$nstr, function(x){
+                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
+                })
+                seSigma <- sapply(1:obsdata$nstr, function(x){
+                    ifelse(var[nFpar + obsdata$nstr + x] > 0,
+                           sqrt(var[nFpar + obsdata$nstr + x] * sigma[x]^2), NA)
+                })
+                seAlpha <- sapply(1:obsdata$nstr, function(x){
+                    ifelse(var[nFpar + 2 * obsdata$nstr + x] > 0,
+                           sqrt(var[nFpar + 2 * obsdata$nstr + x]), NA)
+                })
+                STDERR <- c(seMu = seMu, seSigma = seSigma, seAlpha = seAlpha)
             }
             
             #regression parameter(s)

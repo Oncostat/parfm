@@ -37,7 +37,7 @@ Mloglikelihood <- function(p,
                            frailty,
                            correct) { 
   # ---- Assign the number of frailty parameters 'obs$nFpar' ------------------#
-  # ---- and compute Omega for the Positive Stable frailty --------------------#
+  # ---- and compute Sigma for the Positive Stable frailty --------------------#
   
   if (frailty %in% c("gamma", "ingau")) {
     theta <- exp(p[1])
@@ -72,6 +72,11 @@ Mloglikelihood <- function(p,
     pars <- cbind(alpha = p[obs$nFpar + 1:obs$nstr],
                   kappa = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))    
     beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]
+  } else if (dist == "logskewnormal") {
+      pars <- cbind(mu    = p[obs$nFpar + 1:obs$nstr],
+                    sigma = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]),
+                    alpha = exp(p[obs$nFpar + 2 * obs$nstr + 1:obs$nstr]))
+      beta <- p[-(1:(obs$nFpar + 3 * obs$nstr))]
   }
   rownames(pars) <- levels(as.factor(obs$strata))
   

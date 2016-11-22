@@ -34,8 +34,7 @@ in 'formula'.}
   \item{dist}{
     The baseline hazard distribution.
     One of \code{weibull}, \code{exponential}, \code{gompertz},
-\code{lognormal} or
-\code{loglogistic}.}
+            \code{lognormal}, \code{loglogistic}, \code{logskewnormal}, or \code{logskewnormal}.}
   \item{frailty}{
     The Frailty distribution.
     One of: \code{none}, \code{gamma}, \code{ingau}, \code{possta} or \code{lognormal}.}
@@ -82,6 +81,16 @@ The loglogistic hazard (\code{dist="loglogistic"}) is
   h(t; alpha, kappa) = [exp(alpha) * kappa * t^(kappa - 1)] / [1 + exp(alpha) * t^(kappa)]}
 with \eqn{\alpha \in   {R}, \kappa > 0}{alpha in R, kappa > 0}.
 
+The log-skew-normal hazard (\code{dist="logskewnormal"}) is 
+    obtained as the ratio between the density and the cumulative distribution function
+    of a log-\link[sn:dsn]{skew normal} random variable (Azzalini, 1985),
+    which has density
+\deqn{f(t; \mu, \sigma, \alpha) = \frac{2 \sigma}{t(\log(t)-\mu)}
+    \phi\left(\frac{\log(t) - \mu}{\sigma}\right)
+    \Phi\left(\alpha\frac{\log(t)-\mu}{\sigma}\right)}
+with \eqn{\mu \in {R}, \sigma > 0, \alpha \in {R}}{mu in R, sigma > 0, alpha in R}, and where
+\eqn{\phi}{phi} and \eqn{\Phi}{Phi} are the density and distribution functions of a standard Normal random variable.
+
 
 
 \strong{Frailty distributions}
@@ -116,7 +125,7 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
   Marco Munda, Federico Rotolo, Catherine Legrand (2012).
   parfm: Parametric Frailty Models in R.
   Journal of Statistical Software, 51(11), 1-20. 
-  URL http://www.jstatsoft.org/v51/i11/.
+  DOI \href{http://dx.doi.org/10.18637/jss.v051.i11}{10.18637/jss.v051.i11}
 
   Duchateau L., Janssen P. (2008) 
   The frailty model. 
@@ -129,8 +138,12 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
   Goutis C., Casella G. (1999)
   Explaining the Saddlepoint Approximation.
   The American Statistician 53(3), 216-224.
-  DOI: <a href="dx.doi.org/10.1080/00031305.1999.10474463"
-    target="_blank">10.1080/00031305.1999.10474463</a>
+  DOI \href{http://dx.doi.org/10.1080/00031305.1999.10474463}{10.1080/00031305.1999.10474463}
+    
+ Azzalini A. (1985)
+ A class of distributions which includes the normal ones.
+ Scandinavian Journal of Statistics, 12(2):171-178.
+ URL \url{http://www.jstor.org/stable/4615982}
 
 }
 \author{

@@ -47,6 +47,8 @@
           gompertz, 
           loglogistic, 
           lognormal, 
+          logskewnormal, 
+          skew-normal, 
           \proglang{R}, 
           \pkg{parfm}}
 \Plainkeywords{parametric frailty models, 
@@ -59,6 +61,8 @@
                gompertz, 
                loglogistic, 
                lognormal, 
+               logskewnormal, 
+               skew-normal, 
                R, 
                parfm}
 
