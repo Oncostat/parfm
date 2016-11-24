@@ -85,12 +85,13 @@ The log-skew-normal hazard (\code{dist="logskewnormal"}) is
     obtained as the ratio between the density and the cumulative distribution function
     of a log-\link[sn:dsn]{skew normal} random variable (Azzalini, 1985),
     which has density
-\deqn{f(t; \mu, \sigma, \alpha) = \frac{2 \sigma}{t(\log(t)-\mu)}
-    \phi\left(\frac{\log(t) - \mu}{\sigma}\right)
-    \Phi\left(\alpha\frac{\log(t)-\mu}{\sigma}\right)}
-with \eqn{\mu \in {R}, \sigma > 0, \alpha \in {R}}{mu in R, sigma > 0, alpha in R}, and where
+\deqn{f(t; \xi, \omega, \alpha) = \frac{2 \omega}{t(\log(t)-\xi)}
+    \phi\left(\frac{\log(t) - \xi}{\omega}\right)
+    \Phi\left(\alpha\frac{\log(t)-\xi}{\omega}\right)}
+with \eqn{\xi \in {R}, \omega > 0, \alpha \in {R}}{xi in R, omega > 0, alpha in R}, and where
 \eqn{\phi}{phi} and \eqn{\Phi}{Phi} are the density and distribution functions of a standard Normal random variable.
-
+Of note, if \eqn{\alpha=0}{alpha=0} then the log-ske-normal boils down 
+    to the log-normal distribution, with \eqn{\mu=\xi}{mu=xi} and \eqn{\sigma=\omega}{sigma=omega}.
 
 
 \strong{Frailty distributions}

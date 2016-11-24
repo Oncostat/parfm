@@ -191,13 +191,13 @@ loglogistic <- function(pars,
 #     the normal ones. Scandinavian Journal of Statistics, 12:171-178          # 
 #                                                                              #
 #   Parameters:                                                                #
-#    [1] mu \in \mathbb R, the location parameter (called xi in original paper)#
-#    [2] sigma > 0, the scale parameter (called omega in original paper)       #
+#    [1] xi \in \mathbb R, the location parameter (called xi in original paper)#
+#    [2] omega > 0, the scale parameter (called omega in original paper)       #
 #    [3] alpha \in \mathbb R, the shape parameter                              #
 #                                                                              #
 #   Density:                                                                   #
-#    f(t) = 2 \sigma  / (t - \mu)                                              #
-#            \phi_d((t - \mu) / \sigma) \Phi(\alpha (t - \mu) / \sigma)        #
+#    f(t) = 2 \omega  / (t - \xi)                                              #
+#            \phi_d((t - \xi) / \omega) \Phi(\alpha (t - \xi) / \omega)        #
 #                                                                              #
 #                                                                              # 
 #   Author: Andrea Callegaro                                                   #

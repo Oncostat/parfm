@@ -246,7 +246,7 @@ parfm <- function(formula,
         if (dist %in% c("weibull", "gompertz", 
                         "lognormal", "loglogistic", "logskewnormal")) {
             #2nd initial par: log(lambda), log(lambda), 
-            #                 log(sigma), log(kappa), or log(sigma)
+            #                 log(sigma), log(kappa), or log(omega)
             if (any(p.init[obsdata$nstr + 1:obsdata$nstr] <= 0)) {
                 stop(paste("with that baseline, the 2nd parameter has to be > 0"))
             }
@@ -313,8 +313,8 @@ parfm <- function(formula,
             p.init <- c(logshape - exp(logshape) * logscale, # alpha
                         logshape)                            # log(kappa)
         } else if (dist == "logskewnormal") {
-            p.init <- c(logscale,                            # mu
-                        - logshape,                          # log(sigma)
+            p.init <- c(logscale,                            # xi
+                        - logshape,                          # log(omega)
                         0)                                   # alpha
         }
         
@@ -424,10 +424,10 @@ parfm <- function(formula,
         kappa <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         ESTIMATE <- c(alpha=alpha, kappa=kappa)
     } else if (dist == "logskewnormal") {
-        mu <- res$par[nFpar + 1:obsdata$nstr]
-        sigma <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        xi <- res$par[nFpar + 1:obsdata$nstr]
+        omega <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         alpha <- res$par[nFpar + 2 * obsdata$nstr + 1:obsdata$nstr]
-        ESTIMATE <- c(mu = mu, sigma = sigma, alpha = alpha)
+        ESTIMATE <- c(xi = xi, omega = omega, alpha = alpha)
     }
     
     #regression parameter(s)
@@ -509,13 +509,13 @@ parfm <- function(formula,
                                        ses=TRUE)
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
             } else if (dist == "logskewnormal") {
-                seMu <- sqrt(var["log(scale)", "log(scale)"])
-                seSigma <- deltamethod(g=~exp(- x1), 
+                seXi <- sqrt(var["log(scale)", "log(scale)"])
+                seOmega <- deltamethod(g=~exp(- x1), 
                                        mean=logshape, 
                                        cov=var["log(shape)", "log(shape)"], 
                                        ses=TRUE)
                 seAlpha <- NA
-                STDERR <- c(seXI = seMu, seSigma = seSigma, seAlpha = seAlpha)
+                STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
             }
         } else {
             if (dist == "exponential") {
@@ -587,9 +587,9 @@ parfm <- function(formula,
                 })
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
             } else if (dist == "logskewnormal") {
-                seMu <- sqrt(diag(var[substr(rownames(var),5,9) == "scale",
+                seXi <- sqrt(diag(var[substr(rownames(var),5,9) == "scale",
                                       substr(rownames(var),5,9) == "scale"]))
-                seSigma <- sapply(1:obsdata$nstr, function(x) {
+                seOmega <- sapply(1:obsdata$nstr, function(x) {
                     deltamethod(g=~exp(- x1), 
                                 mean=logshape, 
                                 cov=var[paste("log(shape)", x, sep=":"), 
@@ -597,7 +597,7 @@ parfm <- function(formula,
                                 ses=TRUE)
                 })
                 seAlpha <- rep(NA, length(seSigma))
-                STDERR <- c(seXI = seMu, seSigma = seSigma, seAlpha = seAlpha)
+                STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
             }
         }
         STDERR <- c(STDERR,
@@ -676,10 +676,10 @@ parfm <- function(formula,
                 })
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
             } else if (dist == "logskewnormal") {
-                seMu <- sapply(1:obsdata$nstr, function(x){
+                seXi <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
                 })
-                seSigma <- sapply(1:obsdata$nstr, function(x){
+                seOmega <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + obsdata$nstr + x] > 0,
                            sqrt(var[nFpar + obsdata$nstr + x] * sigma[x]^2), NA)
                 })
