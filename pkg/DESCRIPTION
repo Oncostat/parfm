@@ -8,8 +8,8 @@ Authors@R: c(person("Federico", "Rotolo", role = c("aut", "cre"),
               person("Marco", "Munda", role = "aut",
                      email = "marco.munda@arlenda.com"),
               person("Andrea", "Callegaro", role = "ctb"))
-Author: Federico Rotolo <federico.rotolo@gustaveroussy.fr> [aut, cre],
-        Marco Munda <marco.munda@arlenda.com> [aut],
+Author: Federico Rotolo <federico.rotolo@gustaveroussy.fr>[aut, cre],
+        Marco Munda <marco.munda@arlenda.com>[aut],
         Andrea Callegaro [ctb]
 Maintainer: Federico Rotolo <federico.rotolo@gustaveroussy.fr>
 Description: Fits Parametric Frailty Models by maximum marginal likelihood.
