@@ -10,6 +10,7 @@
 
 plot.select.parfm <- function(x, 
                               mar=c(2.5, 2, 1.5, .5),
+                              ty = 'b',
                               ...){
   par(mfrow=c(1, 3))
   
@@ -30,7 +31,7 @@ plot.select.parfm <- function(x,
   
   for (i in 1:nrow(x$AIC)) points(
     (1:ncol(x$AIC)), x$AIC[i, ],
-    pch=i, cex=1.5)
+    pch = 19 + i, cex = 1.5, ty = ty, bg = i)
   
   
   ### --- names --- ###
@@ -47,8 +48,9 @@ plot.select.parfm <- function(x,
            loglogistic = "loglogistic", 
            lognormal = "logNormal",
            logskewnormal = "logSkewNormal")[rownames(x$AIC)],
-         pch = 1:nrow(x$AIC), 
-         bg = "white", bty = "n",
+         pch = {if(ty == 'l') NULL else 19 + 1:nrow(x$AIC)},
+         pt.bg = 1:nrow(x$AIC),
+         bg = "white", bty = "n", lty = ifelse(ty == 'p', 0, 1),
          ncol = 1, cex = 1.5, xjust = .5)
   
   legend("bottom", #c(0, 2), c(.25, 1), yjust=1,
@@ -88,6 +90,6 @@ plot.select.parfm <- function(x,
   
   for (i in 1:nrow(x$BIC)) points(
     (1:ncol(x$BIC)), x$BIC[i, ],
-    pch=i, cex=1.5)
+    pch = 19 + i, cex = 1.5, ty = ty, bg = i)
 }
 
