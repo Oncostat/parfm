@@ -10,7 +10,7 @@
 \usage{
 select.parfm(formula, cluster=NULL, strata=NULL, data, inip=NULL, iniFpar=NULL,
              dist=c("exponential", "weibull", "gompertz", 
-                    "loglogistic", "lognormal"),
+                    "loglogistic", "lognormal", "logskewnormal"),
              frailty=c("none", "gamma", "ingau", "possta", "lognormal"),
              method="BFGS", maxit=500, Fparscale=1, correct=0)
 }
@@ -78,7 +78,8 @@ models <- select.parfm(Surv(time,status) ~ sex + age,
                               "weibull",
                               "gompertz", 
                               "loglogistic", 
-                              "lognormal"),
+                              "lognormal", 
+                              "logskewnormal"),
                        frailty=c("none", 
                                  "gamma", 
                                  "ingau", 
