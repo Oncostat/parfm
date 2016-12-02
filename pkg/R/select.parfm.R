@@ -25,7 +25,7 @@
 #   - correct  : the correction to use in case of many                         #
 #                events per cluster to get finite likelihood values.           #
 #                When correct!=0 the likelihood is divided by                  #
-#                10^(#clusters * correct) for computation,                     #
+#                10 ^ (#clusters * correct) for computation,                     #
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                It is used only for models with Positive Stable frailty       #
@@ -90,7 +90,7 @@ select.parfm <- function(formula,
           gompertz    = "Gompertz..........",
           loglogistic = "loglogistic.......",
           lognormal   = "lognormal.........",
-          lognormal   = "logskewnormal.....")[d])
+          logskewnormal   = "logskewnormal.....")[d])
     for (f in frailty) {
       cat("..")
       model <- try(parfm(formula = formula, 

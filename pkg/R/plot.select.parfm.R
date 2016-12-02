@@ -5,7 +5,7 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 22, 2011                                                    #
-#   Last modification on: October 17, 2012                                     #
+#   Last modification on: December  2, 2016                                    #
 ################################################################################
 
 plot.select.parfm <- function(x, 
@@ -35,19 +35,24 @@ plot.select.parfm <- function(x,
   
   ### --- names --- ###
   par(mar=mar)
-  plot(0:2, 0:2, xaxt="n", yaxt="n", bty="n", xlab="", ylab="",
-       ty="n")
+  plot(0:2, 0:2, xaxt = "n", yaxt = "n", bty = "n", ann = FALSE,
+       ty = "n")
   
-  legend(c(.3, 1.7), c(1, 1.75),
-         c(exponential="exponential", weibull="Weibull", 
-           inweibull="inverse Weibull",
-           gompertz="Gompertz", loglogistic="loglogistic", 
-           lognormal="lognormal")[rownames(x$AIC)],
-         pch=1:nrow(x$AIC), 
-         bg="white", bty="n",
-         ncol=1, cex=1.5, xjust=.5)
+  legend("top", #c(.3, 1.7), c(1, 1.75),
+         title = 'Baseline',
+         c(exponential = "exponential",
+           weibull = "Weibull", 
+           inweibull = "inverse Weibull",
+           gompertz = "Gompertz",
+           loglogistic = "loglogistic", 
+           lognormal = "logNormal",
+           logskewnormal = "logSkewNormal")[rownames(x$AIC)],
+         pch = 1:nrow(x$AIC), 
+         bg = "white", bty = "n",
+         ncol = 1, cex = 1.5, xjust = .5)
   
-  legend(c(0, 2), c(.25, 1), yjust=1,
+  legend("bottom", #c(0, 2), c(.25, 1), yjust=1,
+         title = 'Frailty distribution',
          mapply(paste, 
                 c(none="No",
                   gamma="Ga",

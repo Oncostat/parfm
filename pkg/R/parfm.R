@@ -29,13 +29,13 @@
 #   - correct  : (only for possta) the correction to use in case of many       #
 #                events per cluster to get finite likelihood values.           #
 #                When correct!=0 the likelihood is divided by                  #
-#                10^(#clusters * correct) for computation,                     #
+#                10 ^ (#clusters * correct) for computation,                   #
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: October 28, 2016                                     #
+#   Last modification on: December  2, 2016                                    #
 ################################################################################
 
 parfm <- function(formula,
@@ -77,10 +77,10 @@ parfm <- function(formula,
     
     #----- 'Correct' is useless except for frailty="possta" ---------------------#
     if (frailty == "possta") {  #Do not exaggerate when setting 'correct' !
-        if (10^correct == Inf || 10^-correct == 0) {
+        if (10 ^ correct == Inf || 10 ^ -correct == 0) {
             stop("'correct' is too large!")
         }
-        if (10^correct == 0 || 10^-correct == Inf) {
+        if (10 ^ correct == 0 || 10 ^ -correct == Inf) {
             stop("'correct' is too small!")
         }
     } else if (correct != 0) {
@@ -618,17 +618,17 @@ parfm <- function(formula,
             #heterogeneity parameter(s)
             if (frailty %in% c("gamma", "ingau")) {
                 seTheta <- sapply(1:nFpar, function(x){
-                    ifelse(var[x] > 0, sqrt(var[x] * theta[x]^2), NA)
+                    ifelse(var[x] > 0, sqrt(var[x] * theta[x] ^ 2), NA)
                 })
                 seSigma2 <- seNu <- NULL
             } else if (frailty == "lognormal") {
                 seSigma2 <- sapply(1:nFpar, function(x){
-                    ifelse(var[x] > 0, sqrt(var[x] * sigma2[x]^2), NA)
+                    ifelse(var[x] > 0, sqrt(var[x] * sigma2[x] ^ 2), NA)
                 })
                 seTheta <- seNu <- NULL
             } else if (frailty == "possta") {
                 seNu <- sapply(1:nFpar, function(x){
-                    ifelse(var[x] > 0, sqrt(var[x] * (nu * log(nu))^2), NA)
+                    ifelse(var[x] > 0, sqrt(var[x] * (nu * log(nu)) ^ 2), NA)
                 })
                 seTheta <- seSigma2 <- NULL
             }
@@ -636,25 +636,25 @@ parfm <- function(formula,
             #baseline hazard parameter(s)
             if (dist == "exponential") {
                 seLambda <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * lambda[x]^2), NA)
+                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * lambda[x] ^ 2), NA)
                 })
                 STDERR <- c(seLambda=seLambda)
             } else if (dist %in% c("weibull")) {
                 seRho <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * rho[x]^2), NA)
+                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * rho[x] ^ 2), NA)
                 })
                 seLambda <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + obsdata$nstr + x] > 0, 
-                           sqrt(var[nFpar + obsdata$nstr + x] * lambda[x]^2), NA)
+                           sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
                 })
                 STDERR <- c(seRho=seRho, seLambda=seLambda)
             } else if (dist == "gompertz") {
                 seGamma <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * gamma[x]^2), NA)
+                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * gamma[x] ^ 2), NA)
                 })
                 seLambda <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * lambda[x]^2), NA)
+                           sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
                 })
                 STDERR <- c(seGamma=seGamma, seLambda=seLambda)
             } else if (dist == "lognormal") {
@@ -663,7 +663,7 @@ parfm <- function(formula,
                 })
                 seSigma <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * sigma[x]^2), NA)
+                           sqrt(var[nFpar + obsdata$nstr + x] * sigma[x] ^ 2), NA)
                 })
                 STDERR <- c(seMu=seMu, seSigma=seSigma)
             } else if (dist == "loglogistic") {
@@ -672,7 +672,7 @@ parfm <- function(formula,
                 })
                 seKappa <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * kappa[x]^2), NA)
+                           sqrt(var[nFpar + obsdata$nstr + x] * kappa[x] ^ 2), NA)
                 })
                 STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
             } else if (dist == "logskewnormal") {
@@ -681,13 +681,13 @@ parfm <- function(formula,
                 })
                 seOmega <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * sigma[x]^2), NA)
+                           sqrt(var[nFpar + obsdata$nstr + x] * omega[x] ^ 2), NA)
                 })
                 seAlpha <- sapply(1:obsdata$nstr, function(x){
                     ifelse(var[nFpar + 2 * obsdata$nstr + x] > 0,
                            sqrt(var[nFpar + 2 * obsdata$nstr + x]), NA)
                 })
-                STDERR <- c(seMu = seMu, seSigma = seSigma, seAlpha = seAlpha)
+                STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
             }
             
             #regression parameter(s)
