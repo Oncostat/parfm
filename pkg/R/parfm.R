@@ -33,9 +33,11 @@
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #
+################################################################################
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: December  2, 2016                                    #
+#   Last modification on: January  23, 2017 (F Rotolo)                          #
+#                                                                              #
 ################################################################################
 
 parfm <- function(formula,
@@ -756,7 +758,8 @@ parfm <- function(formula,
         stratname   = strata,
         correct     = correct,
         formula     = as.character(Call[match("formula", names(Call), nomatch=0)]),
-        terms       = attr(Terms, "term.labels")
+        terms       = attr(Terms, "term.labels"),
+        var         = var
     ))
     if (frailty != "none") {
         names(attr(resmodel, "cumhaz")) <-

@@ -6,7 +6,7 @@
 #  These are functions with parameters                                         #
 #   - k        : the order of the derivative of the Laplace transform          #
 #   - s        : the argument of the Laplace transform                         #
-#   - theta/nu/sigma2
+#   - theta/nu/sigma2                                                          #
 #              : the heterogeneity parameter of the frailty distribution       #
 #   - what     : the quantity to be returned by the function,                  #
 #                either "logLT" for \log[ (-1)^k \mathcal L^(k)(s) ]           # 
