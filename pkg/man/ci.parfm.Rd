@@ -41,7 +41,6 @@
 \examples{
   library(parfm)
 
-  #------Kidney dataset------
   data("kidney")
   kidney$sex <- kidney$sex - 1
 
@@ -49,7 +48,6 @@
                data=kidney, dist="exponential", frailty="gamma")
 
   ci.parfm(pfm)
-  #--------------------------
 }
 
 %%\keyword{}

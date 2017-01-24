@@ -53,7 +53,7 @@
     that could not be made publicly available.    
 }
 \references{
-  Duchateau L., Janssen P. (2008). \emph{The frailty model. Springer}.
+  Duchateau L, Janssen P (2008). \emph{The frailty model. Springer}.
   New York: Springer--Verlag.
 }
 \examples{

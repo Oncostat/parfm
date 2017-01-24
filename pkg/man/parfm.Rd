@@ -124,25 +124,23 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
 \value{An object of class \code{parfm}.}
 
 \references{
-  Marco Munda, Federico Rotolo, Catherine Legrand (2012).
+  Munda M, Rotolo F, Legrand C (2012).
   parfm: Parametric Frailty Models in R.
   Journal of Statistical Software, 51(11), 1-20. 
   DOI \href{http://dx.doi.org/10.18637/jss.v051.i11}{10.18637/jss.v051.i11}
 
-  Duchateau L., Janssen P. (2008) 
-  The frailty model. 
-  Springer.
+  Duchateau L, Janssen P (2008). The frailty model. Springer.
 
-  Wienke A. (2010) 
+  Wienke A (2010).
   Frailty Models in Survival Analysis. 
   Chapman & Hall/CRC biostatistics series. Taylor and Francis.
 
-  Goutis C., Casella G. (1999)
+  Goutis C, Casella G (1999).
   Explaining the Saddlepoint Approximation.
   The American Statistician 53(3), 216-224.
   DOI \href{http://dx.doi.org/10.1080/00031305.1999.10474463}{10.1080/00031305.1999.10474463}
     
- Azzalini A. (1985)
+ Azzalini A (1985).
  A class of distributions which includes the normal ones.
  Scandinavian Journal of Statistics, 12(2):171-178.
  URL \url{http://www.jstor.org/stable/4615982}

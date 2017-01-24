@@ -54,10 +54,10 @@ in 'formula'.}
 
 %%\note{}
 \references{
-  Marco Munda, Federico Rotolo, Catherine Legrand (2012).
+  Munda M, Rotolo F, Legrand C (2012).
   parfm: Parametric Frailty Models in R.
   Journal of Statistical Software, 51(11), 1-20. 
-  URL http://www.jstatsoft.org/v51/i11/.
+  DOI \href{http://dx.doi.org/10.18637/jss.v051.i11}{10.18637/jss.v051.i11}
 }
 
 
@@ -74,18 +74,18 @@ data(kidney)
 kidney$sex <- kidney$sex - 1
 
 models <- select.parfm(Surv(time,status) ~ sex + age, 
-                       dist=c("exponential", 
-                              "weibull",
-                              "gompertz", 
-                              "loglogistic", 
-                              "lognormal", 
-                              "logskewnormal"),
-                       frailty=c("none", 
-                                 "gamma", 
-                                 "ingau", 
-                                 "possta", 
-                                 "lognormal"),
-                       cluster="id", data=kidney)
+                       dist = c("exponential", 
+                                "weibull",
+                                "gompertz", 
+                                "loglogistic", 
+                                "lognormal", 
+                                "logskewnormal"),
+                       frailty = c("none", 
+                                   "gamma", 
+                                   "ingau", 
+                                   "possta", 
+                                   "lognormal"),
+                       cluster = "id", data = kidney)
 models
 plot(models)
 }
