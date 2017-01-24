@@ -30,9 +30,8 @@
 #       Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1          #
 #                                                                              #
 #                                                                              #
-#                                                                              #
 #   Date: December 19, 2011                                                    #
-#   Last modification on: October 16, 2012                                     #
+#   Last modification on: January 23, 2017                                     #
 ################################################################################
 
 print.parfm <- function(x,
@@ -64,13 +63,6 @@ print.parfm <- function(x,
         
         # Significance of regression parameters with symbols
         if ("p-val" %in% colnames(x)) {
-            #       signif <-unlist(lapply(x$"p-val", function(x) { if (!is.na(x)){
-            #         if (x<.001) 4  else
-            #           if (x<.01) 3  else
-            #             if (x<.05) 2 else
-            #               if (x<.1) 1 else 0  } else 0 }
-            #       ))
-            #       signif <- factor(signif, levels=0:4, labels=c("",".  ","*  ","** ","***"))
             signif <- symnum(x$"p-val", 
                              c(0, .001, .01, .05, .1, 1),
                              c('***', '**', '*', '.', ''), na='')
@@ -79,6 +71,8 @@ print.parfm <- function(x,
         # Object to printed out
         toprint <- round(x, digits)
         if ("p-val" %in% colnames(x)) {
+            toprint$"p-val"[toprint$"p-val" < 10 ^ (-digits)] <- 
+                paste0(c('<.', rep(0, digits - 1), '1'), collapse = '')
             toprint <- cbind(toprint, signif)
             names(toprint)[length(names(toprint))] = ""
         }

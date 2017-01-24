@@ -7,9 +7,10 @@
 \description{Fits parametric Frailty Models by maximizing the marginal likelihood.}
 
 \usage{
-parfm(formula, cluster=NULL, strata=NULL, data, inip=NULL, iniFpar=NULL,
-      dist="weibull", frailty="none", method="BFGS", 
-      maxit=500, Fparscale=1, showtime=FALSE, correct=0)
+parfm(formula, cluster = NULL, strata = NULL, data,
+      inip = NULL, iniFpar = NULL,
+      dist = "weibull", frailty = "none", method = "nlminb", 
+      maxit = 500, Fparscale = 1, showtime = FALSE, correct = 0)
 }
 
 \arguments{
@@ -38,9 +39,9 @@ in 'formula'.}
   \item{frailty}{
     The Frailty distribution.
     One of: \code{none}, \code{gamma}, \code{ingau}, \code{possta} or \code{lognormal}.}
-  \item{method}{The optimisation method from the function \code{\link{optim}()}.}
-  \item{maxit}{Maximum number of iterations (see \code{\link{optim}()}).}
-  \item{Fparscale}{the scaling value for the frailty parameter in \code{\link{optim}()}. 
+  \item{method}{The optimisation method from the function \code{\link{optimx}()}.}
+  \item{maxit}{Maximum number of iterations (see \code{\link{optimx}()}).}
+  \item{Fparscale}{the scaling value for the frailty parameter in \code{\link{optimx}()}. 
     Optimisation is performed on Fpar/Fparscale.}
   \item{showtime}{Show the execution time?}
   \item{correct}{A correction factor that does not change the marginal
@@ -166,18 +167,19 @@ data(kidney)
  # type 'help(kidney)' for a description of the data set
 kidney$sex <- kidney$sex - 1
 
-parfm(Surv(time,status) ~ sex + age, cluster="id",
-      data=kidney, dist="exponential", frailty="gamma")
+parfm(Surv(time,status) ~ sex + age, cluster = "id",
+      data = kidney, dist = "exponential", frailty = "gamma")
 
 \donttest{
-parfm(Surv(time,status) ~ sex + age, cluster="id",
-      data=kidney, dist="exponential", frailty="lognormal")
+parfm(Surv(time,status) ~ sex + age, cluster = "id",
+      data = kidney, dist = "weibull", frailty = "ingau")
 
-parfm(Surv(time,status) ~ sex + age, cluster="id",
-      data=kidney, dist="weibull", frailty="ingau")
+parfm(Surv(time,status) ~ sex + age, cluster = "id",
+      data = kidney, dist="gompertz", frailty="possta", method="CG")
 
-parfm(Surv(time,status) ~ sex + age, cluster="id",
-      data=kidney, dist="gompertz", frailty="possta", method="Nelder-Mead")
+
+parfm(Surv(time,status) ~ sex + age, cluster = "id",
+      data = kidney, dist="gompertz", frailty="logskewnormal")
 #--------------------------
 
 #------Asthma dataset------
@@ -185,9 +187,9 @@ data(asthma)
 head(asthma)
   # type 'help(asthma)' for a description of the data set
 
-parfm(Surv(Begin, End, Status)~Drug, cluster="Patid", 
-      data=asthma[asthma$Fevent==0,],
-      dist="weibull", frailty="gamma")
+parfm(Surv(Begin, End, Status) ~ Drug, cluster = "Patid", 
+      data = asthma[asthma$Fevent == 0, ],
+      dist = "weibull", frailty = "lognormal", method = "Nelder-Mead")
 #--------------------------
 }
 }

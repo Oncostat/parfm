@@ -36,32 +36,31 @@
 ################################################################################
 #                                                                              #
 #   Date:                 December 21, 2011                                    #
-#   Last modification on: January  23, 2017 (F Rotolo)                          #
+#   Last modification on: January  24, 2017 (F Rotolo)                          #
 #                                                                              #
 ################################################################################
 
 parfm <- function(formula,
-                  cluster=NULL,
-                  strata=NULL,
+                  cluster   = NULL,
+                  strata    = NULL,
                   data,
-                  inip=NULL,
-                  iniFpar=NULL,
-                  dist="weibull",
-                  frailty="none",
-                  method="BFGS",
-                  maxit=500,
-                  Fparscale=1,
-                  showtime=FALSE,
-                  correct=0){
+                  inip      = NULL,
+                  iniFpar   = NULL,
+                  dist      = "weibull",
+                  frailty   = "none",
+                  method    = "nlminb",
+                  maxit     = 500,
+                  Fparscale = 1,
+                  showtime  = FALSE,
+                  correct   = 0){
     if (missing(data)) {
-        data <- eval(parse(text=paste("data.frame(", 
-                                      paste(all.vars(formula), collapse=", "),
+        data <- eval(parse(text = paste("data.frame(", 
+                                      paste(all.vars(formula), collapse = ", "),
                                       ")")))
     }
     
     #----- Check the baseline hazard and the frailty distribution ---------------#
     dist <- match.arg(tolower(dist), 
-                      #                     %in% 
                       c("exponential", "weibull",
                         "gompertz", "loglogistic", "lognormal",
                         "logskewnormal"))
@@ -70,14 +69,14 @@ parfm <- function(formula,
                          c("none", "gamma", "ingau",
                            "possta", "lognormal", "loglogistic"))
     if (frailty == "none" &&  !is.null(cluster)) {
-        warning(paste("With frailty='none' the cluster variable '",
-                      cluster, "' is not used!", sep=""))
+        warning(paste0("With frailty='none' the cluster variable '",
+                       cluster, "' is not used!"))
     }
     if (frailty == "none" &&  !is.null(iniFpar)) {
         warning("With frailty='none' the argument 'iniFpar' is not used!")
     }
     
-    #----- 'Correct' is useless except for frailty="possta" ---------------------#
+    #----- 'Correct' is useless except for frailty="possta" -------------------#
     if (frailty == "possta") {  #Do not exaggerate when setting 'correct' !
         if (10 ^ correct == Inf || 10 ^ -correct == 0) {
             stop("'correct' is too large!")
@@ -86,35 +85,34 @@ parfm <- function(formula,
             stop("'correct' is too small!")
         }
     } else if (correct != 0) {
-        warning(paste("'correct' has no effect when 'frailty = ", frailty, "'",
-                      sep=""))
+        warning(paste0("'correct' has no effect when 'frailty = ", frailty, "'"))
     }
     
-    #----- Data for Mloglikelihood() --------------------------------------------#
+    #----- Data for Mloglikelihood() ------------------------------------------#
     obsdata <- NULL
     
     #time
     if (length(formula[[2]]) == 3) {# --> without left truncation
         obsdata$time <- eval(
             formula[[2]][[2]], 
-            envir=data
+            envir = data
         )
         obsdata$event <- eval(
             formula[[2]][[3]],
-            envir=data
+            envir = data
         )
     } else if (length(formula[[2]]) == 4) {# --> with left truncation
         obsdata$trunc <- eval(
             formula[[2]][[2]],
-            envir=data
+            envir = data
         )    
         obsdata$time <- eval(
             formula[[2]][[3]] ,
-            envir=data
+            envir = data
         )
         obsdata$event <- eval(
             formula[[2]][[4]], 
-            envir=data
+            envir = data
         )
     }
     if (!all(levels(as.factor(obsdata$event)) %in% 0:1)) {
@@ -140,11 +138,11 @@ parfm <- function(formula,
         obsdata$di <- sum(obsdata$event)
     } else {
         if (! cluster %in% names(data)) {
-            stop(paste("object '", cluster, "' not found", sep=""))
+            stop(paste0("object '", cluster, "' not found"))
         }
-        obsdata$cluster <- eval(#parse(text=paste("data$", 
+        obsdata$cluster <- eval(#parse(text=paste0("data$", 
             as.name(cluster),
-            envir=data #sep=""))
+            envir = data #))
         )
         #number of clusters
         obsdata$ncl <- length(levels(as.factor(obsdata$cluster)))
@@ -166,11 +164,11 @@ parfm <- function(formula,
         obsdata$dq <- sum(obsdata$event)
     } else {
         if (! strata %in% names(data)) {
-            stop(paste("object '", strata, "' not found", sep=""))
+            stop(paste0("object '", strata, "' not found"))
         }
         obsdata$strata <- eval(
             as.name(strata), 
-            envir=data
+            envir = data
         )
         #number of strata
         obsdata$nstr <- length(levels(as.factor(obsdata$strata)))
@@ -202,7 +200,7 @@ parfm <- function(formula,
     
     
     
-    #----- Dimensions -----------------------------------------------------------#
+    #----- Dimensions ---------------------------------------------------------#
     #nFpar: number of heterogeneity parameters
     if (frailty == "none") {
         nFpar <- 0
@@ -226,20 +224,23 @@ parfm <- function(formula,
     nRpar <- ncol(obsdata$x) - 1
     obsdata$nRpar <- nRpar  
     
-    #----- Initial parameters ---------------------------------------------------#
+    #----- Initial parameters -------------------------------------------------#
     if (!is.null(inip)) {
         #if they are specified, then 
-        #(1) check the dimension,
-        #(2) check whether they lie in their parameter space, and
-        #(3) reparametrise them so that they take on values on the whole real line
+        # (1) check the dimension,
+        # (2) check whether they lie in their parameter space, and
+        # (3) reparametrise them so that they take on values on the whole real line
         
+        # (1)
         if (length(inip) != nBpar * obsdata$nstr + nRpar) {
             stop(paste("number of initial parameters 'inip' must be", 
                        nBpar * obsdata$nstr + nRpar))
         }
         p.init <- inip
+        
+        # (2)-(3)
         if (dist %in% c("exponential", "weibull", "gompertz")) {
-            #1st initial par: log(lambda), log(rho), or log(gamma)
+            # 1st initial par: log(lambda), log(rho), or log(gamma)
             if (any(p.init[1:obsdata$nstr] <= 0)) {
                 stop(paste("with that baseline, the 1st parameter has to be > 0"))
             }
@@ -256,86 +257,21 @@ parfm <- function(formula,
                 log(p.init[obsdata$nstr + 1:obsdata$nstr]) 
         }
     } else {
-        coxformula <- formula
-        if (!is.null(strata)) {
-            if (dist!="exponential") {
-                coxformula <- eval(parse(text = paste(
-                    "update(formula, .~.+strata(", strata, "))", sep="")))
-            } else {
-                coxformula <- eval(parse(text = paste(
-                    "update(formula, .~.+", strata, ")", sep="")))
-            }
-        }
-        
-        #if they are not specified, then fit a parametric Cox's model
-        #     library(eha)
-        
-        shape <- 0  #if zero or negative, the shape parameter is estimated
-        d <- dist
-        if (d == "exponential") {
-            d <- "weibull"
-            shape <- 1  #if positive, the shape parameter is fixed at that value
-        }
-        if (d == "logskewnormal") {
-            d <- "lognormal"
-        }
-        
-        coxMod <- tryCatch(phreg(formula=coxformula, data=data,
-                                 dist=d, shape=shape, center=FALSE,
-                                 control=list(maxiter=maxit)),
-                           error = function(e) {1},
-                           warning = function(w) {2})
-        
-        if (class(coxMod) %in% c('try-error', 'numeric')) {
-            logshape <- logscale <- 0
-        } else {
-            logshape <- as.numeric(coxMod$coef[
-                substr(names(coxMod$coef), 5, 9) == "shape"])
-            logscale <- as.numeric(coxMod$coef[
-                substr(names(coxMod$coef), 5, 9) == "scale"])
-        }
-        if (!is.null(strata) && dist=="exponential") {
-            logscale <- logscale - 
-                c(0, coxMod$coef[substr(names(coxMod$coef), 1, nchar(strata)) == strata])
-        }
-        
-        
-        if (dist == "exponential") {
-            p.init <- - logscale                             # log(lambda)
-        } else if (dist == "weibull") {
-            p.init <- c(logshape,                            # log(rho)
-                        - exp(logshape) * logscale)          # log(lambda)
-        } else if (dist == "gompertz") {
-            p.init <- c(- logscale,                          # log(gamma)
-                        logshape - logscale)                 # log(lambda)
-        } else if (dist == "lognormal") {
-            p.init <- c(logscale,                            # mu
-                        - logshape)                          # log(sigma)
-        } else if (dist == "loglogistic") {
-            p.init <- c(logshape - exp(logshape) * logscale, # alpha
-                        logshape)                            # log(kappa)
-        } else if (dist == "logskewnormal") {
-            p.init <- c(logscale,                            # xi
-                        - logshape,                          # log(omega)
-                        0)                                   # alpha
-        }
-        
-        if (nRpar > 0) {
-            if (class(coxMod) %in% c('try-error', 'numeric')) {
-                cnms <- colnames(model.matrix(coxformula, data=data))
-                cnms <- setdiff(cnms, c("(Intercept)", "log(scale)", "log(shape)"))
-                p.init <- c(p.init, rep(0, length(cnms)))
-            } else {
-                p.init <- c(p.init,
-                            as.numeric(coxMod$coef[
-                                setdiff(names(coxMod$coef), 
-                                        c("(Intercept)", "log(scale)", "log(shape)"))
-                                ]))
-            }
-        }
+        sink('NUL')
+        inires <- optimx(par = rep(0, nRpar + nBpar),
+                         fn = optMloglikelihood, method = method,
+                         obs = obsdata, dist = dist, frailty = 'none',
+                         correct = correct,
+                         hessian = TRUE,
+                         control = list(maxit = maxit,
+                                        starttests = FALSE,
+                                        dowarn = FALSE))
+        sink()
+        p.init <- inires[1:(nRpar + nBpar)]
+        rm(inires)
     }
     
-    #--- frailty parameters initialisation ---#
+    # --- frailty parameters initialisation --- #
     if (frailty == "none") {
         pars <- NULL
     } else if (frailty %in% c("gamma", "ingau", "lognormal")) {
@@ -354,51 +290,60 @@ parfm <- function(formula,
         pars <- log(-log(iniFpar))
     }
     
-    pars <- c(pars, p.init)
+    pars <- c(pars, unlist(p.init))
     res <- NULL
     
-    #----- Minimise Mloglikelihood() --------------------------------------------#
+    #--------------------------------------------------------------------------#
+    #----- Minimise Mloglikelihood() ------------------------------------------#
+    #--------------------------------------------------------------------------#
+    sink('NUL')
     todo <- expression({
-        res <- optim(par=pars, fn=Mloglikelihood, method=method, 
-                     obs=obsdata, dist=dist, frailty=frailty,
-                     correct=correct,
-                     hessian=TRUE, 
-                     control=list(maxit=maxit,
-                                  parscale=c(rep(Fparscale, nFpar),
-                                             rep(1, nBpar  * obsdata$nstr + 
-                                                     nRpar))))})
+        res <- optimx(par = pars, fn = optMloglikelihood, method = method,
+                      obs = obsdata, dist = dist, frailty = frailty,
+                      correct = correct,
+                      hessian = TRUE,
+                      control = list(maxit = maxit,
+                                     starttests = FALSE,
+                                     dowarn = FALSE))
+        })
     if (showtime) {
         extime <- system.time(eval(todo))[1]
     } else {
         eval(todo)
         extime <- NULL
     }
+    sink()
+    #--------------------------------------------------------------------------#
     
-    if(res$convergence > 0) {
+    if(res$convcode > 0) {
         warning("optimisation procedure did not converge,
-              conv = ", bquote(.(res$convergence)), ": see optim() for details")
+              conv = ", bquote(.(res$convergence)), ": see ?optimx for details")
     }
-    it <- res$counts[1]   #number of iterations
-    lL <- - res$value     #mamumum value of the marginal loglikelihood
+    it <- res$niter   #number of iterations
+    lL <- -res$value     # value of the marginal loglikelihood
     if (frailty == "possta") {
         lL <- lL + correct * log(10) * obsdata$ncl
     }
-    # }
     
-    #----- Recover the estimates ------------------------------------------------#
+    
+    #--------------------------------------------------------------------------#
+    #----- Recover the estimates ----------------------------------------------#
+    #--------------------------------------------------------------------------#
+    estim_par <- as.numeric(res[1:(nFpar + nBpar  * obsdata$nstr + nRpar)])
+    
     #heterogeneity parameter
     if (frailty %in% c("gamma", "ingau")) {
-        theta <- exp(res$par[1:nFpar])
+        theta <- exp(estim_par[1:nFpar])
         sigma2 <- NULL
         nu <- NULL
     } else if (frailty == "lognormal") {
         theta <- NULL
-        sigma2 <- exp(res$par[1:nFpar])
+        sigma2 <- exp(estim_par[1:nFpar])
         nu <- NULL
     } else if (frailty == "possta") {
         theta <- NULL
         sigma2 <- NULL
-        nu <- exp(-exp(res$par[1:nFpar]))
+        nu <- exp(-exp(estim_par[1:nFpar]))
     } else if (frailty == "none"){
         theta <- NULL
         sigma2 <- NULL
@@ -407,28 +352,28 @@ parfm <- function(formula,
     
     #baseline hazard parameter(s)
     if (dist == "exponential") {
-        lambda <- exp(res$par[nFpar + 1:obsdata$nstr])
+        lambda <- exp(estim_par[nFpar + 1:obsdata$nstr])
         ESTIMATE <- c(lambda=lambda)
     } else if (dist %in% c("weibull")) {
-        rho <- exp(res$par[nFpar + 1:obsdata$nstr])
-        lambda <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        rho <- exp(estim_par[nFpar + 1:obsdata$nstr])
+        lambda <- exp(estim_par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         ESTIMATE <- c(rho=rho, lambda=lambda)
     } else if (dist == "gompertz") {
-        gamma <- exp(res$par[nFpar + 1:obsdata$nstr])
-        lambda <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        gamma <- exp(estim_par[nFpar + 1:obsdata$nstr])
+        lambda <- exp(estim_par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         ESTIMATE <- c(gamma=gamma, lambda=lambda)
     } else if (dist == "lognormal") {
-        mu <- res$par[nFpar + 1:obsdata$nstr]
-        sigma <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        mu <- estim_par[nFpar + 1:obsdata$nstr]
+        sigma <- exp(estim_par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         ESTIMATE <- c(mu=mu, sigma=sigma)
     } else if (dist == "loglogistic") {
-        alpha <- res$par[nFpar + 1:obsdata$nstr]
-        kappa <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        alpha <- estim_par[nFpar + 1:obsdata$nstr]
+        kappa <- exp(estim_par[nFpar + obsdata$nstr + 1:obsdata$nstr])
         ESTIMATE <- c(alpha=alpha, kappa=kappa)
     } else if (dist == "logskewnormal") {
-        xi <- res$par[nFpar + 1:obsdata$nstr]
-        omega <- exp(res$par[nFpar + obsdata$nstr + 1:obsdata$nstr])
-        alpha <- res$par[nFpar + 2 * obsdata$nstr + 1:obsdata$nstr]
+        xi <- estim_par[nFpar + 1:obsdata$nstr]
+        omega <- exp(estim_par[nFpar + obsdata$nstr + 1:obsdata$nstr])
+        alpha <- estim_par[nFpar + 2 * obsdata$nstr + 1:obsdata$nstr]
         ESTIMATE <- c(xi = xi, omega = omega, alpha = alpha)
     }
     
@@ -436,7 +381,7 @@ parfm <- function(formula,
     if (nRpar == 0) {
         beta <- NULL
     } else {
-        beta <- res$par[-(1:(nFpar + nBpar * obsdata$nstr))]
+        beta <- estim_par[-(1:(nFpar + nBpar * obsdata$nstr))]
         names(beta) <- paste("beta", names(obsdata$x), sep=".")[-1]
     }
     
@@ -446,293 +391,145 @@ parfm <- function(formula,
                   nu = nu,
                   ESTIMATE,
                   beta = beta)
+    #--------------------------------------------------------------------------#
     
-    #----- Recover the standard errors ------------------------------------------#
-    if ((frailty == "none") && is.null(inip)) {
-        var <- coxMod$var
+    
+    #--------------------------------------------------------------------------#
+    #----- Recover the standard errors ----------------------------------------#
+    #--------------------------------------------------------------------------#
+    # browser()
+    var <- try(diag(solve(#res$hessian
+        attr(res, 'details')[1, 'nhatend'][[1]]
+    )), silent=TRUE)
+    if (class(var) == "try-error") {
+        warning(var[1])
+        STDERR <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)
+        PVAL <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)
+    } else {
+        if (any(var <= 0)) {
+            warning(paste("negative variances have been replaced by NAs\n",
+                          "Please, try other initial values",
+                          "or another optimisation method"))
+        }
+        
+        #heterogeneity parameter(s)
+        if (frailty %in% c("gamma", "ingau")) {
+            seTheta <- sapply(1:nFpar, function(x){
+                ifelse(var[x] > 0, sqrt(var[x] * theta[x] ^ 2), NA)
+            })
+            seSigma2 <- seNu <- NULL
+        } else if (frailty == "lognormal") {
+            seSigma2 <- sapply(1:nFpar, function(x){
+                ifelse(var[x] > 0, sqrt(var[x] * sigma2[x] ^ 2), NA)
+            })
+            seTheta <- seNu <- NULL
+        } else if (frailty == "possta") {
+            seNu <- sapply(1:nFpar, function(x){
+                ifelse(var[x] > 0, sqrt(var[x] * (nu * log(nu)) ^ 2), NA)
+            })
+            seTheta <- seSigma2 <- NULL
+        }
+        
+        #baseline hazard parameter(s)
+        if (dist == "exponential") {
+            seLambda <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * lambda[x] ^ 2), NA)
+            })
+            STDERR <- c(seLambda=seLambda)
+        } else if (dist %in% c("weibull")) {
+            seRho <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * rho[x] ^ 2), NA)
+            })
+            seLambda <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + obsdata$nstr + x] > 0, 
+                       sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
+            })
+            STDERR <- c(seRho=seRho, seLambda=seLambda)
+        } else if (dist == "gompertz") {
+            seGamma <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * gamma[x] ^ 2), NA)
+            })
+            seLambda <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + obsdata$nstr + x] > 0,
+                       sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
+            })
+            STDERR <- c(seGamma=seGamma, seLambda=seLambda)
+        } else if (dist == "lognormal") {
+            seMu <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
+            })
+            seSigma <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + obsdata$nstr + x] > 0,
+                       sqrt(var[nFpar + obsdata$nstr + x] * sigma[x] ^ 2), NA)
+            })
+            STDERR <- c(seMu=seMu, seSigma=seSigma)
+        } else if (dist == "loglogistic") {
+            seAlpha <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
+            })
+            seKappa <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + obsdata$nstr + x] > 0,
+                       sqrt(var[nFpar + obsdata$nstr + x] * kappa[x] ^ 2), NA)
+            })
+            STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
+        } else if (dist == "logskewnormal") {
+            seXi <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
+            })
+            seOmega <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + obsdata$nstr + x] > 0,
+                       sqrt(var[nFpar + obsdata$nstr + x] * omega[x] ^ 2), NA)
+            })
+            seAlpha <- sapply(1:obsdata$nstr, function(x){
+                ifelse(var[nFpar + 2 * obsdata$nstr + x] > 0,
+                       sqrt(var[nFpar + 2 * obsdata$nstr + x]), NA)
+            })
+            STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
+        }
+        
+        #regression parameter(s)
         if (nRpar == 0) {
             seBeta <- NULL
         } else {
-            seBeta <- sqrt(diag(var)[
-                setdiff(names(coxMod$coef), 
-                        c("(Intercept)", "log(scale)", "log(shape)"))])
+            seBeta <- numeric(nRpar)
+            varBeta <- var[-(1:(nFpar + nBpar * obsdata$nstr))]
+            for(i in 1:nRpar) {
+                seBeta[i] <- ifelse(varBeta[i] > 0, sqrt(varBeta[i]), NA)
+            }
             PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
-                      2 * pnorm(q=- abs(beta / seBeta)))
+                      2 * pnorm(q= -abs(beta / seBeta)))
         }
         
-        if (obsdata$nstr == 1) {
-            if (dist == "exponential") {
-                seLambda <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(- x1), 
-                                mean=logscale[x],
-                                cov=var["log(scale)", "log(scale)"],
-                                ses=TRUE)
-                })
-                STDERR <- c(seLambda=seLambda)
-            } else if (dist %in% c("weibull")) {
-                seRho <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(x1), 
-                                mean=logshape[x],
-                                cov=var["log(shape)", "log(shape)"], 
-                                ses=TRUE)
-                })
-                seLambda <- deltamethod(g=~exp(- exp(x2) * x1),
-                                        mean=c(logscale, logshape),
-                                        cov=var[c("log(scale)","log(shape)"),
-                                                c("log(scale)","log(shape)")],
-                                        ses=TRUE)
-                STDERR <- c(seRho=seRho, seLambda=seLambda)
-            } else if (dist == "gompertz") {
-                seGamma <- deltamethod(g=~exp(- x1),
-                                       mean=logscale,
-                                       cov=var["log(scale)", "log(scale)"],
-                                       ses=TRUE)
-                seLambda <- deltamethod(g=~exp(x1),
-                                        mean=logshape,
-                                        cov=var["log(shape)", "log(shape)"],
-                                        ses=TRUE)
-                STDERR <- c(seGamma=seGamma, seLambda=seLambda)
-            } else if (dist == "lognormal") {
-                seMu <- sqrt(var["log(scale)", "log(scale)"])
-                seSigma <- deltamethod(g=~exp(- x1), 
-                                       mean=logshape, 
-                                       cov=var["log(shape)", "log(shape)"], 
-                                       ses=TRUE)
-                STDERR <- c(seMu=seMu, seSigma=seSigma)
-            } else if (dist == "loglogistic") {
-                seAlpha <- deltamethod(g=~- exp(x2) * x1,
-                                       mean=c(logscale, logshape),
-                                       cov=var[c("log(scale)","log(shape)"),
-                                               c("log(scale)","log(shape)")],
-                                       ses=TRUE)
-                seKappa <- deltamethod(g=~exp(x1), 
-                                       mean=logshape, 
-                                       cov=var["log(shape)", "log(shape)"], 
-                                       ses=TRUE)
-                STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
-            } else if (dist == "logskewnormal") {
-                seXi <- sqrt(var["log(scale)", "log(scale)"])
-                seOmega <- deltamethod(g=~exp(- x1), 
-                                       mean=logshape, 
-                                       cov=var["log(shape)", "log(shape)"], 
-                                       ses=TRUE)
-                seAlpha <- NA
-                STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
-            }
-        } else {
-            if (dist == "exponential") {
-                seLambda <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(- x1), 
-                                mean=logscale[x],
-                                cov=var[paste("log(scale)", x, sep=":"), 
-                                        paste("log(scale)", x, sep=":")],
-                                ses=TRUE)
-                })
-                STDERR <- c(seLambda=seLambda)
-            } else if (dist %in% c("weibull")) {
-                seRho <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(x1), 
-                                mean=logshape[x],
-                                cov=var[paste("log(shape)", x, sep=":"), 
-                                        paste("log(shape)", x, sep=":")], 
-                                ses=TRUE)
-                })
-                seLambda <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(- exp(x2) * x1),
-                                mean=c(logscale[x], logshape[x]),
-                                cov=var[paste(c("log(scale)","log(shape)"), x, sep=":"), 
-                                        paste(c("log(scale)","log(shape)"), x, sep=":")],
-                                ses=TRUE)
-                })
-                STDERR <- c(seRho=seRho, seLambda=seLambda)
-            } else if (dist == "gompertz") {
-                seGamma <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(- x1),
-                                mean=logscale[x],
-                                cov=var[paste("log(scale)", x, sep=":"), 
-                                        paste("log(scale)", x, sep=":")],
-                                ses=TRUE)
-                })
-                seLambda <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(x1),
-                                mean=logshape,
-                                cov=var[paste("log(shape)", x, sep=":"), 
-                                        paste("log(shape)", x, sep=":")],
-                                ses=TRUE)
-                })
-                STDERR <- c(seGamma=seGamma, seLambda=seLambda)
-            } else if (dist == "lognormal") {
-                seMu <- sqrt(diag(var[substr(rownames(var),5,9) == "scale",
-                                      substr(rownames(var),5,9) == "scale"]))
-                seSigma <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(- x1), 
-                                mean=logshape, 
-                                cov=var[paste("log(shape)", x, sep=":"), 
-                                        paste("log(shape)", x, sep=":")], 
-                                ses=TRUE)
-                })
-                STDERR <- c(seMu=seMu, seSigma=seSigma)
-            } else if (dist == "loglogistic") {
-                seAlpha <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~- exp(x2) * x1,
-                                mean=c(logscale, logshape),
-                                cov=var[paste(c("log(scale)","log(shape)"), x, sep=":"), 
-                                        paste(c("log(scale)","log(shape)"), x, sep=":")],
-                                ses=TRUE)
-                })
-                seKappa <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(x1), 
-                                mean=logshape, 
-                                cov=var[paste("log(shape)", x, sep=":"), 
-                                        paste("log(shape)", x, sep=":")], 
-                                ses=TRUE)
-                })
-                STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
-            } else if (dist == "logskewnormal") {
-                seXi <- sqrt(diag(var[substr(rownames(var),5,9) == "scale",
-                                      substr(rownames(var),5,9) == "scale"]))
-                seOmega <- sapply(1:obsdata$nstr, function(x) {
-                    deltamethod(g=~exp(- x1), 
-                                mean=logshape, 
-                                cov=var[paste("log(shape)", x, sep=":"), 
-                                        paste("log(shape)", x, sep=":")], 
-                                ses=TRUE)
-                })
-                seAlpha <- rep(NA, length(seSigma))
-                STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
-            }
-        }
+        #all together
         STDERR <- c(STDERR,
-                    se.beta = seBeta)
-    } else {
-        var <- try(diag(solve(res$hessian)), silent=TRUE)
-        if (class(var) == "try-error") {
-            warning(var[1])
-            STDERR <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)
-            PVAL <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)
-        } else {
-            if (any(var <= 0)) {
-                warning(paste("negative variances have been replaced by NAs\n",
-                              "Please, try other initial values",
-                              "or another optimisation method"))
-            }
-            
-            #heterogeneity parameter(s)
-            if (frailty %in% c("gamma", "ingau")) {
-                seTheta <- sapply(1:nFpar, function(x){
-                    ifelse(var[x] > 0, sqrt(var[x] * theta[x] ^ 2), NA)
-                })
-                seSigma2 <- seNu <- NULL
-            } else if (frailty == "lognormal") {
-                seSigma2 <- sapply(1:nFpar, function(x){
-                    ifelse(var[x] > 0, sqrt(var[x] * sigma2[x] ^ 2), NA)
-                })
-                seTheta <- seNu <- NULL
-            } else if (frailty == "possta") {
-                seNu <- sapply(1:nFpar, function(x){
-                    ifelse(var[x] > 0, sqrt(var[x] * (nu * log(nu)) ^ 2), NA)
-                })
-                seTheta <- seSigma2 <- NULL
-            }
-            
-            #baseline hazard parameter(s)
-            if (dist == "exponential") {
-                seLambda <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * lambda[x] ^ 2), NA)
-                })
-                STDERR <- c(seLambda=seLambda)
-            } else if (dist %in% c("weibull")) {
-                seRho <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * rho[x] ^ 2), NA)
-                })
-                seLambda <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + obsdata$nstr + x] > 0, 
-                           sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
-                })
-                STDERR <- c(seRho=seRho, seLambda=seLambda)
-            } else if (dist == "gompertz") {
-                seGamma <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * gamma[x] ^ 2), NA)
-                })
-                seLambda <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
-                })
-                STDERR <- c(seGamma=seGamma, seLambda=seLambda)
-            } else if (dist == "lognormal") {
-                seMu <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
-                })
-                seSigma <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * sigma[x] ^ 2), NA)
-                })
-                STDERR <- c(seMu=seMu, seSigma=seSigma)
-            } else if (dist == "loglogistic") {
-                seAlpha <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
-                })
-                seKappa <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * kappa[x] ^ 2), NA)
-                })
-                STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
-            } else if (dist == "logskewnormal") {
-                seXi <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
-                })
-                seOmega <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + obsdata$nstr + x] * omega[x] ^ 2), NA)
-                })
-                seAlpha <- sapply(1:obsdata$nstr, function(x){
-                    ifelse(var[nFpar + 2 * obsdata$nstr + x] > 0,
-                           sqrt(var[nFpar + 2 * obsdata$nstr + x]), NA)
-                })
-                STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
-            }
-            
-            #regression parameter(s)
-            if (nRpar == 0) {
-                seBeta <- NULL
-            } else {
-                seBeta <- numeric(nRpar)
-                varBeta <- var[-(1:(nFpar + nBpar * obsdata$nstr))]
-                for(i in 1:nRpar) {
-                    seBeta[i] <- ifelse(varBeta[i] > 0, sqrt(varBeta[i]), NA)
-                }
-                PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
-                          2 * pnorm(q= -abs(beta / seBeta)))
-            }
-            
-            #all together
-            STDERR <- c(STDERR,
-                        se.beta=seBeta)
-            if (frailty != "none") {
-                STDERR <- c(se.theta=seTheta,
-                            se.sigma2=seSigma2,
-                            se.nu=seNu,
-                            STDERR)
-            }
+                    se.beta=seBeta)
+        if (frailty != "none") {
+            STDERR <- c(se.theta=seTheta,
+                        se.sigma2=seSigma2,
+                        se.nu=seNu,
+                        STDERR)
         }
     }
     
-    #----- Output ---------------------------------------------------------------#
+    
+    #--------------------------------------------------------------------------#
+    #----- Output -------------------------------------------------------------#
+    #--------------------------------------------------------------------------#
     resmodel <- cbind(ESTIMATE=ESTIMATE, SE=STDERR)
     rownames(resmodel) <- gsub("beta.","", rownames(resmodel))
     
     if (nRpar > 0) {
-        resmodel <- cbind(resmodel, "p-val"= PVAL)
+        resmodel <- cbind(resmodel, "p-val" = PVAL)
     }
     
     class(resmodel) <- c("parfm", class(resmodel))
-    ### - Checks - ###############################################################
+    ### - Checks - #############################################################
     Call <- match.call()
-    if (!match("formula", names(Call), nomatch=0))
+    if (!match("formula", names(Call), nomatch = 0))
         stop("A formula argument is required")
     
     Terms <- terms(formula, data = data)
-    ######################################################## - End of Checks - ###
+    ###################################################### - End of Checks - ###
     attributes(resmodel) <- c(attributes(resmodel), list(
         call        = Call,
         convergence = res$convergence,
@@ -742,14 +539,14 @@ parfm <- function(formula,
         shared      = (nrow(data) > obsdata$ncl),
         loglik      = lL,
         dist        = dist,
-        cumhaz      = attributes(Mloglikelihood(p=res$par,
-                                                obs=obsdata, dist=dist, 
-                                                frailty=frailty,
-                                                correct=correct))$cumhaz,
-        cumhazT     = attributes(Mloglikelihood(p=res$par,
-                                                obs=obsdata, dist=dist, 
-                                                frailty=frailty,
-                                                correct=correct))$cumhazT,
+        cumhaz      = attributes(Mloglikelihood(p = estim_par,
+                                                obs = obsdata, dist = dist, 
+                                                frailty = frailty,
+                                                correct = correct))$cumhaz,
+        cumhazT     = attributes(Mloglikelihood(p = estim_par,
+                                                obs = obsdata, dist = dist, 
+                                                frailty = frailty,
+                                                correct = correct))$cumhazT,
         di          = obsdata$di,
         dq          = obsdata$dq,
         dqi         = obsdata$dqi,
@@ -757,7 +554,8 @@ parfm <- function(formula,
         clustname   = cluster,
         stratname   = strata,
         correct     = correct,
-        formula     = as.character(Call[match("formula", names(Call), nomatch=0)]),
+        formula     = as.character(Call[match("formula", names(Call), 
+                                              nomatch = 0)]),
         terms       = attr(Terms, "term.labels"),
         var         = var
     ))

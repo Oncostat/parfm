@@ -22,7 +22,7 @@ S3method(print, predict.parfm)
 S3method(plot, select.parfm)
 S3method(print, select.parfm)
 
-import(msm, eha, graphics, sn, survival)
+import(msm, graphics, optimx, sn, survival)
 importFrom("stats", 
            "AIC", "BIC", "aggregate", "delete.response", "dlnorm", "formula",
            "integrate", "model.matrix", "nlm", "optimize", "pchisq", "plnorm",
