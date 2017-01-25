@@ -398,9 +398,8 @@ parfm <- function(formula,
     #----- Recover the standard errors ----------------------------------------#
     #--------------------------------------------------------------------------#
     # browser()
-    var <- try(diag(solve(#res$hessian
-        attr(res, 'details')[1, 'nhatend'][[1]]
-    )), silent=TRUE)
+    resHessian <- attr(res, 'details')[1, 'nhatend'][[1]]
+    var <- try(diag(solve(resHessian)), silent=TRUE)
     if (class(var) == "try-error" | any(is.nan(var))) {
         warning(var[1])
         STDERR <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)
@@ -557,7 +556,7 @@ parfm <- function(formula,
         formula     = as.character(Call[match("formula", names(Call), 
                                               nomatch = 0)]),
         terms       = attr(Terms, "term.labels"),
-        var         = var
+        Hess        = resHessian
     ))
     if (frailty != "none") {
         names(attr(resmodel, "cumhaz")) <-
