@@ -32,7 +32,7 @@
              Catherine Legrand}
              
 \title{\pkg{parfm}: Parametric Frailty Models in \proglang{R}
-        \\[.5em]\small{Package vignette, V.~1.3 (November 10th, 2016)}}
+        \\[.5em]\small{Package vignette, V.~1.4 (January 25th, 2017)}}
 \Plaintitle{parfm: Parametric Frailty Models in R} %% without formatting
 
 \Abstract{ \input{tex/00_abs.tex} }

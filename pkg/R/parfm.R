@@ -401,7 +401,7 @@ parfm <- function(formula,
     var <- try(diag(solve(#res$hessian
         attr(res, 'details')[1, 'nhatend'][[1]]
     )), silent=TRUE)
-    if (class(var) == "try-error") {
+    if (class(var) == "try-error" | any(is.nan(var))) {
         warning(var[1])
         STDERR <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)
         PVAL <- rep(NA, nFpar + nBpar * obsdata$nstr + nRpar)

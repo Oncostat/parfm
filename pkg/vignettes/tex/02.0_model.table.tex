@@ -37,21 +37,54 @@
 \renewcommand{\arraystretch}{1.5}
   \begin{tabular}{cccc}
   \hline \hline
-  {\bf distribution}                 & $\bm{h_{0}(t)}$                                            & $\bm{H_{0}(t)} = \int_{0}^{t} h_{0} ( s ) \textrm{d} s$           & {\bf parameters space} \\  
+  {\bf distribution}
+    & $\bm{h_{0}(t)}$
+    & $\bm{H_{0}(t)} = \int_{0}^{t} h_{0} ( s ) \textrm{d} s$
+    & {\bf parameters space}
+  \\ % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
   \hline
-  {\bf exponential}                  & $\lambda$                                                  & $\lambda t$                                                       & $\lambda > 0$ \\
-  {\bf Weibull}                      & $\lambda \rho t^{\rho - 1}$                                & $\lambda t^{\rho}$                                                & $\rho, \lambda > 0$   \\
-  {\bf Gompertz}                     & $\lambda \exp ( \gamma t )$                                & $\frac{\lambda}{\gamma} \left(\exp (\gamma t) - 1\right)$         & $\gamma, \lambda > 0$ \\
-  \multirow{2}{*}{{\bf lognormal}}   & \multirow{2}{*}{$\frac{\phi \left(\tfrac{\log(t) - \mu}{\sigma} \right)}
-	      		   {\sigma t \left[1 - \Phi\left(\tfrac{\log(t) - \mu}{\sigma} \right) \right]}$} & \multirow{2}{*}{$- \log \left[1 - \Phi\left(\tfrac{\log(t) - \mu}
-					                                                                                   {\sigma} \right)\right]$}                                      & \multirow{2}{*}{$\mu \in                       \mathbb{R}$, $\sigma > 0$}\\
-					                 &                                                            &                                                                   &                         \\     
-  \multirow{2}{*}{{\bf loglogistic}}& \multirow{2}{*}{$\cfrac{\exp(\alpha) \kappa t^{\kappa - 1}}
-	                                               {1 + \exp(\alpha) t^{\kappa}}$}                & \multirow{2}{*}{$\log \left(1 + \exp(\alpha) t^{\kappa}\right)$} & \multirow{2}{*}{$\alpha \in \mathbb{R}$, $\kappa > 0$} \\
-	                                 &                                                            &                                                                   &                          \\                
+  {\bf exponential}
+    & $\lambda$
+    & $\lambda t$
+    & $\lambda > 0$
+  \\ % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  {\bf Weibull}
+    & $\lambda \rho t^{\rho - 1}$
+    & $\lambda t^{\rho}$
+    & $\rho, \lambda > 0$
+  \\ % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  {\bf Gompertz}
+    & $\lambda \exp ( \gamma t )$
+    & $\frac{\lambda}{\gamma} \left(\exp (\gamma t) - 1\right)$
+    & $\gamma, \lambda > 0$
+  \\ % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  \multirow{2}{*}{{\bf lognormal}}
+    & \multirow{2}{*}{$\frac{\phi \left(\tfrac{\log(t) - \mu}{\sigma} \right)}
+	      		   {\sigma t \left[1 - \Phi\left(\tfrac{\log(t) - \mu}{\sigma} \right) \right]}$}
+    & \multirow{2}{*}{$- \log \left[1 - \Phi\left(\tfrac{\log(t) - \mu}{\sigma} \right)\right]$}
+    & \multirow{2}{*}{$\mu \in \mathbb{R}$, $\sigma > 0$}
+    \\&&&
+  \\ % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  \multirow{2}{*}{{\bf log-SkewNormal}}
+    & \multirow{2}{*}{$\frac{
+        2 \omega 
+        \phi\left(\frac{\log(t) - \xi}{\omega}\right)
+        \Phi\left(\alpha\frac{\log(t)-\xi}{\omega}\right)
+        }{
+         t \left[1 - \Phi\left(\tfrac{\log(t) - \xi}{\sigma} \right) \right]}$}
+    & \multirow{2}{*}{$- \log \left[1 - \Phi\left(\tfrac{\log(t) - \xi}{\sigma} \right)\right]$}
+    & \multirow{2}{*}{$\mu \in \mathbb{R}$, $\sigma > 0$}
+    \\&&&
+  \\ % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %     
+  \multirow{2}{*}{{\bf loglogistic}}
+    & \multirow{2}{*}{$\cfrac{\exp(\alpha) \kappa t^{\kappa - 1}}{1 + \exp(\alpha) t^{\kappa}}$}
+    & \multirow{2}{*}{$\log \left(1 + \exp(\alpha) t^{\kappa}\right)$} & \multirow{2}{*}{$\alpha \in \mathbb{R}$, $\kappa > 0$}
+    \\&&&
+    \\                
 	\hline \hline
 	\end{tabular}
-\caption{Parametric distributions available in \pkg{parfm} for the baseline hazard. With the lognormal, $\phi(\cdot)$ and $\Phi(\cdot)$ respectively denote the probability density and the cumulative distribution functions of a standard normal random variable.}
+\caption{Parametric distributions available in \pkg{parfm} for the baseline hazard.
+    With the log(skew)normal, $\phi(\cdot)$ and $\Phi(\cdot)$ respectively denote the probability density and the cumulative distribution functions of a standard normal random variable.}
 \label{tab:model.baselines}	
 \end{table} 
 

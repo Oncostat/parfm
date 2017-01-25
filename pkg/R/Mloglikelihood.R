@@ -42,7 +42,7 @@ Mloglikelihood <- function(p,
     if (frailty %in% c("gamma", "ingau")) {
         theta <- exp(p[1])
     } else if (frailty == "lognormal") {
-        sigma <- exp(p[1])
+        sigma2 <- exp(p[1])
     } else if (frailty == "possta") {
         nu <- exp(-exp(p[1]))
         D <- max(obs$dqi)
@@ -169,7 +169,7 @@ Mloglikelihood <- function(p,
     } else if (frailty == "lognormal") {
         logSurv <- mapply(fr.lognormal, 
                           k = obs$di, s = as.numeric(cumhaz[[1]]), 
-                          sigma = rep(sigma, obs$ncl), 
+                          sigma2 = rep(sigma2, obs$ncl), 
                           what = "logLT")
     } else if (frailty == "none") {
         logSurv <- mapply(fr.none, s = cumhaz, what = "logLT")
@@ -199,7 +199,7 @@ Mloglikelihood <- function(p,
         } else if (frailty == "lognormal") {
             logSurvT <- mapply(fr.lognormal, 
                                k = 0, s = as.numeric(cumhazT[[1]]), 
-                               sigma = rep(sigma, obs$ncl), 
+                               sigma2 = rep(sigma2, obs$ncl), 
                                what = "logLT") 
         } else if (frailty == "none") {
             logSurvT <- mapply(fr.none, s = cumhazT, what = "logLT")
@@ -219,9 +219,9 @@ Mloglikelihood <- function(p,
         attr(Mloglik, "cumhazT") <- NULL
     }
     attr(Mloglik, "loghaz") <- as.numeric(loghaz[[1]])
-    attr(Mloglik, "logSurv") <- (logSurv)
+    attr(Mloglik, "logSurv") <- logSurv
     if (!is.null(obs$trunc)) {
-        attr(Mloglik, "logSurvT") <- (logSurvT)
+        attr(Mloglik, "logSurvT") <- logSurvT
     }
     return(Mloglik)
 }

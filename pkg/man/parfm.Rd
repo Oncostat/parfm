@@ -86,7 +86,7 @@ The log-skew-normal hazard (\code{dist="logskewnormal"}) is
     obtained as the ratio between the density and the cumulative distribution function
     of a log-\link[sn:dsn]{skew normal} random variable (Azzalini, 1985),
     which has density
-\deqn{f(t; \xi, \omega, \alpha) = \frac{2 \omega}{t(\log(t)-\xi)}
+\deqn{f(t; \xi, \omega, \alpha) = \frac{2 \omega}{t}
     \phi\left(\frac{\log(t) - \xi}{\omega}\right)
     \Phi\left(\alpha\frac{\log(t)-\xi}{\omega}\right)}
 with \eqn{\xi \in {R}, \omega > 0, \alpha \in {R}}{xi in R, omega > 0, alpha in R}, and where
@@ -167,6 +167,10 @@ kidney$sex <- kidney$sex - 1
 
 parfm(Surv(time,status) ~ sex + age, cluster = "id",
       data = kidney, dist = "exponential", frailty = "gamma")
+      
+      
+parfm(Surv(time,status) ~ sex + age, cluster = "id",
+      data = kidney, dist = "exponential", frailty = "lognormal")
 
 \donttest{
 parfm(Surv(time,status) ~ sex + age, cluster = "id",
@@ -184,6 +188,14 @@ parfm(Surv(time,status) ~ sex + age, cluster = "id",
 data(asthma)
 head(asthma)
   # type 'help(asthma)' for a description of the data set
+
+asthma$time <- asthma$End - asthma$Begin
+parfm(Surv(time, Status) ~ Drug, cluster = "Patid", data = asthma,
+      dist = "weibull", frailty = "gamma")
+      
+      
+parfm(Surv(time, Status) ~ Drug, cluster = "Patid", data = asthma,
+      dist = "weibull", frailty = "lognormal")
 
 parfm(Surv(Begin, End, Status) ~ Drug, cluster = "Patid", 
       data = asthma[asthma$Fevent == 0, ],

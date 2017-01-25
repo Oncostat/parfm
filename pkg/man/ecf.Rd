@@ -47,6 +47,7 @@ We also consider the binary covariate breed.
   New York: Springer--Verlag.
 }
 \examples{
+\donttest{
 library(parfm)
 data(ecf)
 head(ecf)
@@ -77,7 +78,7 @@ curve(pfm1["lambda", 1] * pfm1["rho", 1] *
       add = TRUE, lwd = 2)
 legend("top", lwd = c(1, 1, 1, 2), lty = c(1, 2, 3, 1), ncol = 2,
        legend = c("Mean frailty", "Q75 frailty", "Q25 frailty", "Population"))
-}
+}}
 \keyword{datasets}
 \keyword{ecf}
 \keyword{cows}
