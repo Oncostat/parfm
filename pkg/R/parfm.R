@@ -556,7 +556,7 @@ parfm <- function(formula,
         formula     = as.character(Call[match("formula", names(Call), 
                                               nomatch = 0)]),
         terms       = attr(Terms, "term.labels"),
-        Hess        = resHessian
+        FisherI     = resHessian
     ))
     if (frailty != "none") {
         names(attr(resmodel, "cumhaz")) <-
