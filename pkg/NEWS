@@ -1,8 +1,8 @@
 Changes in Version 2.7 (January 2017)
 
   o optimization is now based on the optimx package
-  o the default optimizer is now nlminb (from the stats package)
-  o fixed problems in the likelihood with ognormal frailties
+    and the default optimizer is now nlminb (from the stats package)
+  o fixed issue in the likelihood when frailties are lognormal
 
 
 Changes in Version 2.6.0 (November 2016)
@@ -17,7 +17,7 @@ Changes in Version 2.5.10 (September 2015)
 
 Changes in Version 2.5 (October 2012)
 
-  o new frailty distrubution available: lognormal
+  o new frailty distribution available: lognormal
 
 
 Changes in Version 2.01 (June 2012)
