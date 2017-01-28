@@ -3,6 +3,8 @@ Changes in Version 2.7 (January 2017)
   o optimization is now based on the optimx package
     and the default optimizer is now nlminb (from the stats package)
   o fixed issue in the likelihood when frailties are lognormal
+  o initialization of the parameter is now performed in a standalone manner
+    via the parfm likelihood, instead of relying on eha::phreg()
 
 
 Changes in Version 2.6.0 (November 2016)
