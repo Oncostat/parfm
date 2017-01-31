@@ -26,9 +26,11 @@
 #                but the value of the log-likelihood in the output             #
 #                is the re-adjusted value.                                     #
 #                                                                              #
+################################################################################
 #                                                                              #
-#   Date: December 19, 2011                                                    #
-#   Last modification on: January 24, 2017                                     #
+#   Date:              December 19, 2011                                       #
+#   Last modification: January 31, 2017                                        #
+#                                                                              #
 ################################################################################
 
 Mloglikelihood <- function(p,
@@ -54,7 +56,7 @@ Mloglikelihood <- function(p,
     if (frailty == 'none') obs$nFpar <- 0
     
     # baseline parameters
-    if (dist %in% c("weibull", "inweibull")) {
+    if (dist %in% c("weibull", "inweibull", "frechet")) {
         pars <- cbind(rho    = exp(p[obs$nFpar + 1:obs$nstr]),
                       lambda = exp(p[obs$nFpar + obs$nstr + 1:obs$nstr]))
         beta <- p[-(1:(obs$nFpar + 2 * obs$nstr))]

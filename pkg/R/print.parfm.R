@@ -31,16 +31,15 @@
 #                                                                              #
 #                                                                              #
 #   Date: December 19, 2011                                                    #
-#   Last modification on: January 23, 2017                                     #
+#   Last modification: January 23, 2017                                        #
 ################################################################################
 
 print.parfm <- function(x,
-                        digits=3,
-                        na.print="",
+                        digits = 3,
+                        na.print = "",
                         silent = FALSE,
                         ...) {
-    if (!is.null(x)){
-        
+    if (!is.null(x)) {
         # Which frailty distribution, pretty expression
         frailty <- list(none      = "none",
                         gamma     = "gamma",
@@ -54,10 +53,10 @@ print.parfm <- function(x,
         # Which baseline hazard, pretty expression
         baseline <- paste(toupper(substr(attributes(x)$dist, 1, 1)), 
                           substr(attributes(x)$dist, 2, 100), 
-                          sep="")
+                          sep = "")
         
         # Loglikelihood value
-        loglikelihood <-round(attributes(x)$loglik, digits)
+        loglikelihood <- round(attributes(x)$loglik, digits)
         
         x <- as.data.frame(x)
         
@@ -65,7 +64,7 @@ print.parfm <- function(x,
         if ("p-val" %in% colnames(x)) {
             signif <- symnum(x$"p-val", 
                              c(0, .001, .01, .05, .1, 1),
-                             c('***', '**', '*', '.', ''), na='')
+                             c('***', '**', '*', '.', ''), na = '')
         }
         
         # Object to printed out
@@ -88,7 +87,7 @@ print.parfm <- function(x,
                       "\nLoglikelihood:", 
                       loglikelihood,
                       "\n\n"))
-            print(as.matrix(toprint), na.print=na.print, quote=FALSE)
+            print(as.matrix(toprint), na.print = na.print, quote = FALSE)
             if ("p-val" %in% colnames(x))
                 cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
             if (!is.null(tau))
@@ -96,4 +95,8 @@ print.parfm <- function(x,
                           ifelse(is.numeric(tau), round(tau, digits), tau), "\n"))
         }
     }
+}
+
+coef.parfm <- function(object, ...) {
+    object[!is.na(object[, 'p-val']), 'ESTIMATE']
 }

@@ -1,0 +1,6 @@
+- inverse weibull
+- hessian matrix in the right scale
+- plot baseline
+- predict newdata
+- plot median time
+- se for theta (bootstrap?)
