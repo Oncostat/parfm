@@ -18,3 +18,4 @@ License: GPL-2
 LazyLoad: yes
 Depends: R (>= 2.10), survival, optimx
 Imports: msm, graphics, sn
+Encoding: UTF-8

@@ -63,9 +63,11 @@ parfm <- function(formula,
     }
     
     #----- Check the baseline hazard and the frailty distribution ---------------#
-    dist <- match.arg(tolower(dist))
+    dist <- tolower(dist)
+    dist <- match.arg(dist)
     
-    frailty <- match.arg(tolower(frailty))
+    frailty <- tolower(frailty)
+    frailty <- match.arg(frailty)
     if (frailty == "none" &&  !is.null(cluster)) {
         warning(paste0("With frailty='none' the cluster variable '",
                        cluster, "' is not used!"))

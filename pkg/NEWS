@@ -1,3 +1,6 @@
+Changes in Version 2.7.3 (January 2017)
+  o New baseline hazard family: inverse Weibull (Fréchet)
+
 Changes in Version 2.7 (January 2017)
 
   o optimization is now based on the optimx package

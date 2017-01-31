@@ -1,6 +1,5 @@
-- inverse weibull
 - hessian matrix in the right scale
-- plot baseline
-- predict newdata
-- plot median time
-- se for theta (bootstrap?)
+- plot baseline hazard (also with covariate values?)
+- predict with newdata 
+- plot median survival time distribution
+- s.e. for theta (bootstrap?)
