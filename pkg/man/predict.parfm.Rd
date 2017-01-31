@@ -55,7 +55,7 @@ u.coxph <- exp(model.coxph$frail)
 
 
 # Plot of predictions from both models
-par(mfrow = c(1, 3))
+par(mfrow = c(1,2))
 ylim <- c(0, max(c(u, u.coxph)))
 plot(u, sort = "i",
      main = paste("Parametric", 
@@ -71,12 +71,6 @@ plot(u.coxph, sort = "i",
      main = paste("Semi-parametric",
                   "Gamma frailty model", sep = "\n"),
      ylim = ylim)
-     
-plot(as.numeric(u) , as.numeric(u.coxph), asp = 1,
-     xlab = 'Semiarametric predicted value',
-     ylab = 'Parametric predicted value',
-     panel.first = abline(0, 1))
-
 }
 \keyword{frailty}
 \keyword{prediction}
