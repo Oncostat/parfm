@@ -6,6 +6,7 @@
 \alias{print.parfm}
 \title{Parametric Frailty Models}
 \description{Fits parametric Frailty Models by maximizing the marginal likelihood.}
+\encoding{UTF-8}
 
 \usage{
 parfm(formula, cluster = NULL, strata = NULL, data,
