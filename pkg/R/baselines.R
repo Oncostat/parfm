@@ -223,3 +223,10 @@ logskewnormal <- function(pars,
         return(log(dlsn(t, pars = pars)) -
                    log(1 - plsn(t, pars = pars)))
 }
+
+
+# setGeneric('basehaz', package = 'survival')
+# setClass('parfm')
+# setMethod('basehaz', signature(fit = 'parfm'), function(fit, centered = TRUE) {
+#     return(fit)
+# })

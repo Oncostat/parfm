@@ -262,7 +262,7 @@ parfm <- function(formula,
                          fn = optMloglikelihood, method = method,
                          obs = obsdata, dist = dist, frailty = 'none',
                          correct = correct,
-                         hessian = TRUE,
+                         hessian = FALSE,
                          control = list(maxit = maxit,
                                         starttests = FALSE,
                                         dowarn = FALSE))
@@ -301,7 +301,7 @@ parfm <- function(formula,
         res <- optimx(par = pars, fn = optMloglikelihood, method = method,
                       obs = obsdata, dist = dist, frailty = frailty,
                       correct = correct,
-                      hessian = TRUE,
+                      hessian = FALSE,
                       control = list(maxit = maxit,
                                      starttests = FALSE,
                                      dowarn = FALSE))
@@ -397,7 +397,11 @@ parfm <- function(formula,
     #--------------------------------------------------------------------------#
     #----- Recover the standard errors ----------------------------------------#
     #--------------------------------------------------------------------------#
-    resHessian <- attr(res, 'details')[1, 'nhatend'][[1]]
+    resHessian <- # attr(res, 'details')[1, 'nhatend'][[1]]
+        optimHess(par = ESTIMATE, fn = Mloglikelihood, 
+                  obs = obsdata, dist = dist, frailty = frailty,
+                  correct = correct, transform = FALSE)
+    
     var <- try(diag(solve(resHessian)), silent=TRUE)
     if (class(var) == "try-error" | any(is.nan(var))) {
         warning(var[1])
@@ -413,17 +417,17 @@ parfm <- function(formula,
         # heterogeneity (frailty distribution) parameter(s)
         if (frailty %in% c("gamma", "ingau")) {
             seTheta <- sapply(1:nFpar, function(x){
-                ifelse(var[x] > 0, sqrt(var[x] * theta[x] ^ 2), NA)
+                ifelse(var[x] > 0, sqrt(var[x]), NA)
             })
             seSigma2 <- seNu <- NULL
         } else if (frailty == "lognormal") {
             seSigma2 <- sapply(1:nFpar, function(x){
-                ifelse(var[x] > 0, sqrt(var[x] * sigma2[x] ^ 2), NA)
+                ifelse(var[x] > 0, sqrt(var[x]), NA)
             })
             seTheta <- seNu <- NULL
         } else if (frailty == "possta") {
             seNu <- sapply(1:nFpar, function(x){
-                ifelse(var[x] > 0, sqrt(var[x] * (nu * log(nu)) ^ 2), NA)
+                ifelse(var[x] > 0, sqrt(var[x]), NA)
             })
             seTheta <- seSigma2 <- NULL
         }
@@ -431,25 +435,25 @@ parfm <- function(formula,
         # baseline hazard parameter(s)
         if (dist == "exponential") {
             seLambda <- sapply(1:obsdata$nstr, function(x){
-                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * lambda[x] ^ 2), NA)
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
             })
             STDERR <- c(seLambda = seLambda)
         } else if (dist %in% c("weibull", "inweibull", "frechet")) {
             seRho <- sapply(1:obsdata$nstr, function(x){
-                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * rho[x] ^ 2), NA)
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
             })
             seLambda <- sapply(1:obsdata$nstr, function(x){
                 ifelse(var[nFpar + obsdata$nstr + x] > 0, 
-                       sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
+                       sqrt(var[nFpar + obsdata$nstr + x]), NA)
             })
             STDERR <- c(seRho = seRho, seLambda = seLambda)
         } else if (dist == "gompertz") {
             seGamma <- sapply(1:obsdata$nstr, function(x){
-                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x] * gamma[x] ^ 2), NA)
+                ifelse(var[nFpar + x] > 0, sqrt(var[nFpar + x]), NA)
             })
             seLambda <- sapply(1:obsdata$nstr, function(x){
                 ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                       sqrt(var[nFpar + obsdata$nstr + x] * lambda[x] ^ 2), NA)
+                       sqrt(var[nFpar + obsdata$nstr + x]), NA)
             })
             STDERR <- c(seGamma = seGamma, seLambda = seLambda)
         } else if (dist == "lognormal") {
@@ -458,7 +462,7 @@ parfm <- function(formula,
             })
             seSigma <- sapply(1:obsdata$nstr, function(x){
                 ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                       sqrt(var[nFpar + obsdata$nstr + x] * sigma[x] ^ 2), NA)
+                       sqrt(var[nFpar + obsdata$nstr + x]), NA)
             })
             STDERR <- c(seMu=seMu, seSigma=seSigma)
         } else if (dist == "loglogistic") {
@@ -467,7 +471,7 @@ parfm <- function(formula,
             })
             seKappa <- sapply(1:obsdata$nstr, function(x){
                 ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                       sqrt(var[nFpar + obsdata$nstr + x] * kappa[x] ^ 2), NA)
+                       sqrt(var[nFpar + obsdata$nstr + x]), NA)
             })
             STDERR <- c(seAlpha=seAlpha, seKappa=seKappa)
         } else if (dist == "logskewnormal") {
@@ -476,13 +480,15 @@ parfm <- function(formula,
             })
             seOmega <- sapply(1:obsdata$nstr, function(x){
                 ifelse(var[nFpar + obsdata$nstr + x] > 0,
-                       sqrt(var[nFpar + obsdata$nstr + x] * omega[x] ^ 2), NA)
+                       sqrt(var[nFpar + obsdata$nstr + x]), NA)
             })
             seAlpha <- sapply(1:obsdata$nstr, function(x){
                 ifelse(var[nFpar + 2 * obsdata$nstr + x] > 0,
                        sqrt(var[nFpar + 2 * obsdata$nstr + x]), NA)
             })
-            STDERR <- c(seXi = seXi, seOmega = seOmega, seAlpha = seAlpha)
+            STDERR <- c(seXi    = seXi, 
+                        seOmega = seOmega, 
+                        seAlpha = seAlpha)
         }
         
         #regression parameter(s)
@@ -491,36 +497,37 @@ parfm <- function(formula,
         } else {
             seBeta <- numeric(nRpar)
             varBeta <- var[-(1:(nFpar + nBpar * obsdata$nstr))]
-            for(i in 1:nRpar) {
+            for (i in 1:nRpar) {
                 seBeta[i] <- ifelse(varBeta[i] > 0, sqrt(varBeta[i]), NA)
             }
             PVAL <- c(rep(NA, nFpar + nBpar * obsdata$nstr), 
-                      2 * pnorm(q= -abs(beta / seBeta)))
+                      2 * pnorm(q = -abs(beta / seBeta)))
         }
         
         #all together
-        STDERR <- c(STDERR,
-                    se.beta=seBeta)
+        STDERR <- c(STDERR, se.beta = seBeta)
         if (frailty != "none") {
-            STDERR <- c(se.theta=seTheta,
-                        se.sigma2=seSigma2,
-                        se.nu=seNu,
+            STDERR <- c(se.theta  = seTheta,
+                        se.sigma2 = seSigma2,
+                        se.nu     = seNu,
                         STDERR)
         }
     }
     
     
+    
     #--------------------------------------------------------------------------#
     #----- Output -------------------------------------------------------------#
     #--------------------------------------------------------------------------#
-    resmodel <- cbind(ESTIMATE=ESTIMATE, SE=STDERR)
+    resmodel <- cbind(ESTIMATE = ESTIMATE, 
+                      SE       = STDERR)
     rownames(resmodel) <- gsub("beta.","", rownames(resmodel))
     
-    if (nRpar > 0) {
+    if (nRpar > 0)
         resmodel <- cbind(resmodel, "p-val" = PVAL)
-    }
     
     class(resmodel) <- c("parfm", class(resmodel))
+    
     ### - Checks - #############################################################
     Call <- match.call()
     if (!match("formula", names(Call), nomatch = 0))
@@ -528,6 +535,7 @@ parfm <- function(formula,
     
     Terms <- terms(formula, data = data)
     ###################################################### - End of Checks - ###
+    
     attributes(resmodel) <- c(attributes(resmodel), list(
         call        = Call,
         convergence = res$convergence,
@@ -537,12 +545,14 @@ parfm <- function(formula,
         shared      = (nrow(data) > obsdata$ncl),
         loglik      = lL,
         dist        = dist,
-        cumhaz      = attributes(Mloglikelihood(p = estim_par,
-                                                obs = obsdata, dist = dist, 
+        cumhaz      = attributes(Mloglikelihood(p       = estim_par,
+                                                obs     = obsdata, 
+                                                dist    = dist, 
                                                 frailty = frailty,
                                                 correct = correct))$cumhaz,
-        cumhazT     = attributes(Mloglikelihood(p = estim_par,
-                                                obs = obsdata, dist = dist, 
+        cumhazT     = attributes(Mloglikelihood(p       = estim_par,
+                                                obs     = obsdata,
+                                                dist    = dist, 
                                                 frailty = frailty,
                                                 correct = correct))$cumhazT,
         di          = obsdata$di,
@@ -559,11 +569,11 @@ parfm <- function(formula,
     ))
     if (frailty != "none") {
         names(attr(resmodel, "cumhaz")) <-
-            names(attr(resmodel, "di")) <- unique(obsdata$cluster)
+            names(attr(resmodel, "di")) <- 
+            unique(obsdata$cluster)
     }
-    if (showtime){
+    if (showtime)
         cat("\nExecution time:", extime, "second(s) \n")
-    }
     
     return(resmodel)
 }
