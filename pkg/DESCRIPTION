@@ -1,8 +1,8 @@
 Package: parfm
 Type: Package
 Title: Parametric Frailty Models
-Version: 2.7.4
-Date: 2017-02-17
+Version: 2.7.5
+Date: 2017-02-20
 Authors@R: c(person("Federico", "Rotolo", role = c("aut", "cre"),
                      email = "federico.rotolo@gustaveroussy.fr"),
               person("Marco", "Munda", role = "aut",
