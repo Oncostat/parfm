@@ -169,8 +169,6 @@ As the Laplace tranform of the lognormal frailties does not exist in closed form
 }
 
 \examples{
-library(parfm)
-
 #------Kidney dataset------
 data(kidney) 
  # type 'help(kidney)' for a description of the data set
