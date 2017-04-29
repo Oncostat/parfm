@@ -178,10 +178,10 @@ parfm(Surv(time,status) ~ sex + age, cluster = "id",
       data = kidney, dist = "exponential", frailty = "gamma")
       
       
+\donttest{
 parfm(Surv(time,status) ~ sex + age, cluster = "id",
       data = kidney, dist = "exponential", frailty = "lognormal")
 
-\donttest{
 parfm(Surv(time,status) ~ sex + age, cluster = "id",
       data = kidney, dist = "weibull", frailty = "ingau")
 
